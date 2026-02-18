@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import skills from "@/data/skills.json";
 import experience from "@/data/experience.json";
@@ -8,11 +9,8 @@ export const metadata: Metadata = {
     description: "Senior Frontend Architect with expertise in Next.js, Geospatial Engineering, and Scalable Systems.",
 };
 
-const Badge = ({ children }: { children: React.ReactNode }) => (
-    <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80">
-        {children}
-    </span>
-);
+// Badge component removed to simplify build
+
 
 export default function AboutPage() {
     return (
@@ -37,25 +35,41 @@ export default function AboutPage() {
                     <Card>
                         <CardHeader><CardTitle>Frontend</CardTitle></CardHeader>
                         <CardContent className="flex flex-wrap gap-2">
-                            {skills.frontend.map(skill => <Badge key={skill}>{skill}</Badge>)}
+                            {skills.frontend.map(skill => (
+                                <span key={skill} className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80">
+                                    {skill}
+                                </span>
+                            ))}
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader><CardTitle>Geospatial</CardTitle></CardHeader>
                         <CardContent className="flex flex-wrap gap-2">
-                            {skills.geospatial.map(skill => <Badge key={skill}>{skill}</Badge>)}
+                            {skills.geospatial.map(skill => (
+                                <span key={skill} className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80">
+                                    {skill}
+                                </span>
+                            ))}
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader><CardTitle>Backend</CardTitle></CardHeader>
                         <CardContent className="flex flex-wrap gap-2">
-                            {skills.backend.map(skill => <Badge key={skill}>{skill}</Badge>)}
+                            {skills.backend.map(skill => (
+                                <span key={skill} className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80">
+                                    {skill}
+                                </span>
+                            ))}
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader><CardTitle>Tools</CardTitle></CardHeader>
                         <CardContent className="flex flex-wrap gap-2">
-                            {skills.tools.map(skill => <Badge key={skill}>{skill}</Badge>)}
+                            {skills.tools.map(skill => (
+                                <span key={skill} className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80">
+                                    {skill}
+                                </span>
+                            ))}
                         </CardContent>
                     </Card>
                 </div>
