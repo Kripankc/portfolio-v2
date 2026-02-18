@@ -4,28 +4,26 @@
         "Next.js",
         "TypeScript",
         "TailwindCSS",
-        "Framer Motion",
-        "Three.js"
+        "Framer Motion"
     ],
     "geospatial": [
-        "GDAL",
+        "ArcGIS",
         "QGIS",
-        "Mapbox GL JS",
-        "Leaflet",
-        "PostGIS"
+        "Google Earth Engine",
+        "Remote Sensing",
+        "GDAL"
     ],
-    "backend": [
-        "Node.js",
-        "Python (Django/FastAPI)",
-        "PostgreSQL",
-        "Redis"
+    "modeling": [
+        "Environmental Modeling",
+        "HEC-RAS",
+        "HEC-HMS",
+        "Hydrological Modeling"
     ],
-    "tools": [
-        "Git",
-        "Docker",
-        "Vercel",
-        "GitHub Actions",
-        "Jest",
-        "Playwright"
+    "analysis": [
+        "Data Analysis",
+        "Python",
+        "API Development",
+        "Machine Learning",
+        "Statistics"
     ]
 }

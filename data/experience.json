@@ -1,24 +1,42 @@
 [
     {
-        "id": "exp-1",
-        "role": "Senior Frontend Developer",
-        "company": "Tech Corp Inc.",
-        "period": "2023 - Present",
+        "id": "exp-munich-re",
+        "role": "Intern - Geospatial Solutions Team",
+        "company": "Munich Re",
+        "period": "Sep 2025 - Present",
         "description": [
-            "Led the migration of legacy SPAs to Next.js 14, improving Core Web Vitals by 40%.",
-            "Architected a reusable component library consumed by 5+ internal teams.",
-            "Mentored junior developers and established code review standards."
+            "Developing geospatial solutions for climate and hazard risk modeling, utilizing advanced Remote Sensing technology.",
+            "Processing large-scale satellite products for disaster models and integration into risk analysis pipelines.",
+            "Building APIs to operationalize GIS and remote sensing algorithms for production-level risk assessment platforms."
         ]
     },
     {
-        "id": "exp-2",
-        "role": "Geospatial Engineer",
-        "company": "GeoData Solutions",
-        "period": "2020 - 2023",
+        "id": "exp-tum-assistant",
+        "role": "Student Research Assistant",
+        "company": "Technical University of Munich (TUM)",
+        "period": "Nov 2024 - Sep 2025",
         "description": [
-            "Developed high-performance map rendering engine using WebGL and Rust.",
-            "Optimized raster processing pipelines for satellite imagery analysis.",
-            "Implemented OGC standards compliant API services."
+            "Conducting flood risk analysis using remote sensing, modeling, and advanced data techniques to support sustainable water and hazard management.",
+            "Assisting in research related to hydrology and river basin management."
+        ]
+    },
+    {
+        "id": "exp-rise-nepal",
+        "role": "Environmental Engineer",
+        "company": "Research Institute for Sustainable Environment (RISE) Pvt. Ltd.",
+        "period": "June 2023 - April 2024",
+        "description": [
+            "Engaged in Environmental impact assessments, Environmental modeling, GIS, and Remote sensing application in sustainable development."
+        ]
+    },
+    {
+        "id": "exp-upwork-gis",
+        "role": "Freelancer GIS Analyst",
+        "company": "Upwork",
+        "period": "April 2020 - March 2024",
+        "description": [
+            "Provided geospatial analysis for global clients, including suitability modeling, remote sensing data processing, and spatial data analysis.",
+            "Developed an evapotranspiration (ET) model in Google Earth Engine (GEE) by integrating satellite-derived inputs."
         ]
     }
 ]

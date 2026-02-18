@@ -23,14 +23,14 @@ export function Hero() {
                     className="flex-1 space-y-6"
                 >
                     <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-                        Building{" "}
+                        Engineering a{" "}
                         <span className="bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent">
-                            Digital Landscapes
+                            Sustainable Future
                         </span>
                     </h1>
                     <p className="mx-auto max-w-[700px] text-lg text-muted-foreground md:mx-0 md:text-xl">
-                        Senior Frontend Architect specializing in scalable web applications, geospatial
-                        visualization, and performance optimization.
+                        Environmental Engineer and Geospatial Specialist developing innovative solutions
+                        for climate risk, hydrological modeling, and hazard assessment.
                     </p>
                     <div className="flex flex-col gap-4 sm:flex-row sm:justify-center md:justify-start">
                         <Button size="lg" asChild>
