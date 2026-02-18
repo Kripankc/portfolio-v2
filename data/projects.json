@@ -1,0 +1,40 @@
+[
+    {
+        "id": "geospatial-memory-optimizer",
+        "title": "Geospatial Memory Optimizer",
+        "description": "High-performance framework utilizing Copy-On-Write (COW) shared memory architecture for processing large-scale raster datasets.",
+        "technologies": [
+            "Python",
+            "Rust",
+            "GDAL",
+            "Multiprocessing"
+        ],
+        "imageUrl": "/projects/memory-opt.png",
+        "githubUrl": "https://github.com/kripankc/geospatial-memory-optimizer",
+        "featured": true
+    },
+    {
+        "id": "precipitation-modeling",
+        "title": "Precipitation Modeling Optimization",
+        "description": "Novel directional DEM smoothing and stratified kriging framework reducing estimation errors by 45.4%.",
+        "technologies": [
+            "R",
+            "Geostatistics",
+            "Kriging"
+        ],
+        "imageUrl": "/projects/precip-model.png",
+        "featured": true
+    },
+    {
+        "id": "raster-voronoi",
+        "title": "Raster Voronoi Solver",
+        "description": "Algorithm for generating Voronoi diagrams directly on raster grids for environmental modeling.",
+        "technologies": [
+            "C++",
+            "Python",
+            "Numpy"
+        ],
+        "imageUrl": "/projects/voronoi.png",
+        "featured": false
+    }
+]

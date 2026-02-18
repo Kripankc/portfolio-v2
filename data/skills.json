@@ -1,0 +1,31 @@
+{
+    "frontend": [
+        "React",
+        "Next.js",
+        "TypeScript",
+        "TailwindCSS",
+        "Framer Motion",
+        "Three.js"
+    ],
+    "geospatial": [
+        "GDAL",
+        "QGIS",
+        "Mapbox GL JS",
+        "Leaflet",
+        "PostGIS"
+    ],
+    "backend": [
+        "Node.js",
+        "Python (Django/FastAPI)",
+        "PostgreSQL",
+        "Redis"
+    ],
+    "tools": [
+        "Git",
+        "Docker",
+        "Vercel",
+        "GitHub Actions",
+        "Jest",
+        "Playwright"
+    ]
+}

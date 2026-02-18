@@ -1,0 +1,24 @@
+[
+    {
+        "id": "exp-1",
+        "role": "Senior Frontend Developer",
+        "company": "Tech Corp Inc.",
+        "period": "2023 - Present",
+        "description": [
+            "Led the migration of legacy SPAs to Next.js 14, improving Core Web Vitals by 40%.",
+            "Architected a reusable component library consumed by 5+ internal teams.",
+            "Mentored junior developers and established code review standards."
+        ]
+    },
+    {
+        "id": "exp-2",
+        "role": "Geospatial Engineer",
+        "company": "GeoData Solutions",
+        "period": "2020 - 2023",
+        "description": [
+            "Developed high-performance map rendering engine using WebGL and Rust.",
+            "Optimized raster processing pipelines for satellite imagery analysis.",
+            "Implemented OGC standards compliant API services."
+        ]
+    }
+]
