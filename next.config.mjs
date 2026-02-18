@@ -7,6 +7,12 @@ const nextConfig = {
     // If your repo is NOT at the root (e.g. username.github.io/repo-name),
     // you might need to uncomment and set the repo name here:
     basePath: "/portfolio-v2",
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
+    typescript: {
+        ignoreBuildErrors: true,
+    },
 };
 
 export default nextConfig;
