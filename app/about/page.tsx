@@ -1,7 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import skills from "@/data/skills.json";
 import experience from "@/data/experience.json";
-import { Badge as BadgeIcon } from "lucide-react"; // Renamed to avoid conflict if needed, or just remove. Actually I'll just remove it as I don't use it.
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

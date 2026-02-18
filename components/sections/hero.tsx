@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Download } from "lucide-react";
 import Link from "next/link";
 
-const CanvasScene = dynamic(() => import("@/components/ui/canvas-scene"), {
-    ssr: false,
-    loading: () => <div className="h-full w-full bg-transparent" />,
-});
+// const CanvasScene = dynamic(() => import("@/components/ui/canvas-scene"), {
+//     ssr: false,
+//     loading: () => <div className="h-full w-full bg-transparent" />,
+// });
 
 export function Hero() {
     return (
@@ -53,9 +53,13 @@ export function Hero() {
                     className="flex-1 items-center justify-center hidden md:flex h-[500px] w-full"
                 >
                     <div className="relative h-full w-full">
-                        <Suspense fallback={null}>
-                            <CanvasScene />
-                        </Suspense>
+                        {/* 3D Scene Disabled to debug build */}
+                        {/* <Suspense fallback={null}>
+              <CanvasScene />
+            </Suspense> */}
+                        <div className="flex items-center justify-center h-full text-muted-foreground bg-muted/20 rounded-xl">
+                            3D Scene Placeholder
+                        </div>
                     </div>
                 </motion.div>
             </div>
