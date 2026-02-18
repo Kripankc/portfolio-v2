@@ -24,13 +24,13 @@ export function Hero() {
                 >
                     <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
                         Engineering a{" "}
-                        <span className="bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent">
+                        <span className="bg-gradient-to-r from-blue-400 to-green-600 bg-clip-text text-transparent">
                             Sustainable Future
                         </span>
                     </h1>
                     <p className="mx-auto max-w-[700px] text-lg text-muted-foreground md:mx-0 md:text-xl">
-                        Environmental Engineer and Geospatial Specialist developing innovative solutions
-                        for climate risk, hydrological modeling, and hazard assessment.
+                        Environmental Engineer at **Munich Re**. Specializing in GIS, Remote Sensing,
+                        and Python for climate risk, hydrological modeling, and hazard assessment.
                     </p>
                     <div className="flex flex-col gap-4 sm:flex-row sm:justify-center md:justify-start">
                         <Button size="lg" asChild>

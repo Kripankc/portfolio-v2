@@ -2,12 +2,23 @@
     {
         "id": "areal-precipitation-refinement",
         "title": "Areal Precipitation Refinement",
-        "description": "Developed a novel directional DEM smoothing and stratified kriging framework, reducing precipitation estimation errors by 45.4% for hydrological applications.",
+        "description": "Developed a novel directional DEM smoothing and stratified kriging framework, reducing precipitation estimation errors by 45.4%. Quantified impact on a calibrated HBV model for flood forecasting.",
         "technologies": [
             "Python",
             "Kriging",
             "DEM",
-            "Hydrology"
+            "Hydrology",
+            "HBV Model"
+        ],
+        "libraries": [
+            "scipy",
+            "numpy",
+            "pandas",
+            "matplotlib"
+        ],
+        "topics": [
+            "Hydrology",
+            "Modeling"
         ],
         "imageUrl": "/projects/precip.png",
         "githubUrl": "https://github.com/kripankc/precipitation-modeling",
@@ -16,11 +27,20 @@
     {
         "id": "flood-risk-reduction-roshaupten",
         "title": "Flood Risk Reduction - Roßhaupten",
-        "description": "Utilized high-resolution geospatial parameters in GIS and hydrological models for micro-level flood risk assessment and culvert design recommendations.",
+        "description": "Micro-level flood risk assessment for the Rosshaupten Municipality. Utilized high-resolution geospatial parameters to model hydrological response and design culvert/retention mitigation strategies.",
         "technologies": [
             "GIS",
             "HEC-RAS",
-            "Hydrological Modeling"
+            "Hydrological Modeling",
+            "Culvert Design"
+        ],
+        "libraries": [
+            "ArcGIS Pro",
+            "HEC-RAS"
+        ],
+        "topics": [
+            "Risk Assessment",
+            "Engineering"
         ],
         "imageUrl": "/projects/flood.png",
         "githubUrl": "https://github.com/kripankc/flood-risk-reduction",
@@ -29,11 +49,21 @@
     {
         "id": "snowmelt-runoff-modeling",
         "title": "Snowmelt Runoff Modeling",
-        "description": "Developed a physically-based snowmelt runoff model for the Inn River Basin by integrating satellite-derived radiation data using Google Earth Engine and Python.",
+        "description": "Integrated satellite-derived radiation data into a physically-based snowmelt runoff model for the Inn River Basin, Bavaria. Enhanced model accuracy for efficient water management.",
         "technologies": [
             "Python",
             "Google Earth Engine",
-            "Remote Sensing"
+            "Remote Sensing",
+            "Hydrology"
+        ],
+        "libraries": [
+            "earthengine-api",
+            "geopandas",
+            "rasterio"
+        ],
+        "topics": [
+            "Remote Sensing",
+            "Cryosphere"
         ],
         "imageUrl": "/projects/snowmelt.png",
         "githubUrl": "https://github.com/kripankc/snowmelt-model",
@@ -42,27 +72,59 @@
     {
         "id": "glacier-dynamics-nepal",
         "title": "Glacier Dynamics Analysis - Nepal",
-        "description": "Investigated long-term glacier dynamics (1990-2020) in the Marshyangdi river basin using multi-temporal satellite imagery and machine learning.",
+        "description": "Investigated long-term glacier dynamics (1990-2020) in the Marshyangdi river basin. Applied Machine Learning to multi-temporal Landsat and Sentinel-2 imagery for ice differentiation.",
         "technologies": [
             "Machine Learning",
             "Remote Sensing",
-            "Satellite Imagery"
+            "Climate Change"
+        ],
+        "libraries": [
+            "scikit-learn",
+            "tensorflow",
+            "rasterio"
+        ],
+        "topics": [
+            "Climate Change",
+            "Remote Sensing"
         ],
         "imageUrl": "/projects/glacier.png",
-        "githubUrl": "https://github.com/kripankc/glacier-dynamics",
         "featured": false
     },
     {
         "id": "lulc-change-detection",
-        "title": "Post-Disaster LULC Change Detection",
-        "description": "Analyzed and quantified Land Use/Land Cover change patterns in Panauti and Banepa Valley following the 2015 Nepal earthquake.",
+        "title": "Post-Disaster LULC Detection",
+        "description": "Quantified Land Use/Land Cover change patterns in Panauti and Banepa Valley following the 2015 Nepal earthquake using Change Detection techniques and ground validation.",
         "technologies": [
             "Remote Sensing",
             "GIS",
             "Change Detection"
         ],
+        "libraries": [
+            "ArcGIS",
+            "QGIS",
+            "Remote Sensing"
+        ],
+        "topics": [
+            "Risk Assessment",
+            "GIS"
+        ],
         "imageUrl": "/projects/lulc.png",
-        "githubUrl": "https://github.com/kripankc/lulc-detection",
+        "featured": false
+    },
+    {
+        "id": "anaerobic-digestor",
+        "title": "Lab Scale Anaerobic Digestor",
+        "description": "Design and fabrication of a lab-scale anaerobic digestor to process food waste from Kathmandu University Canteen, converting waste to energy.",
+        "technologies": [
+            "Environmental Engineering",
+            "Waste Management",
+            "Bioenergy"
+        ],
+        "libraries": [],
+        "topics": [
+            "Waste Management"
+        ],
+        "imageUrl": "/projects/digestor.png",
         "featured": false
     }
 ]

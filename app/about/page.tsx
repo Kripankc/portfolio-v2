@@ -3,6 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/com
 import skills from "@/data/skills.json";
 import experience from "@/data/experience.json";
 import { Metadata } from "next";
+import InteractiveSkills from "@/components/sections/interactive-skills";
 
 export const metadata: Metadata = {
     title: "About | Kripan K.C.",
@@ -60,49 +61,11 @@ export default function AboutPage() {
 
             {/* Skills Section */}
             <section className="space-y-8">
-                <h2 className="text-3xl font-bold tracking-tight">Technical Skills</h2>
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                    <Card>
-                        <CardHeader><CardTitle>Geospatial</CardTitle></CardHeader>
-                        <CardContent className="flex flex-wrap gap-2">
-                            {skills.geospatial.map(skill => (
-                                <span key={skill} className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80">
-                                    {skill}
-                                </span>
-                            ))}
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardHeader><CardTitle>Environmental Modeling</CardTitle></CardHeader>
-                        <CardContent className="flex flex-wrap gap-2">
-                            {skills.modeling.map(skill => (
-                                <span key={skill} className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80">
-                                    {skill}
-                                </span>
-                            ))}
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardHeader><CardTitle>Data & Analysis</CardTitle></CardHeader>
-                        <CardContent className="flex flex-wrap gap-2">
-                            {skills.analysis.map(skill => (
-                                <span key={skill} className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80">
-                                    {skill}
-                                </span>
-                            ))}
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardHeader><CardTitle>Development</CardTitle></CardHeader>
-                        <CardContent className="flex flex-wrap gap-2">
-                            {skills.frontend.map(skill => (
-                                <span key={skill} className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80">
-                                    {skill}
-                                </span>
-                            ))}
-                        </CardContent>
-                    </Card>
+                <div className="space-y-2">
+                    <h2 className="text-3xl font-bold tracking-tight">Technical Expertise</h2>
+                    <p className="text-muted-foreground">Click a category to explore specific tools, libraries, and related projects.</p>
                 </div>
+                <InteractiveSkills />
             </section>
 
             {/* Experience Timeline */}

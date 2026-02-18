@@ -1,29 +1,146 @@
 {
-    "frontend": [
-        "React",
-        "Next.js",
-        "TypeScript",
-        "TailwindCSS",
-        "Framer Motion"
-    ],
-    "geospatial": [
-        "ArcGIS",
-        "QGIS",
-        "Google Earth Engine",
-        "Remote Sensing",
-        "GDAL"
-    ],
-    "modeling": [
-        "Environmental Modeling",
-        "HEC-RAS",
-        "HEC-HMS",
-        "Hydrological Modeling"
-    ],
-    "analysis": [
-        "Data Analysis",
-        "Python",
-        "API Development",
-        "Machine Learning",
-        "Statistics"
+    "categories": [
+        {
+            "id": "python",
+            "title": "Python for Geospatial & Modeling",
+            "icon": "Code2",
+            "description": "Advanced programming for hazard modeling, data automation, and risk assessment.",
+            "tools": [
+                {
+                    "name": "Geopandas",
+                    "description": "Vector data manipulation and spatial joins",
+                    "projects": [
+                        "areal-precipitation-refinement",
+                        "snowmelt-runoff-modeling"
+                    ]
+                },
+                {
+                    "name": "Rasterio",
+                    "description": "Satellite imagery processing and raster analysis",
+                    "projects": [
+                        "glacier-dynamics-nepal",
+                        "snowmelt-runoff-modeling"
+                    ]
+                },
+                {
+                    "name": "Scikit-Learn",
+                    "description": "Machine learning for glacier classification and LULC",
+                    "projects": [
+                        "glacier-dynamics-nepal"
+                    ]
+                },
+                {
+                    "name": "Xarray",
+                    "description": "N-dimensional array processing for climate datasets",
+                    "projects": [
+                        "areal-precipitation-refinement"
+                    ]
+                },
+                {
+                    "name": "Pandas/NumPy",
+                    "description": "Large-scale data processing and statistics",
+                    "projects": [
+                        "areal-precipitation-refinement",
+                        "glacier-dynamics-nepal"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "gis",
+            "title": "GIS & Remote Sensing",
+            "icon": "Globe2",
+            "description": "Specialized in spatial analysis, remote sensing retrieval, and mapping.",
+            "tools": [
+                {
+                    "name": "ArcGIS Pro",
+                    "description": "Advanced spatial analyst and hazard mapping",
+                    "projects": [
+                        "flood-risk-reduction-roshaupten",
+                        "lulc-change-detection"
+                    ]
+                },
+                {
+                    "name": "QGIS",
+                    "description": "Open-source geospatial analysis and visualization",
+                    "projects": [
+                        "lulc-change-detection"
+                    ]
+                },
+                {
+                    "name": "Google Earth Engine",
+                    "description": "Cloud-based remote sensing data retrieval",
+                    "projects": [
+                        "snowmelt-runoff-modeling",
+                        "exp-upwork-gis"
+                    ]
+                },
+                {
+                    "name": "GDAL",
+                    "description": "Geospatial Data Abstraction Library for data conversion",
+                    "projects": [
+                        "snowmelt-runoff-modeling"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "api",
+            "title": "API Development",
+            "icon": "Server",
+            "description": "Operationalizing algorithms into production-level platforms.",
+            "tools": [
+                {
+                    "name": "FastAPI",
+                    "description": "High-performance API framework for risk assessment",
+                    "projects": [
+                        "exp-munich-re"
+                    ]
+                },
+                {
+                    "name": "Flask",
+                    "description": "Lightweight web services for spatial models",
+                    "projects": [
+                        "exp-munich-re"
+                    ]
+                },
+                {
+                    "name": "RESTful Design",
+                    "description": "Building scalable interfaces for geospatial data",
+                    "projects": [
+                        "exp-munich-re"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "modeling",
+            "title": "Environmental Modeling",
+            "icon": "Waves",
+            "description": "Hydrological and hydraulic modeling for risk mitigation.",
+            "tools": [
+                {
+                    "name": "HEC-RAS",
+                    "description": "1D/2D hydraulic modeling for flood risk",
+                    "projects": [
+                        "flood-risk-reduction-roshaupten"
+                    ]
+                },
+                {
+                    "name": "HEC-HMS",
+                    "description": "Hydrological modeling for rainfall-runoff",
+                    "projects": [
+                        "areal-precipitation-refinement"
+                    ]
+                },
+                {
+                    "name": "HBV Model",
+                    "description": "Conceptual rainfall-runoff modeling",
+                    "projects": [
+                        "areal-precipitation-refinement"
+                    ]
+                }
+            ]
+        }
     ]
 }
