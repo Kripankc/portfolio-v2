@@ -1,0 +1,9 @@
+@echo off
+set "PATH=%~dp0.node_runtime\node-v20.11.0-win-x64;%PATH%"
+echo checking node version...
+node -v
+echo Installing dependencies (this may take a while if first run)...
+call npm install
+echo Starting development server...
+call npm run dev
+pause
