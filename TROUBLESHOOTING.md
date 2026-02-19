@@ -40,4 +40,16 @@ Restored the necessary icon imports (`Menu`, `X`, `ChevronRight`, `ExternalLink`
 
 - **Verify JSON Structure:** Ensure that data files match the expected structure in the code (array vs object).
 - **Check All Imports:** When refactoring, ensure no necessary imports are removed.
-- **Clear Stale Locks:** If git commands hang or fail with lock errors, check for `.git/index.lock`.
+- **Clear Stale Locks:** If git commands hang or financial with lock errors, check for `.git/index.lock`.
+
+## 5. Slow Dependency Installation
+
+**Issue:**
+`npm install` takes an exceptionally long time to complete.
+
+**Cause:**
+The project is located within `OneDrive - Munich Re`. Cloud sync services heavily degrade performance for `node_modules` due to thousands of small files being synced.
+
+**Resolution:**
+- Be patient during installation.
+- Recommended: Move project outside of OneDrive for development (e.g., `C:\Dev\portfolio-next`).
