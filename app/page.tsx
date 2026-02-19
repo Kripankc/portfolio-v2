@@ -54,10 +54,10 @@ const Portfolio = () => {
         color: designColors[idx % designColors.length]
     }));
 
-    const skillCategories = skillsData.map(cat => ({
-        name: cat.category,
+    const skillCategories = skillsData.categories.map(cat => ({
+        name: cat.title,
         icon: cat.icon,
-        skills: cat.items,
+        skills: cat.tools.map(tool => tool.name),
         color: "text-blue-400"
     }));
 
@@ -286,8 +286,8 @@ const Portfolio = () => {
                                     key={cat.name}
                                     onClick={() => setExpandedSkill(expandedSkill === cat.name ? null : cat.name)}
                                     className={`bg-white p-6 rounded-xl border transition-all cursor-pointer ${expandedSkill === cat.name
-                                            ? 'border-blue-500 shadow-lg ring-2 ring-blue-500/20'
-                                            : 'border-gray-200 hover:border-blue-300 hover:shadow-md'
+                                        ? 'border-blue-500 shadow-lg ring-2 ring-blue-500/20'
+                                        : 'border-gray-200 hover:border-blue-300 hover:shadow-md'
                                         }`}
                                 >
                                     <div className={`${cat.color} mb-4`}>
@@ -487,8 +487,8 @@ const Portfolio = () => {
                                     key={cat}
                                     onClick={() => setProjectFilter(cat)}
                                     className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${projectFilter === cat
-                                            ? 'bg-blue-600 text-white'
-                                            : 'bg-white text-gray-600 hover:bg-gray-100'
+                                        ? 'bg-blue-600 text-white'
+                                        : 'bg-white text-gray-600 hover:bg-gray-100'
                                         }`}
                                 >
                                     {cat}
