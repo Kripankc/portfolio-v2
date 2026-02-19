@@ -91,15 +91,8 @@
             "description": "Operationalizing algorithms into production-level platforms.",
             "tools": [
                 {
-                    "name": "FastAPI",
-                    "description": "High-performance API framework for risk assessment",
-                    "projects": [
-                        "exp-munich-re"
-                    ]
-                },
-                {
-                    "name": "Flask",
-                    "description": "Lightweight web services for spatial models",
+                    "name": "Tkinter Bootstrap",
+                    "description": "Desktop application framework for risk assessment",
                     "projects": [
                         "exp-munich-re"
                     ]
