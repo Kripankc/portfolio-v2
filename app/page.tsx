@@ -1,43 +1,9 @@
 "use client";
-
 import React, { useState, useEffect } from 'react';
 import {
-    Menu,
-    X,
-    Github,
-    Linkedin,
-    Mail,
-    ChevronRight,
-    ChevronLeft,
-    ChevronDown,
-    Map,
-    Globe,
-    Layers,
-    Database,
-    Download,
-    Code,
-    Terminal,
-    Cpu,
-    Leaf,
-    Droplets,
-    Wind,
-    Activity,
-    ArrowUpRight,
-    Zap,
-    Box,
-    GitBranch,
-    Server,
-    GraduationCap,
-    Award,
-    HeartHandshake,
-    ExternalLink,
-    Search,
-    Filter,
-    Briefcase,
-    BookOpen,
-    Star,
-    MapPin,
-    Calendar
+    Menu, X, Github, Linkedin, Mail, ChevronRight, ChevronLeft, ChevronDown, Map, Globe,
+    Layers, Download, Code, Terminal, Cpu, Leaf, Droplets, Activity, ArrowUpRight,
+    Server, GraduationCap, Award, ExternalLink, Briefcase, MapPin, Calendar
 } from 'lucide-react';
 
 import projectsData from "@/data/projects.json";
@@ -67,23 +33,13 @@ const iconMap: Record<string, any> = {
     Activity: <Activity size={20} />
 };
 
-const getLink = (project: any) => {
-    return {
-        github: project.githubUrl,
-        demo: project.demoUrl || project.githubUrl
-    };
-};
-
 const Portfolio = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [activeSection, setActiveSection] = useState('home');
     const [scrolled, setScrolled] = useState(false);
-    const [currentView, setCurrentView] = useState('home'); // 'home' | 'projects' | 'about'
-
-    // State for interactive sections
-    const [activeProject, setActiveProject] = useState(0);
+    const [currentView, setCurrentView] = useState('home');
     const [expandedSkill, setExpandedSkill] = useState<string | null>(null);
-    const [showSkillProjects, setShowSkillProjects] = useState<string | null>(null);
+    const [showSkillProjects, setShowSkillProjects] = useState(false);
     const [projectFilter, setProjectFilter] = useState('All');
 
     // Data Preparation
@@ -91,248 +47,167 @@ const Portfolio = () => {
         id: idx,
         featured: p.featured,
         title: p.title,
-        category: p.topics[0] || "Engineering",
-        description: p.description,
-        stat: p.featured ? "High Impact" : "Research",
-        tech: [...p.technologies, ...p.libraries].slice(0, 4),
-        color: designColors[idx % designColors.length],
-        links: { github: p.githubUrl, demo: p.githubUrl }
+        desc: p.description,
+        tags: p.technologies,
+        category: "Web", // Default or map from tags
+        links: { github: p.githubUrl, demo: p.githubUrl }, // Using githubUrl as demo fallback
+        color: designColors[idx % designColors.length]
     }));
 
-    const featuredProjects = allProjects.filter(p => p.featured);
+    const skillCategories = skillsData.map(cat => ({
+        name: cat.category,
+        icon: cat.icon,
+        skills: cat.items,
+        color: "text-blue-400"
+    }));
 
-    const skillCategories = skillsData.categories.map((cat, idx) => {
-        let colorClass = 'bg-slate-100 text-slate-700';
-        if (idx === 0) colorClass = 'bg-emerald-100 text-emerald-700';
-        else if (idx === 1) colorClass = 'bg-blue-100 text-blue-700';
-        else if (idx === 2) colorClass = 'bg-purple-100 text-purple-700';
-        else if (idx === 3) colorClass = 'bg-amber-100 text-amber-700';
-
-        return {
-            id: cat.id,
-            name: cat.title,
-            icon: iconMap[cat.icon] || <Code size={20} />,
-            color: colorClass,
-            skills: cat.tools.map(tool => ({
-                name: tool.name,
-                desc: tool.description,
-                places: ["Projects"],
-                projectList: tool.projects.map(pid => {
-                    const p = projectsData.find(proj => proj.id === pid);
-                    return p ? p.title : pid;
-                })
-            }))
-        };
-    });
-
-    const timeline = [
-        ...experienceData.map(e => ({
-            type: 'work',
-            year: e.period,
-            title: e.role,
-            org: e.company,
-            desc: e.description[0],
-            tech: [] as string[]
-        })),
-        ...educationData.map(e => ({
-            type: 'edu',
-            year: e.year,
-            title: e.degree,
-            org: e.school,
-            desc: e.focus,
-            tech: [] as string[]
-        }))
-    ];
+    const timeline = experienceData.map((job, idx) => ({
+        year: job.period,
+        role: job.role,
+        company: job.company,
+        desc: job.description
+    }));
 
     const bio = {
-        title: "Engineering with Purpose",
-        description: "I am an Environmental Engineer passionate about leveraging technology to solve critical ecological challenges. Specializing in Geospatial Solutions, Remote Sensing, and Hydrological Modeling to build safe, data-driven environments.",
+        name: "Kripank",
+        role: "DevOps & Cloud Engineer",
+        tagline: "Building scalable infrastructure and automated solutions.",
+        about: "I am a passionate DevOps Engineer with a strong background in environmental engineering. Wait, what? Yes! I transitioned from analyzing environmental data to optimizing cloud infrastructure. I love automating tedious tasks and building robust CI/CD pipelines.",
+        location: "Munich, Germany",
+        email: "contact@example.com",
+        github: "https://github.com/Kripankc",
+        linkedin: "https://linkedin.com/in/kripank"
     };
 
-    // Handle scroll effects
+    // Scroll Handler
     useEffect(() => {
         const handleScroll = () => {
             setScrolled(window.scrollY > 50);
-            if (currentView === 'home') {
-                const sections = ['home', 'career-summary', 'featured', 'contact'];
-                const current = sections.find(section => {
-                    const element = document.getElementById(section);
-                    if (element) {
-                        const rect = element.getBoundingClientRect();
-                        return rect.top >= -100 && rect.top < 300;
-                    }
-                    return false;
-                });
-                if (current) setActiveSection(current);
-            }
+            const sections = ['home', 'about', 'projects', 'contact'];
+            const current = sections.find(section => {
+                const element = document.getElementById(section);
+                if (element) {
+                    const rect = element.getBoundingClientRect();
+                    return rect.top >= 0 && rect.top <= 300;
+                }
+                return false;
+            });
+            if (current) setActiveSection(current);
         };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [currentView]);
+    }, []);
 
-    const navigateTo = (view: string, sectionId: string | null = null) => {
-        setIsMenuOpen(false);
-        setCurrentView(view);
-        window.scrollTo(0, 0);
+    const Navbar = () => (
+        <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled || currentView !== 'home' ? 'bg-white/95 backdrop-blur-md shadow-sm py-4' : 'bg-transparent py-6'}`}>
+            <div className="container mx-auto px-6 flex justify-between items-center">
+                <button onClick={() => setCurrentView('home')} className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-500">
+                    K.
+                </button>
 
-        if (sectionId && view === 'home') {
-            setTimeout(() => {
-                const element = document.getElementById(sectionId);
-                if (element) element.scrollIntoView({ behavior: 'smooth' });
-            }, 100);
-        }
-    };
-
-    const nextProject = () => {
-        setActiveProject((prev) => (prev + 1) % featuredProjects.length);
-    };
-
-    const prevProject = () => {
-        setActiveProject((prev) => (prev - 1 + featuredProjects.length) % featuredProjects.length);
-    };
-
-    // --- SUB-COMPONENTS ---
-
-    const Navbar = () => {
-        return (
-            <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled || currentView !== 'home' ? 'bg-white/95 backdrop-blur-md shadow-sm py-4' : 'bg-transparent py-6'}`}>
-                <div className="container mx-auto px-6 flex justify-between items-center">
-                    <div
-                        className="text-2xl font-bold tracking-tight text-slate-900 cursor-pointer"
-                        onClick={() => navigateTo('home')}
-                    >
-                        Kripan<span className="text-emerald-600">.</span>KC
-                    </div>
-
-                    <div className="hidden md:flex space-x-8">
+                {/* Desktop Menu */}
+                <div className="hidden md:flex space-x-8">
+                    {['Home', 'About', 'Projects', 'Contact'].map((item) => (
                         <button
-                            onClick={() => navigateTo('home')}
-                            className={`text-sm font-medium transition-colors hover:text-emerald-600 ${currentView === 'home' ? 'text-emerald-600' : 'text-slate-600'}`}
+                            key={item}
+                            onClick={() => {
+                                setCurrentView(item.toLowerCase());
+                                setIsMenuOpen(false);
+                            }}
+                            className={`text-sm font-medium transition-colors hover:text-blue-600 ${currentView === item.toLowerCase() ? 'text-blue-600' : 'text-gray-600'
+                                }`}
                         >
-                            Home
+                            {item}
                         </button>
-                        <button
-                            onClick={() => navigateTo('about')}
-                            className={`text-sm font-medium transition-colors hover:text-emerald-600 ${currentView === 'about' ? 'text-emerald-600' : 'text-slate-600'}`}
-                        >
-                            About
-                        </button>
-                        <button
-                            onClick={() => navigateTo('projects')}
-                            className={`text-sm font-medium transition-colors hover:text-emerald-600 ${currentView === 'projects' ? 'text-emerald-600' : 'text-slate-600'}`}
-                        >
-                            Projects
-                        </button>
-                        <button
-                            onClick={() => navigateTo('home', 'contact')}
-                            className="text-sm font-medium text-slate-600 hover:text-emerald-600 transition-colors"
-                        >
-                            Contact
-                        </button>
-                    </div>
-
-                    <button className="md:hidden p-2 text-slate-600" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                        {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                    </button>
+                    ))}
                 </div>
 
+                {/* Mobile Menu Button */}
+                <button className="md:hidden text-gray-600" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                    {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+
+                {/* Mobile Menu Overlay */}
                 {isMenuOpen && (
-                    <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg border-t border-slate-100">
-                        <div className="flex flex-col py-4">
-                            {['Home', 'About', 'Projects'].map(item => (
-                                <button
-                                    key={item}
-                                    onClick={() => navigateTo(item.toLowerCase())}
-                                    className="px-6 py-3 text-left text-slate-600 hover:bg-slate-50 hover:text-emerald-600"
-                                >
-                                    {item}
-                                </button>
-                            ))}
-                        </div>
+                    <div className="absolute top-full left-0 w-full bg-white shadow-lg py-4 px-6 md:hidden flex flex-col space-y-4">
+                        {['Home', 'About', 'Projects', 'Contact'].map((item) => (
+                            <button
+                                key={item}
+                                onClick={() => {
+                                    setCurrentView(item.toLowerCase());
+                                    setIsMenuOpen(false);
+                                }}
+                                className="text-left text-gray-600 hover:text-blue-600 py-2"
+                            >
+                                {item}
+                            </button>
+                        ))}
                     </div>
                 )}
-            </nav>
-        );
-    };
-
-    // --- VIEWS ---
+            </div>
+        </nav>
+    );
 
     const HomeView = () => {
         return (
             <>
                 {/* Hero Section */}
                 <section id="home" className="min-h-screen flex items-center pt-20 relative overflow-hidden">
-                    <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
-                        <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                            <path d="M0,50 Q25,40 50,50 T100,50" fill="none" stroke="currentColor" strokeWidth="0.5" />
-                            <path d="M0,60 Q25,50 50,60 T100,60" fill="none" stroke="currentColor" strokeWidth="0.5" />
-                            <path d="M0,40 Q25,30 50,40 T100,40" fill="none" stroke="currentColor" strokeWidth="0.5" />
-                        </svg>
-                    </div>
-                    <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-[800px] h-[800px] bg-emerald-100/50 rounded-full blur-3xl -z-10"></div>
-
-                    <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center">
-                        <div className="space-y-8">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-sm font-medium">
-                                <Activity size={16} className="text-emerald-600" />
-                                <span>Analyzing Risk &bull; Modeling Resilience</span>
+                    <div className="absolute inset-0 bg-blue-50/50 -z-10" />
+                    <div className="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+                        <div className="space-y-6">
+                            <div className="inline-flex items-center space-x-2 bg-blue-100/50 px-3 py-1 rounded-full text-blue-600 text-sm font-medium">
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                                </span>
+                                <span>Available for Hire</span>
                             </div>
-
-                            <h1 className="text-5xl md:text-7xl font-bold leading-[1.1] text-slate-900 tracking-tight">
-                                Deciphering <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600">
-                                    Environmental Risk
-                                </span> <br />
-                                with Geospatial Intelligence.
+                            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 leading-tight">
+                                Building <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-500">Digital</span>
+                                <br /> Experiences
                             </h1>
-
-                            <p className="text-xl text-slate-600 max-w-lg leading-relaxed border-l-4 border-emerald-500 pl-6">
-                                Specialized in Remote Sensing, Hydrological Modeling, and Hazard Assessment to build safer, data-driven environments.
+                            <p className="text-xl text-gray-600 max-w-lg">
+                                {bio.tagline}
                             </p>
-
-                            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                                <button onClick={() => navigateTo('projects')} className="px-8 py-4 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800 transition-all hover:shadow-lg flex items-center justify-center gap-2">
-                                    View Projects <ChevronRight size={18} />
+                            <div className="flex space-x-4 pt-4">
+                                <button onClick={() => setCurrentView('projects')} className="group flex items-center space-x-2 bg-gray-900 text-white px-6 py-3 rounded-full hover:bg-blue-600 transition-colors">
+                                    <span>View Work</span>
+                                    <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
                                 </button>
-                                <button className="px-8 py-4 bg-white border border-slate-200 text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
-                                    Download CV <Download size={18} />
+                                <button className="flex items-center space-x-2 border border-gray-200 px-6 py-3 rounded-full hover:border-blue-200 hover:bg-blue-50 transition-colors text-gray-700">
+                                    <Download size={18} />
+                                    <span>Download CV</span>
                                 </button>
                             </div>
                         </div>
 
-                        <div className="relative hidden lg:block h-[600px] w-full">
-                            <div className="absolute inset-0 bg-slate-900 rounded-3xl overflow-hidden shadow-2xl">
-                                <div className="absolute inset-0 opacity-40 bg-[url('https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg')] bg-cover bg-center"></div>
-
-                                <div className="absolute top-1/4 left-10 p-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white w-48 animate-bounce-slow">
-                                    <div className="flex items-center gap-3 mb-2">
-                                        <div className="p-2 bg-emerald-500 rounded-lg"><Droplets size={16} /></div>
-                                        <div className="text-xs font-bold uppercase tracking-wider text-emerald-300">Hydrology</div>
+                        {/* Hero Visual */}
+                        <div className="relative h-[500px] hidden md:block">
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-tr from-blue-100 to-cyan-100 rounded-full blur-3xl opacity-50" />
+                            <div className="relative z-10 grid grid-cols-2 gap-4 animate-float">
+                                <div className="space-y-4 mt-12">
+                                    <div className="bg-white p-6 rounded-2xl shadow-xl shadow-blue-100/50 transform hover:-translate-y-2 transition-transform duration-300">
+                                        <Code className="text-blue-500 mb-4" size={32} />
+                                        <h3 className="font-bold text-gray-800">Clean Code</h3>
+                                        <p className="text-sm text-gray-500">Maintainable & Scalable</p>
                                     </div>
-                                    <div className="text-2xl font-bold">124mm</div>
-                                    <div className="text-xs text-slate-300">Precipitation Spike Detected</div>
-                                </div>
-
-                                <div className="absolute bottom-1/3 right-10 p-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white w-56 animate-pulse-slow">
-                                    <div className="flex items-center gap-3 mb-2">
-                                        <div className="p-2 bg-orange-500 rounded-lg"><Activity size={16} /></div>
-                                        <div className="text-xs font-bold uppercase tracking-wider text-orange-300">Hazard Alert</div>
-                                    </div>
-                                    <div className="h-2 w-full bg-white/20 rounded-full mt-2 overflow-hidden">
-                                        <div className="h-full w-[70%] bg-orange-500"></div>
-                                    </div>
-                                    <div className="flex justify-between text-xs text-slate-300 mt-2">
-                                        <span>Risk Level</span>
-                                        <span>High</span>
+                                    <div className="bg-white p-6 rounded-2xl shadow-xl shadow-blue-100/50 transform hover:-translate-y-2 transition-transform duration-300">
+                                        <Globe className="text-cyan-500 mb-4" size={32} />
+                                        <h3 className="font-bold text-gray-800">Global Scale</h3>
+                                        <p className="text-sm text-gray-500">Distributed Systems</p>
                                     </div>
                                 </div>
-
-                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                                    <div className="w-32 h-32 rounded-full border-4 border-emerald-500/30 flex items-center justify-center relative">
-                                        <div className="w-24 h-24 rounded-full bg-emerald-500/20 animate-ping"></div>
-                                        <div className="absolute inset-0 flex items-center justify-center text-emerald-400">
-                                            <Map size={32} />
-                                        </div>
+                                <div className="space-y-4">
+                                    <div className="bg-white p-6 rounded-2xl shadow-xl shadow-blue-100/50 transform hover:-translate-y-2 transition-transform duration-300">
+                                        <Server className="text-indigo-500 mb-4" size={32} />
+                                        <h3 className="font-bold text-gray-800">Backend</h3>
+                                        <p className="text-sm text-gray-500">Robust Architecture</p>
+                                    </div>
+                                    <div className="bg-white p-6 rounded-2xl shadow-xl shadow-blue-100/50 transform hover:-translate-y-2 transition-transform duration-300">
+                                        <Activity className="text-emerald-500 mb-4" size={32} />
+                                        <h3 className="font-bold text-gray-800">Performance</h3>
+                                        <p className="text-sm text-gray-500">High Availability</p>
                                     </div>
                                 </div>
                             </div>
@@ -340,131 +215,191 @@ const Portfolio = () => {
                     </div>
                 </section>
 
-                {/* Career Summary Section */}
-                <section id="career-summary" className="py-24 bg-white">
+                {/* Career Summary */}
+                <section className="py-20 bg-white">
                     <div className="container mx-auto px-6">
-                        <div className="max-w-4xl mx-auto text-center mb-16">
-                            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-6 leading-tight">
-                                From <span className="text-emerald-600">Munich to the World</span>, building digital twins of our changing environment.
-                            </h2>
-                            <div className="w-24 h-1 bg-emerald-500 mx-auto rounded-full mb-8"></div>
-                        </div>
-
-                        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                            {/* Current Role */}
-                            {timeline.find(t => t.type === 'work') && (
-                                <div className="flex flex-col items-center text-center p-6 hover:bg-slate-50 rounded-2xl transition-colors">
-                                    <Briefcase size={32} className="text-slate-400 mb-4" />
-                                    <div className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Current Focus</div>
-                                    <div className="font-bold text-lg text-slate-900">{timeline.find(t => t.type === 'work')?.title}</div>
-                                    <div className="text-slate-600">{timeline.find(t => t.type === 'work')?.org}</div>
+                        <div className="flex flex-col md:flex-row gap-12 items-center">
+                            <div className="md:w-1/2">
+                                <h2 className="text-3xl font-bold mb-6">Career Timeline</h2>
+                                <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
+                                    {timeline.slice(0, 3).map((job, idx) => (
+                                        <div key={idx} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+                                            <div className="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-300 group-[.is-active]:bg-blue-500 text-slate-500 group-[.is-active]:text-emerald-50 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
+                                                <Briefcase size={16} />
+                                            </div>
+                                            <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white p-4 rounded border border-slate-200 shadow">
+                                                <div className="flex items-center justify-between space-x-2 mb-1">
+                                                    <div className="font-bold text-slate-900">{job.role}</div>
+                                                    <time className="font-caveat font-medium text-blue-500">{job.year}</time>
+                                                </div>
+                                                <div className="text-slate-500 text-sm">{job.company}</div>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                            )}
-
-                            {/* Education */}
-                            {timeline.find(t => t.type === 'edu') && (
-                                <div className="flex flex-col items-center text-center p-6 hover:bg-slate-50 rounded-2xl transition-colors border-x border-slate-100">
-                                    <GraduationCap size={32} className="text-slate-400 mb-4" />
-                                    <div className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Alma Mater</div>
-                                    <div className="font-bold text-lg text-slate-900">{timeline.find(t => t.type === 'edu')?.title}</div>
-                                    <div className="text-slate-600">{timeline.find(t => t.type === 'edu')?.org}</div>
+                                <button onClick={() => setCurrentView('about')} className="mt-8 text-blue-600 font-medium hover:underline flex items-center">
+                                    View Full History <ArrowUpRight size={16} className="ml-1" />
+                                </button>
+                            </div>
+                            <div className="md:w-1/2 bg-gray-50 rounded-2xl p-8 border border-gray-100">
+                                <h2 className="text-3xl font-bold mb-6">Education</h2>
+                                <div className="space-y-6">
+                                    {educationData.map((edu, idx) => (
+                                        <div key={idx} className="flex gap-4 items-start">
+                                            <div className="bg-white p-3 rounded-lg shadow-sm text-blue-500">
+                                                <GraduationCap size={24} />
+                                            </div>
+                                            <div>
+                                                <h3 className="font-bold text-gray-900">{edu.degree}</h3>
+                                                <p className="text-gray-600">{edu.institution}</p>
+                                                <p className="text-sm text-gray-500 mt-1">{edu.period}</p>
+                                                {edu.honors && <div className="mt-2 flex items-center text-sm text-amber-600 bg-amber-50 px-3 py-1 rounded-full w-fit">
+                                                    <Award size={14} className="mr-1" />
+                                                    {edu.honors}
+                                                </div>}
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                            )}
-
-                            {/* Honors/Key Distinction - using generic or last item if no honor explicit in json */}
-                            <div className="flex flex-col items-center text-center p-6 bg-gradient-to-b from-amber-50 to-white rounded-2xl border border-amber-100 shadow-sm relative overflow-hidden group">
-                                <div className="absolute top-0 right-0 w-16 h-16 bg-amber-400/20 rounded-full blur-xl -translate-y-1/2 translate-x-1/2"></div>
-                                <Award size={32} className="text-amber-500 mb-4 drop-shadow-sm" />
-                                <div className="text-xs font-bold uppercase tracking-widest text-amber-600/70 mb-1">Impact</div>
-                                <div className="font-bold text-lg text-slate-900"><span className="text-amber-500">{allProjects.length}+</span> Projects</div>
-                                <div className="text-slate-600 text-sm mt-1">Delivered across multiple domains</div>
                             </div>
                         </div>
+                    </div>
+                </section>
 
-                        <div className="text-center mt-12">
-                            <button
-                                onClick={() => navigateTo('about')}
-                                className="text-slate-500 hover:text-emerald-600 font-medium inline-flex items-center gap-2 border-b border-transparent hover:border-emerald-600 transition-all pb-0.5"
-                            >
-                                Read Full Professional Biography <ArrowUpRight size={16} />
+                {/* Toolkit Preview */}
+                <section className="py-20 bg-gray-50">
+                    <div className="container mx-auto px-6">
+                        <div className="flex justify-between items-end mb-12">
+                            <div>
+                                <h2 className="text-4xl font-bold text-gray-900 mb-4">Technical Arsenal</h2>
+                                <p className="text-gray-600 max-w-xl">Technologies I use to build robust solutions.</p>
+                            </div>
+                            <button onClick={() => setShowSkillProjects(!showSkillProjects)} className="hidden md:flex items-center space-x-2 text-blue-600 font-medium hover:bg-blue-50 px-4 py-2 rounded-lg transition-colors">
+                                <Code size={20} />
+                                <span>{showSkillProjects ? 'Hide Details' : 'View Details'}</span>
                             </button>
                         </div>
+
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                            {skillCategories.map((cat) => (
+                                <div
+                                    key={cat.name}
+                                    onClick={() => setExpandedSkill(expandedSkill === cat.name ? null : cat.name)}
+                                    className={`bg-white p-6 rounded-xl border transition-all cursor-pointer ${expandedSkill === cat.name
+                                            ? 'border-blue-500 shadow-lg ring-2 ring-blue-500/20'
+                                            : 'border-gray-200 hover:border-blue-300 hover:shadow-md'
+                                        }`}
+                                >
+                                    <div className={`${cat.color} mb-4`}>
+                                        {iconMap[cat.icon] || <Code size={24} />}
+                                    </div>
+                                    <h3 className="font-medium text-gray-900">{cat.name}</h3>
+                                    <div className="flex justify-between items-center mt-2 text-sm text-gray-500">
+                                        <span>{cat.skills.length} skills</span>
+                                        <ChevronDown size={16} className={`transform transition-transform ${expandedSkill === cat.name ? 'rotate-180' : ''}`} />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Expanded Skill Details */}
+                        {expandedSkill && (
+                            <div className="mt-8 bg-white rounded-2xl border border-blue-100 p-8 animate-in fade-in slide-in-from-top-4">
+                                <div className="flex justify-between items-start mb-6">
+                                    <div>
+                                        <h3 className="text-2xl font-bold text-gray-900 mb-2">{expandedSkill}</h3>
+                                        <p className="text-gray-600">Key competencies and tools</p>
+                                    </div>
+                                    <button onClick={() => setExpandedSkill(null)} className="text-gray-400 hover:text-gray-600">
+                                        <X size={24} />
+                                    </button>
+                                </div>
+                                <div className="flex flex-wrap gap-3">
+                                    {skillCategories.find(c => c.name === expandedSkill)?.skills.map((skill) => (
+                                        <span key={skill} className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 font-medium">
+                                            {skill}
+                                        </span>
+                                    ))}
+                                </div>
+                                {showSkillProjects && (
+                                    <div className="mt-8 pt-8 border-t border-gray-100">
+                                        <h4 className="font-medium text-gray-900 mb-4 flex items-center">
+                                            <Layers size={18} className="mr-2 text-blue-500" />
+                                            Related Projects
+                                        </h4>
+                                        <div className="grid md:grid-cols-3 gap-6">
+                                            {allProjects.slice(0, 3).map(project => (
+                                                <div key={project.id} className="group bg-gray-50 rounded-xl p-4 hover:bg-blue-50 transition-colors cursor-pointer" onClick={() => setCurrentView('projects')}>
+                                                    <h5 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{project.title}</h5>
+                                                    <p className="text-sm text-gray-600 mt-1 line-clamp-2">{project.desc}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </section>
 
-                {/* Toolkit Section */}
-                <section className="py-24 bg-slate-50">
+                {/* Featured Projects Carousel */}
+                <section className="py-20 bg-white overflow-hidden">
                     <div className="container mx-auto px-6">
-                        <div className="mb-12">
-                            <h3 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-3">
-                                <Code size={24} className="text-slate-400" /> Technical Toolkit
-                            </h3>
-                            <p className="text-slate-600 max-w-2xl mb-8">
-                                A concise overview of my technical proficiencies. Click on any skill to reveal experience and projects.
-                            </p>
+                        <div className="flex justify-between items-end mb-12">
+                            <div>
+                                <div className="inline-flex items-center space-x-2 bg-blue-50 px-3 py-1 rounded-full text-blue-600 text-sm font-medium mb-4">
+                                    <span>Selected Works</span>
+                                </div>
+                                <h2 className="text-4xl font-bold text-gray-900">Featured Projects</h2>
+                            </div>
+                            <div className="flex space-x-2">
+                                <button className="p-2 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors text-gray-600">
+                                    <ChevronLeft size={24} />
+                                </button>
+                                <button className="p-2 rounded-full border border-gray-200 hover:bg-gray-50 transition-colors text-gray-600">
+                                    <ChevronRight size={24} />
+                                </button>
+                            </div>
                         </div>
 
-                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            {skillCategories.map((cat) => (
-                                <div key={cat.id} className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                                    <div className="flex items-center gap-3 mb-6">
-                                        <div className={`p-2 rounded-lg ${cat.color}`}>{cat.icon}</div>
-                                        <h4 className="font-bold text-slate-900 text-sm">{cat.name}</h4>
-                                    </div>
-
-                                    <div className="space-y-3">
-                                        {cat.skills.map((skill) => (
-                                            <div
-                                                key={skill.name}
-                                                className={`p-3 rounded-xl border transition-all duration-300 ${expandedSkill === skill.name
-                                                    ? 'bg-slate-50 border-emerald-500 shadow-md scale-105 relative z-10'
-                                                    : 'bg-white border-slate-100 hover:border-emerald-300 cursor-pointer'
-                                                    }`}
-                                                onClick={() => setExpandedSkill(expandedSkill === skill.name ? null : skill.name)}
-                                            >
-                                                <div className="flex justify-between items-center">
-                                                    <span className="font-medium text-sm text-slate-800">{skill.name}</span>
-                                                    <ChevronDown
-                                                        size={14}
-                                                        className={`text-slate-400 transition-transform duration-300 ${expandedSkill === skill.name ? 'rotate-180' : ''}`}
-                                                    />
-                                                </div>
-
-                                                {expandedSkill === skill.name && (
-                                                    <div className="mt-3 pt-3 border-t border-slate-200 text-xs animate-in fade-in slide-in-from-top-1">
-                                                        <p className="text-slate-600 mb-3 leading-relaxed">{skill.desc}</p>
-
-                                                        {/* Projects Toggle */}
-                                                        {skill.projectList.length > 0 && (
-                                                            <div>
-                                                                <button
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        setShowSkillProjects(showSkillProjects === skill.name ? null : skill.name);
-                                                                    }}
-                                                                    className="flex items-center gap-1 text-emerald-600 font-bold hover:text-emerald-700 transition-colors"
-                                                                >
-                                                                    <Layers size={10} />
-                                                                    <span>Projects</span>
-                                                                    <ChevronDown size={10} className={`transition-transform ${showSkillProjects === skill.name ? 'rotate-180' : ''}`} />
-                                                                </button>
-
-                                                                {showSkillProjects === skill.name && (
-                                                                    <ul className="mt-2 space-y-1 pl-2 border-l border-emerald-200">
-                                                                        {skill.projectList.map(p => (
-                                                                            <li key={p} className="text-slate-500 flex items-center gap-2">
-                                                                                <div className="w-1 h-1 bg-emerald-400 rounded-full"></div>
-                                                                                {p}
-                                                                            </li>
-                                                                        ))}
-                                                                    </ul>
-                                                                )}
-                                                            </div>
-                                                        )}
+                        <div className="flex space-x-8 overflow-x-auto pb-8 snap-x hide-scrollbar">
+                            {allProjects.filter(p => p.featured).map((project) => (
+                                <div key={project.id} className="min-w-[300px] md:min-w-[400px] snap-center">
+                                    <div className={`h-full bg-gradient-to-br ${project.color} p-1 rounded-2xl`}>
+                                        <div className="bg-white h-full rounded-xl p-8 flex flex-col justify-between hover:translate-y-[-4px] transition-transform duration-300">
+                                            <div>
+                                                <div className="flex justify-between items-start mb-6">
+                                                    <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase">
+                                                        {project.category}
+                                                    </span>
+                                                    <div className="flex space-x-2">
+                                                        <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-gray-600 transition-colors">
+                                                            <Github size={20} />
+                                                        </a>
+                                                        <a href={project.links.demo} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-600 transition-colors">
+                                                            <ExternalLink size={20} />
+                                                        </a>
                                                     </div>
-                                                )}
+                                                </div>
+                                                <h3 className="text-2xl font-bold text-gray-900 mb-3">{project.title}</h3>
+                                                <p className="text-gray-600 mb-6 leading-relaxed">
+                                                    {project.desc}
+                                                </p>
                                             </div>
-                                        ))}
+                                            <div>
+                                                <div className="flex flex-wrap gap-2 mb-6">
+                                                    {project.tags.slice(0, 3).map(tag => (
+                                                        <span key={tag} className="text-xs font-medium text-gray-500 bg-gray-50 px-2 py-1 rounded">
+                                                            {tag}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                                <button onClick={() => setCurrentView('projects')} className="w-full py-3 rounded-lg border border-gray-200 text-gray-700 font-medium hover:bg-gray-50 transition-colors flex items-center justify-center group">
+                                                    <span>View Case Study</span>
+                                                    <ArrowUpRight size={16} className="ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
@@ -472,164 +407,20 @@ const Portfolio = () => {
                     </div>
                 </section>
 
-                {/* Featured Projects Carousel */}
-                <section id="featured" className="py-24 bg-slate-900 text-white overflow-hidden relative">
-                    <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-5 pointer-events-none"></div>
-                    <div className="container mx-auto px-6 relative z-10">
-                        <div className="mb-12 text-center">
-                            <h2 className="text-3xl font-bold mb-4">Featured Projects</h2>
-                            <p className="text-slate-400">An interactive showcase of select works.</p>
-                        </div>
-
-                        {featuredProjects.length > 0 ? (
-                            <div className="h-[500px] flex items-center justify-center relative perspective-1000 mb-12">
-                                {/* Controls */}
-                                <button
-                                    onClick={prevProject}
-                                    className="absolute left-4 z-50 p-3 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 transition-all text-white border border-white/10 hover:scale-110 hidden md:block"
-                                >
-                                    <ChevronLeft size={24} />
-                                </button>
-                                <button
-                                    onClick={nextProject}
-                                    className="absolute right-4 z-50 p-3 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 transition-all text-white border border-white/10 hover:scale-110 hidden md:block"
-                                >
-                                    <ChevronRight size={24} />
-                                </button>
-
-                                {/* Carousel Items */}
-                                <div className="relative w-full max-w-4xl h-full flex items-center justify-center">
-                                    {featuredProjects.map((project, index) => {
-                                        let offset = index - activeProject;
-                                        if (offset < -1) offset += featuredProjects.length;
-                                        if (offset > 1) offset -= featuredProjects.length;
-
-                                        const isActive = index === activeProject;
-                                        const isPrev = index === (activeProject - 1 + featuredProjects.length) % featuredProjects.length;
-                                        const isNext = index === (activeProject + 1) % featuredProjects.length;
-
-                                        let className = "transition-all duration-700 ease-[cubic-bezier(0.25,0.8,0.25,1)] absolute w-full max-w-xl";
-                                        let style: React.CSSProperties = {};
-
-                                        if (isActive) {
-                                            style = {
-                                                transform: 'translateX(0) scale(1) rotateY(0deg)',
-                                                zIndex: 20,
-                                                opacity: 1,
-                                            };
-                                        } else if (isPrev) {
-                                            style = {
-                                                transform: 'translateX(-60%) scale(0.85) rotateY(15deg) perspective(1000px)',
-                                                zIndex: 10,
-                                                opacity: 0.5,
-                                                filter: 'blur(2px)'
-                                            };
-                                        } else if (isNext) {
-                                            style = {
-                                                transform: 'translateX(60%) scale(0.85) rotateY(-15deg) perspective(1000px)',
-                                                zIndex: 10,
-                                                opacity: 0.5,
-                                                filter: 'blur(2px)'
-                                            };
-                                        } else {
-                                            style = {
-                                                transform: 'translateZ(-200px) scale(0)',
-                                                zIndex: 0,
-                                                opacity: 0
-                                            };
-                                        }
-
-                                        return (
-                                            <div
-                                                key={index}
-                                                className={className}
-                                                style={style}
-                                                onClick={() => setActiveProject(index)}
-                                            >
-                                                <div className={`rounded-3xl bg-gradient-to-br ${project.color} p-1 shadow-2xl cursor-pointer`}>
-                                                    <div className="rounded-[20px] bg-slate-900/90 backdrop-blur-md p-8 h-[400px] flex flex-col relative overflow-hidden">
-                                                        <div className="absolute top-0 right-0 p-12 opacity-10 pointer-events-none">
-                                                            <Activity size={120} />
-                                                        </div>
-
-                                                        <div className="flex-grow">
-                                                            <div className="flex justify-between items-start mb-6">
-                                                                <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 border border-emerald-500/30 px-2 py-1 rounded">
-                                                                    {project.category}
-                                                                </span>
-                                                                <div className="flex gap-1">
-                                                                    <div className="w-2 h-2 rounded-full bg-red-500/50"></div>
-                                                                    <div className="w-2 h-2 rounded-full bg-yellow-500/50"></div>
-                                                                    <div className="w-2 h-2 rounded-full bg-green-500/50"></div>
-                                                                </div>
-                                                            </div>
-
-                                                            <h3 className="text-3xl font-bold text-white mb-4 line-clamp-2">{project.title}</h3>
-                                                            <p className="text-slate-300 leading-relaxed mb-6 line-clamp-3">
-                                                                {project.description}
-                                                            </p>
-
-                                                            <div className="flex flex-wrap gap-2 mb-8">
-                                                                {project.tech.map(t => (
-                                                                    <span key={t} className="px-2 py-1 bg-white/5 rounded text-[10px] text-slate-400 border border-white/5">
-                                                                        {t}
-                                                                    </span>
-                                                                ))}
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="mt-auto border-t border-white/10 pt-4 flex items-center justify-between">
-                                                            <div>
-                                                                <div className="text-2xl font-bold text-white">{project.stat}</div>
-                                                                <div className="text-[10px] text-slate-500 uppercase tracking-widest">Impact Metric</div>
-                                                            </div>
-                                                            <button className="p-3 bg-white text-slate-900 rounded-full hover:scale-110 transition-transform">
-                                                                <ArrowUpRight size={20} />
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="text-base text-center text-slate-400">
-                                No featured projects to display.
-                            </div>
-                        )}
-
-                        <div className="text-center">
-                            <button
-                                onClick={() => navigateTo('projects')}
-                                className="px-8 py-4 bg-emerald-600 text-white rounded-full font-bold hover:bg-emerald-500 transition-all hover:scale-105 shadow-lg shadow-emerald-500/20 inline-flex items-center gap-2"
-                            >
-                                View Project Archive <ArrowUpRight size={18} />
-                            </button>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Contact Section */}
-                <section id="contact" className="py-24 bg-white">
-                    <div className="container mx-auto px-6">
-                        <div className="max-w-4xl mx-auto bg-slate-100 rounded-3xl p-8 md:p-16 text-center">
-                            <h2 className="text-3xl font-bold text-slate-900 mb-6">Ready to collaborate?</h2>
-                            <p className="text-slate-600 text-lg mb-10 max-w-2xl mx-auto">
-                                Open to opportunities in environmental modeling, geospatial data analysis, and climate tech.
-                            </p>
-
-                            <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
-                                <a href="mailto:kripan.kc@outlook.com" className="px-8 py-4 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors w-full sm:w-auto">
-                                    Get in Touch
-                                </a>
-                                <div className="flex items-center gap-6 text-slate-400">
-                                    <a href="https://github.com/kripankc" target="_blank" className="hover:text-emerald-600 transition-colors"><Github size={24} /></a>
-                                    <a href="https://linkedin.com/in/kripankc" target="_blank" className="hover:text-emerald-600 transition-colors"><Linkedin size={24} /></a>
-                                    <a href="mailto:kripan.kc@outlook.com" className="hover:text-emerald-600 transition-colors"><Mail size={24} /></a>
-                                </div>
-                            </div>
+                {/* Contact CTA */}
+                <section id="contact" className="py-24 bg-gray-900 text-white relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-1/2 h-full bg-blue-600/10 blur-3xl rounded-full translate-x-1/2" />
+                    <div className="container mx-auto px-6 relative z-10 text-center">
+                        <h2 className="text-4xl md:text-5xl font-bold mb-8">Ready to start a project?</h2>
+                        <div className="flex flex-col md:flex-row justify-center gap-6">
+                            <a href={`mailto:${bio.email}`} className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full font-bold text-lg transition-all hover:scale-105 flex items-center justify-center">
+                                <Mail className="mr-2" />
+                                Send an Email
+                            </a>
+                            <a href={bio.linkedin} target="_blank" rel="noreferrer" className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-8 py-4 rounded-full font-bold text-lg transition-all flex items-center justify-center">
+                                <Linkedin className="mr-2" />
+                                Connect on LinkedIn
+                            </a>
                         </div>
                     </div>
                 </section>
@@ -637,96 +428,67 @@ const Portfolio = () => {
         );
     };
 
-    const AboutView = () => {
-        return (
-            <div className="min-h-screen bg-slate-50 pt-32 pb-20">
-                <div className="container mx-auto px-6">
-                    <div className="grid lg:grid-cols-12 gap-12">
-                        {/* Left Sidebar - Bio & Intro */}
-                        <div className="lg:col-span-4 lg:sticky lg:top-32 h-fit">
-                            <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
-                                <div className="w-20 h-20 bg-slate-900 rounded-2xl flex items-center justify-center text-white text-2xl font-bold mb-6">KC</div>
-                                <h1 className="text-3xl font-bold text-slate-900 mb-2">Kripan K.C.</h1>
-                                <p className="text-emerald-600 font-medium mb-6">Environmental Engineer & Geospatial Developer</p>
-                                <p className="text-slate-600 leading-relaxed text-sm mb-8">
-                                    {bio.description}
-                                </p>
-
-                                <div className="flex flex-col gap-3">
-                                    <div className="flex items-center gap-3 text-sm text-slate-600">
-                                        <MapPin size={16} /> Munich, Germany
-                                    </div>
-                                    <div className="flex items-center gap-3 text-sm text-slate-600">
-                                        <Mail size={16} /> kripan.kc@outlook.com
-                                    </div>
-                                </div>
-                            </div>
+    const AboutView = () => (
+        <div className="pt-24 min-h-screen bg-white">
+            <div className="container mx-auto px-6 max-w-4xl">
+                <h1 className="text-4xl font-bold text-gray-900 mb-8">About Me</h1>
+                <div className="prose prose-lg text-gray-600 mb-12">
+                    <p className="text-xl leading-relaxed mb-6">{bio.about}</p>
+                    <div className="grid md:grid-cols-2 gap-8 not-prose mt-12">
+                        <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                            <h3 className="font-bold text-gray-900 mb-4 flex items-center">
+                                <MapPin className="text-blue-500 mr-2" /> Location
+                            </h3>
+                            <p>{bio.location}</p>
                         </div>
-
-                        {/* Right Content - Timeline */}
-                        <div className="lg:col-span-8">
-                            <h2 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-3">
-                                <Calendar className="text-slate-400" /> Career Timeline
-                            </h2>
-
-                            <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent">
-                                {timeline.map((item, index) => (
-                                    <div key={index} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                                        {/* Icon */}
-                                        <div className="flex items-center justify-center w-10 h-10 rounded-full border border-white bg-slate-50 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
-                                            {item.type === 'work' && <Briefcase size={16} className="text-blue-600" />}
-                                            {item.type === 'edu' && <GraduationCap size={16} className="text-emerald-600" />}
-                                        </div>
-
-                                        {/* Content Card */}
-                                        <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-6 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                                            <div className="flex flex-col sm:flex-row justify-between items-start mb-2">
-                                                <time className="font-mono text-xs text-slate-400 mb-1 sm:mb-0">{item.year}</time>
-                                                <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${item.type === 'work' ? 'bg-blue-50 text-blue-600' : 'bg-emerald-50 text-emerald-600'}`}>
-                                                    {item.type === 'work' ? 'Experience' : 'Education'}
-                                                </span>
-                                            </div>
-                                            <h3 className="font-bold text-slate-900 text-lg mb-1">{item.title}</h3>
-                                            <div className="text-sm font-medium text-slate-500 mb-3">{item.org}</div>
-                                            <p className="text-sm text-slate-600 leading-relaxed mb-4">{item.desc}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                        <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                            <h3 className="font-bold text-gray-900 mb-4 flex items-center">
+                                <Mail className="text-blue-500 mr-2" /> Contact
+                            </h3>
+                            <p>{bio.email}</p>
                         </div>
                     </div>
                 </div>
+
+                <h2 className="text-2xl font-bold text-gray-900 mb-8">Experience</h2>
+                <div className="space-y-12">
+                    {timeline.map((job, idx) => (
+                        <div key={idx} className="flex gap-6">
+                            <div className="flex flex-col items-center">
+                                <div className="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                                    <Briefcase size={20} />
+                                </div>
+                                {idx !== timeline.length - 1 && <div className="w-0.5 bg-gray-200 flex-1 my-2" />}
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-bold text-gray-900">{job.role}</h3>
+                                <div className="text-blue-600 font-medium mb-2">{job.company} | {job.year}</div>
+                                <p className="text-gray-600 leading-relaxed">{job.desc}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
-        );
-    };
+        </div>
+    );
 
     const ProjectsView = () => {
-        const categories = ['All', ...Array.from(new Set(allProjects.map(p => p.category)))];
-        const filteredProjects = projectFilter === 'All'
-            ? allProjects
-            : allProjects.filter(p => p.category === projectFilter);
-
+        const categories = ['All', 'Web', 'Data', 'Cloud']; // Example categories
         return (
-            <div className="min-h-screen bg-slate-50 pt-32 pb-20">
+            <div className="pt-24 min-h-screen bg-gray-50">
                 <div className="container mx-auto px-6">
-                    <div className="max-w-2xl mb-12">
-                        <div className="text-emerald-600 font-bold uppercase tracking-wider text-sm mb-2">Portfolio Archive</div>
-                        <h1 className="text-4xl font-bold text-slate-900 mb-6">All Projects</h1>
-                        <p className="text-slate-600 text-lg">
-                            A comprehensive list of my engineering projects, codebases, and experiments.
-                        </p>
-                    </div>
+                    <div className="max-w-4xl mx-auto mb-16 text-center">
+                        <h1 className="text-4xl font-bold text-gray-900 mb-6">Project Archive</h1>
+                        <p className="text-xl text-gray-600 mb-8">A collection of experiments, products, and open source contributions.</p>
 
-                    {/* Controls */}
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex justify-center flex-wrap gap-2">
                             {categories.map(cat => (
                                 <button
                                     key={cat}
                                     onClick={() => setProjectFilter(cat)}
                                     className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${projectFilter === cat
-                                        ? 'bg-slate-900 text-white shadow-lg'
-                                        : 'bg-white text-slate-600 border border-slate-200 hover:border-emerald-300'
+                                            ? 'bg-blue-600 text-white'
+                                            : 'bg-white text-gray-600 hover:bg-gray-100'
                                         }`}
                                 >
                                     {cat}
@@ -735,33 +497,26 @@ const Portfolio = () => {
                         </div>
                     </div>
 
-                    {/* Project Grid */}
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {filteredProjects.map((project) => (
-                            <div key={project.id} className="bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden group">
-                                <div className={`h-2 w-full bg-gradient-to-r ${project.color}`}></div>
-                                <div className="p-6 flex flex-col flex-grow">
-                                    <div className="flex justify-between items-start mb-4">
-                                        <span className="text-[10px] uppercase font-bold text-slate-400 border border-slate-100 px-2 py-1 rounded bg-slate-50">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+                        {allProjects.map((project) => (
+                            <div key={project.id} className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow group">
+                                <div className={`h-2 bg-gradient-to-r ${project.color}`} />
+                                <div className="p-8">
+                                    <div className="flex justify-between items-start mb-6">
+                                        <div className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
                                             {project.category}
-                                        </span>
-                                        <div className="flex gap-2">
-                                            {project.links.github && <a href={project.links.github} target="_blank" className="text-slate-400 hover:text-slate-900"><Github size={16} /></a>}
-                                            {project.links.demo && <a href={project.links.demo} target="_blank" className="text-slate-400 hover:text-emerald-600"><ExternalLink size={16} /></a>}
+                                        </div>
+                                        <div className="flex space-x-3 text-gray-400">
+                                            <a href={project.links.github} className="hover:text-gray-900 transition-colors"><Github size={20} /></a>
+                                            <a href={project.links.demo} className="hover:text-blue-600 transition-colors"><ExternalLink size={20} /></a>
                                         </div>
                                     </div>
-
-                                    <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-600 transition-colors">
-                                        {project.title}
-                                    </h3>
-                                    <p className="text-slate-600 text-sm leading-relaxed mb-6 flex-grow">
-                                        {project.description}
-                                    </p>
-
-                                    <div className="flex flex-wrap gap-2 mt-auto">
-                                        {project.tech.map(t => (
-                                            <span key={t} className="px-2 py-1 bg-slate-50 text-slate-600 text-xs rounded border border-slate-100">
-                                                {t}
+                                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">{project.title}</h3>
+                                    <p className="text-gray-600 mb-6 line-clamp-3">{project.desc}</p>
+                                    <div className="flex flex-wrap gap-2">
+                                        {project.tags.slice(0, 4).map(tag => (
+                                            <span key={tag} className="text-xs font-medium text-gray-500 bg-gray-50 px-2 py-1 rounded border border-gray-100">
+                                                {tag}
                                             </span>
                                         ))}
                                     </div>
@@ -775,16 +530,22 @@ const Portfolio = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-emerald-200 selection:text-emerald-900">
+        <div className="min-h-screen bg-gray-50 font-sans text-gray-900 selection:bg-blue-100 selection:text-blue-900">
             <Navbar />
-            {currentView === 'home' && <HomeView />}
-            {currentView === 'about' && <AboutView />}
-            {currentView === 'projects' && <ProjectsView />}
-
-            {/* Footer */}
-            <footer className="bg-white py-12 border-t border-slate-100">
-                <div className="container mx-auto px-6 text-center text-slate-400 text-sm">
-                    © {new Date().getFullYear()} Kripan K.C. Environmental Engineering & Design.
+            <main>
+                {currentView === 'home' && <HomeView />}
+                {currentView === 'about' && <AboutView />}
+                {currentView === 'projects' && <ProjectsView />}
+                {currentView === 'contact' && <div className="pt-20"><HomeView /></div>}
+            </main>
+            <footer className="bg-white border-t border-gray-100 py-12">
+                <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-gray-600 text-sm">
+                    <p>&copy; {new Date().getFullYear()} Kripank. All rights reserved.</p>
+                    <div className="flex space-x-6 mt-4 md:mt-0">
+                        <a href={bio.github} className="hover:text-blue-600 transition-colors">GitHub</a>
+                        <a href={bio.linkedin} className="hover:text-blue-600 transition-colors">LinkedIn</a>
+                        <a href={`mailto:${bio.email}`} className="hover:text-blue-600 transition-colors">Email</a>
+                    </div>
                 </div>
             </footer>
         </div>
