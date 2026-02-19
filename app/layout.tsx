@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Header } from "@/components/ui/header";
-import { Footer } from "@/components/ui/footer";
 import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -37,15 +35,13 @@ export default function RootLayout({
             >
                 <ThemeProvider
                     attribute="class"
-                    defaultTheme="system"
-                    enableSystem
+                    defaultTheme="light"
+                    enableSystem={false}
                     disableTransitionOnChange
                 >
-                    <div className="relative flex min-h-screen flex-col">
-                        <main className="flex-1">
-                            {children}
-                        </main>
-                    </div>
+                    <main className="min-h-screen flex flex-col">
+                        {children}
+                    </main>
                 </ThemeProvider>
             </body>
         </html>
