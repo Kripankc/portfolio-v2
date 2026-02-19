@@ -1,11 +1,14 @@
 [
     {
-        "degree": "M.Sc. in Environment Engineering",
-        "school": "Technical University of Munich (TUM)",
-        "year": "2024 - Present",
-        "focus": "Hydrology & Water Resources Management"
+        "degree": "M.Sc. in Environmental Engineering",
+        "institution": "Technical University of Munich (TUM)",
+        "period": "2024 - Present",
+        "honors": "Focus: Hydrology & Water Resources"
     },
     {
         "degree": "B.Tech in Environmental Engineering",
-        "school": "Kathmandu University, Nepal",
-        "year": "2019 - 2023",
+        "institution": "Kathmandu University, Nepal",
+        "period": "2019 - 2023",
+        "honors": "First Class with Distinction"
+    }
+]
