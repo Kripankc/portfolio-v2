@@ -1,5 +1,132 @@
 [
     {
+        "id": "global-territorial-buffer-engine",
+        "title": "Global Territorial Buffer Engine",
+        "description": "Production pipeline generating seamless, non-overlapping offshore territorial zones for ~200 sovereign territories. Replaced O(N²) vector polygon intersection with O(N) Euclidean Distance Transform for conflict resolution. Zero-crash 8-hour run on Databricks via shared-memory parallelism and disk-based checkpointing.",
+        "technologies": [
+            "Python",
+            "Geospatial Engineering",
+            "Big Data",
+            "Databricks"
+        ],
+        "libraries": [
+            "geopandas",
+            "shapely",
+            "rasterio",
+            "scipy",
+            "numpy",
+            "multiprocessing"
+        ],
+        "topics": [
+            "Algorithm Engineering",
+            "Geospatial"
+        ],
+        "imageUrl": "/projects/buffer-world.png",
+        "githubUrl": "https://github.com/Kripankc/geospatial-portfolio/tree/main/buffer-world",
+        "featured": true
+    },
+    {
+        "id": "batch-api-enrichment-application",
+        "title": "Batch Geospatial API Enrichment Application",
+        "description": "Desktop GUI application (.exe) for batch-processing insurance portfolios through 4 internal APIs. Refactored from geocoding-only to full pipeline: geocoding, location info, risk zone enrichment, rate computation. Threaded concurrency, cooperative cancellation, dynamic SSL handling, PyInstaller packaging.",
+        "technologies": [
+            "Python",
+            "API Integration",
+            "GUI Development",
+            "Software Engineering"
+        ],
+        "libraries": [
+            "tkinter",
+            "requests",
+            "pandas",
+            "threading",
+            "PyInstaller",
+            "PyYAML"
+        ],
+        "topics": [
+            "Software Engineering",
+            "API Development"
+        ],
+        "imageUrl": "/projects/angel-api.png",
+        "githubUrl": "https://github.com/Kripankc/geospatial-portfolio/tree/main/angel-api-tool",
+        "featured": true
+    },
+    {
+        "id": "sfd-mfd-municipality-enrichment",
+        "title": "Cross-Lingual Municipality Enrichment: SFD/MFD Classification",
+        "description": "Waterfall entity resolution pipeline linking Eurostat census dwelling data to GfK administrative boundaries across 9 European countries. Solved cross-lingual name matching (Greek transliteration, bilingual splits, spatial composite keys) — achieving 95–100% match rates per country.",
+        "technologies": [
+            "Python",
+            "Entity Resolution",
+            "Geospatial",
+            "Data Engineering"
+        ],
+        "libraries": [
+            "geopandas",
+            "pandas",
+            "unicodedata",
+            "scipy",
+            "rasterio"
+        ],
+        "topics": [
+            "Data Engineering",
+            "Geospatial"
+        ],
+        "imageUrl": "/projects/sfd-mfd.png",
+        "githubUrl": "https://github.com/Kripankc/geospatial-portfolio/tree/main/sfd-mfd-enrichment",
+        "featured": true
+    },
+    {
+        "id": "us-coastal-proximity-toolbox",
+        "title": "US Coastal Proximity Analysis & ArcGIS Pro Toolbox",
+        "description": "Novel 'Magnet Method' deriving a high-resolution coastal boundary directly from postal code geometries — avoiding km-level systematic errors from reference coastlines. Identifies postal codes within 25 miles of the US Atlantic and Gulf coastline. Packaged as a reusable ArcGIS Pro Python Toolbox (.pyt).",
+        "technologies": [
+            "Python",
+            "GIS",
+            "Geospatial Engineering",
+            "ArcGIS Pro"
+        ],
+        "libraries": [
+            "geopandas",
+            "shapely",
+            "arcpy",
+            "pyproj",
+            "pandas"
+        ],
+        "topics": [
+            "Geospatial",
+            "Risk Assessment"
+        ],
+        "imageUrl": "/projects/coastal.png",
+        "githubUrl": "https://github.com/Kripankc/geospatial-portfolio/tree/main/coastal-proximity",
+        "featured": false
+    },
+    {
+        "id": "india-building-osm-validation",
+        "title": "India Building Data Validation: OSM Quality Assessment",
+        "description": "National-scale pipeline assessing accuracy of OpenStreetMap building:levels data for India. Acquisition via Overpass API (regional partitioning), urbanisation stratification with JRC GHS-SMOD, and Google Street View ground-truth validation. Outcomes inform whether crowdsourced data is viable for insurance exposure modelling.",
+        "technologies": [
+            "Python",
+            "Remote Sensing",
+            "Data Validation",
+            "Geospatial"
+        ],
+        "libraries": [
+            "geopandas",
+            "rasterio",
+            "requests",
+            "pandas",
+            "openpyxl"
+        ],
+        "topics": [
+            "Remote Sensing",
+            "Data Engineering"
+        ],
+        "imageUrl": "/projects/india-buildings.png",
+        "githubUrl": "https://github.com/Kripankc/geospatial-portfolio/tree/main/india-building-validation",
+        "featured": false
+    },
+    {
         "id": "areal-precipitation-refinement",
         "title": "Improvement of Areal Precipitation for Rainfall-Runoff Modeling using Modified Topographic Information",
         "description": "Developed a novel directional DEM smoothing and stratified kriging framework, reducing precipitation estimation errors by 45.4%. Quantified impact on a calibrated HBV model for flood forecasting.",
