@@ -2,12 +2,13 @@
     {
         "id": "global-territorial-buffer-engine",
         "title": "Global Territorial Buffer Engine",
-        "description": "Production pipeline generating seamless, non-overlapping offshore territorial zones for ~200 sovereign territories. Replaced O(N²) vector polygon intersection with O(N) Euclidean Distance Transform for conflict resolution. Zero-crash 8-hour run on Databricks via shared-memory parallelism and disk-based checkpointing.",
+        "description": "Production pipeline generating seamless, non-overlapping offshore territorial zones for ~200 sovereign territories. Replaced O(N²) vector polygon intersection with O(N) Euclidean Distance Transform for conflict resolution. 8-hour zero-crash run on Databricks with shared-memory parallelism.",
         "technologies": [
             "Python",
-            "Geospatial Engineering",
-            "Big Data",
-            "Databricks"
+            "GeoPandas",
+            "SciPy EDT",
+            "Databricks",
+            "Multiprocessing"
         ],
         "libraries": [
             "geopandas",
@@ -21,6 +22,8 @@
             "Algorithm Engineering",
             "Geospatial"
         ],
+        "stat": "O(N)",
+        "statLabel": "complexity vs O(N²)",
         "imageUrl": "/projects/buffer-world.png",
         "githubUrl": "https://github.com/Kripankc/geospatial-portfolio/tree/main/buffer-world",
         "featured": true
@@ -28,12 +31,13 @@
     {
         "id": "batch-api-enrichment-application",
         "title": "Batch Geospatial API Enrichment Application",
-        "description": "Desktop GUI application (.exe) for batch-processing insurance portfolios through 4 internal APIs. Refactored from geocoding-only to full pipeline: geocoding, location info, risk zone enrichment, rate computation. Threaded concurrency, cooperative cancellation, dynamic SSL handling, PyInstaller packaging.",
+        "description": "Desktop GUI app (.exe) for batch-processing insurance portfolios through 4 internal APIs. Refactored from geocoding-only to full pipeline: geocoding, location info, risk zone enrichment, rate computation. Threaded concurrency, cooperative cancellation, zero operator installation.",
         "technologies": [
             "Python",
-            "API Integration",
-            "GUI Development",
-            "Software Engineering"
+            "Tkinter",
+            "PyInstaller",
+            "SOAP/REST",
+            "Threading"
         ],
         "libraries": [
             "tkinter",
@@ -47,18 +51,20 @@
             "Software Engineering",
             "API Development"
         ],
+        "stat": "4 APIs",
+        "statLabel": "pipelines unified",
         "imageUrl": "/projects/angel-api.png",
         "githubUrl": "https://github.com/Kripankc/geospatial-portfolio/tree/main/angel-api-tool",
         "featured": true
     },
     {
         "id": "sfd-mfd-municipality-enrichment",
-        "title": "Cross-Lingual Municipality Enrichment: SFD/MFD Classification",
-        "description": "Waterfall entity resolution pipeline linking Eurostat census dwelling data to GfK administrative boundaries across 9 European countries. Solved cross-lingual name matching (Greek transliteration, bilingual splits, spatial composite keys) — achieving 95–100% match rates per country.",
+        "title": "Cross-Lingual Municipality Enrichment: SFD/MFD",
+        "description": "Waterfall entity resolution pipeline linking Eurostat census dwelling data to GfK boundaries across 9 European countries. Solved cross-lingual name matching (Greek transliteration, bilingual splits, spatial composite keys) achieving 95–100% match rates per country.",
         "technologies": [
             "Python",
-            "Entity Resolution",
-            "Geospatial",
+            "GeoPandas",
+            "NLP",
             "Data Engineering"
         ],
         "libraries": [
@@ -72,19 +78,21 @@
             "Data Engineering",
             "Geospatial"
         ],
+        "stat": "95–100%",
+        "statLabel": "match rate per country",
         "imageUrl": "/projects/sfd-mfd.png",
         "githubUrl": "https://github.com/Kripankc/geospatial-portfolio/tree/main/sfd-mfd-enrichment",
         "featured": true
     },
     {
         "id": "us-coastal-proximity-toolbox",
-        "title": "US Coastal Proximity Analysis & ArcGIS Pro Toolbox",
-        "description": "Novel 'Magnet Method' deriving a high-resolution coastal boundary directly from postal code geometries — avoiding km-level systematic errors from reference coastlines. Identifies postal codes within 25 miles of the US Atlantic and Gulf coastline. Packaged as a reusable ArcGIS Pro Python Toolbox (.pyt).",
+        "title": "US Coastal Proximity Analysis & ArcGIS Toolbox",
+        "description": "Novel 'Magnet Method' deriving a high-resolution coastal boundary directly from postal code geometries — avoiding km-level systematic distance errors from reference coastlines. Packaged as a reusable ArcGIS Pro Python Toolbox for any polygon dataset.",
         "technologies": [
             "Python",
-            "GIS",
-            "Geospatial Engineering",
-            "ArcGIS Pro"
+            "ArcGIS Pro",
+            "GeoPandas",
+            "Shapely"
         ],
         "libraries": [
             "geopandas",
@@ -97,19 +105,21 @@
             "Geospatial",
             "Risk Assessment"
         ],
+        "stat": "25 mi",
+        "statLabel": "US coastal coverage",
         "imageUrl": "/projects/coastal.png",
         "githubUrl": "https://github.com/Kripankc/geospatial-portfolio/tree/main/coastal-proximity",
         "featured": false
     },
     {
         "id": "india-building-osm-validation",
-        "title": "India Building Data Validation: OSM Quality Assessment",
-        "description": "National-scale pipeline assessing accuracy of OpenStreetMap building:levels data for India. Acquisition via Overpass API (regional partitioning), urbanisation stratification with JRC GHS-SMOD, and Google Street View ground-truth validation. Outcomes inform whether crowdsourced data is viable for insurance exposure modelling.",
+        "title": "India Building Data Validation: OSM Assessment",
+        "description": "National-scale pipeline assessing OpenStreetMap building level data accuracy for India. Overpass API acquisition, JRC GHS-SMOD urbanisation stratification, and Google Street View ground-truth validation. Determines viability for insurance exposure modelling.",
         "technologies": [
             "Python",
-            "Remote Sensing",
-            "Data Validation",
-            "Geospatial"
+            "Rasterio",
+            "Overpass API",
+            "GeoPandas"
         ],
         "libraries": [
             "geopandas",
@@ -122,14 +132,16 @@
             "Remote Sensing",
             "Data Engineering"
         ],
+        "stat": "3 bands",
+        "statLabel": "urban strata validated",
         "imageUrl": "/projects/india-buildings.png",
         "githubUrl": "https://github.com/Kripankc/geospatial-portfolio/tree/main/india-building-validation",
         "featured": false
     },
     {
         "id": "areal-precipitation-refinement",
-        "title": "Improvement of Areal Precipitation for Rainfall-Runoff Modeling using Modified Topographic Information",
-        "description": "Developed a novel directional DEM smoothing and stratified kriging framework, reducing precipitation estimation errors by 45.4%. Quantified impact on a calibrated HBV model for flood forecasting.",
+        "title": "Areal Precipitation Refinement for Rainfall-Runoff Modeling",
+        "description": "Novel directional DEM smoothing and stratified kriging framework, reducing precipitation estimation errors by 45.4%. Quantified impact on a calibrated HBV model for flood forecasting.",
         "technologies": [
             "Python",
             "Kriging",
@@ -147,19 +159,21 @@
             "Hydrology",
             "Modeling"
         ],
+        "stat": "45.4%",
+        "statLabel": "error reduction",
         "imageUrl": "/projects/precip.png",
         "githubUrl": "https://github.com/kripankc/precipitation-modeling",
         "featured": true
     },
     {
         "id": "flood-risk-reduction-roshaupten",
-        "title": "Flood Risk Reduction - Roßhaupten",
-        "description": "Micro-level flood risk assessment for the Rosshaupten Municipality. Utilized high-resolution geospatial parameters to model hydrological response and design culvert/retention mitigation strategies.",
+        "title": "Flood Risk Reduction — Roßhaupten",
+        "description": "Micro-level flood risk assessment for the Rosshaupten Municipality. High-resolution geospatial parameters to model hydrological response and design culvert/retention mitigation strategies.",
         "technologies": [
-            "GIS",
             "HEC-RAS",
-            "Hydrological Modeling",
-            "Culvert Design"
+            "ArcGIS Pro",
+            "GIS",
+            "Hydrological Modeling"
         ],
         "libraries": [
             "ArcGIS Pro",
@@ -169,18 +183,21 @@
             "Risk Assessment",
             "Engineering"
         ],
+        "stat": "HEC-RAS",
+        "statLabel": "1D/2D flood model",
         "imageUrl": "/projects/flood.png",
         "githubUrl": "https://github.com/kripankc/flood-risk-reduction",
         "featured": true
     },
     {
         "id": "glacier-dynamics-nepal",
-        "title": "Glacier Dynamics Analysis - Nepal",
-        "description": "Investigated long-term glacier dynamics (1990-2020) in the Marshyangdi river basin. Applied Machine Learning to multi-temporal Landsat and Sentinel-2 imagery for ice differentiation.",
+        "title": "Glacier Dynamics Analysis — Nepal",
+        "description": "Long-term glacier dynamics (1990–2020) in the Marshyangdi river basin. Machine Learning applied to multi-temporal Landsat and Sentinel-2 imagery for ice differentiation.",
         "technologies": [
             "Machine Learning",
-            "Remote Sensing",
-            "Climate Change"
+            "Sentinel-2",
+            "Landsat",
+            "Rasterio"
         ],
         "libraries": [
             "scikit-learn",
@@ -191,13 +208,15 @@
             "Climate Change",
             "Remote Sensing"
         ],
+        "stat": "30 yrs",
+        "statLabel": "temporal coverage",
         "imageUrl": "/projects/glacier.png",
         "featured": false
     },
     {
         "id": "snowmelt-runoff-modeling",
-        "title": "Snowmelt Runoff Modeling",
-        "description": "Integrated satellite-derived radiation data into a physically-based snowmelt runoff model for the Inn River Basin, Bavaria. Enhanced model accuracy for efficient water management.",
+        "title": "Snowmelt Runoff Modeling — Inn River Basin",
+        "description": "Satellite-derived radiation data integrated into a physically-based snowmelt runoff model for the Inn River Basin, Bavaria. Enhanced forecast accuracy for water management.",
         "technologies": [
             "Python",
             "Google Earth Engine",
@@ -213,17 +232,20 @@
             "Remote Sensing",
             "Cryosphere"
         ],
+        "stat": "GEE",
+        "statLabel": "satellite-derived inputs",
         "imageUrl": "/projects/snowmelt.png",
         "githubUrl": "https://github.com/kripankc/snowmelt-model",
         "featured": true
     },
     {
         "id": "lulc-change-detection",
-        "title": "Post-Disaster LULC Detection",
+        "title": "Post-Disaster LULC Change Detection — Nepal 2015",
         "description": "Quantified Land Use/Land Cover change patterns in Panauti and Banepa Valley following the 2015 Nepal earthquake using Change Detection techniques and ground validation.",
         "technologies": [
             "Remote Sensing",
-            "GIS",
+            "ArcGIS",
+            "QGIS",
             "Change Detection"
         ],
         "libraries": [
@@ -235,6 +257,8 @@
             "Risk Assessment",
             "GIS"
         ],
+        "stat": "Mw 7.8",
+        "statLabel": "earthquake event",
         "imageUrl": "/projects/lulc.png",
         "featured": false
     }

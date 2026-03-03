@@ -37,8 +37,26 @@ const styles = `
     0% { transform: scale(0); opacity: 1; }
     100% { transform: scale(3); opacity: 0; }
   }
+  @keyframes crosshair-rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes coord-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  @keyframes satellite-scan {
+    0% { transform: translateX(-100%) translateY(-100%); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateX(100vw) translateY(100vh); opacity: 0; }
+  }
+  @keyframes grid-pulse {
+    0%, 100% { opacity: 0.03; }
+    50% { opacity: 0.08; }
+  }
   .animate-scan {
-    animation: scan 4s linear infinite;
+    animation: scan 5s linear infinite;
   }
   .animate-fade-in-up {
     animation: fade-in-up 0.8s ease-out forwards;
@@ -56,6 +74,25 @@ const styles = `
   .animate-radar-ping {
     animation: radar-ping 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
   }
+  .animate-crosshair {
+    animation: crosshair-rotate 8s linear infinite;
+  }
+  .animate-coord-blink {
+    animation: coord-blink 2s ease-in-out infinite;
+  }
+  .animate-satellite-scan {
+    animation: satellite-scan 8s linear infinite;
+  }
+  .animate-grid-pulse {
+    animation: grid-pulse 4s ease-in-out infinite;
+  }
+
+  .satellite-grid-bg {
+    background-size: 60px 60px;
+    background-image:
+      linear-gradient(to right, rgba(52, 211, 153, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(52, 211, 153, 0.08) 1px, transparent 1px);
+  }
   
   .tech-grid-bg {
     background-size: 40px 40px;
@@ -66,7 +103,7 @@ const styles = `
 
   .topo-bg {
     background-color: #f8fafc;
-    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 2.24 5 5 2.24 5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 2.24 5 5 2.24 5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 2.24 5 5 2.24 5 5 2.24 5 5 2.24 5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2394a3b8' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 2.24 5 5 2.24 5 5 2.24 5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 2.24 5 5 2.24 5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 2.24 5 5 2.24 5 5 2.24 5 5 2.24 5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%2394a3b8' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
   }
 
   .streamline-bg {
@@ -76,6 +113,22 @@ const styles = `
   
   .scrollbar-hide::-webkit-scrollbar {
       display: none;
+  }
+
+  .hero-dark-grid {
+    background-color: #050d1a;
+    background-image:
+      linear-gradient(to right, rgba(52, 211, 153, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(52, 211, 153, 0.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .stat-card-hover {
+    transition: all 0.25s ease;
+  }
+  .stat-card-hover:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(16, 185, 129, 0.15);
   }
 `;
 
@@ -114,7 +167,7 @@ const projectColors = [
 ];
 
 const allProjects = projectsData.map((p: any, index: number) => {
-    const isRaster = p.topics?.some((t: string) => t.includes('Remote Sensing') || t.includes('Raster'));
+    const isRaster = p.topics?.some((t: string) => t.includes('Remote Sensing') || t.includes('Raster') || t.includes('Climate'));
     const isSensor = p.topics?.some((t: string) => t.includes('IoT') || t.includes('Sensor'));
 
     return {
@@ -124,12 +177,12 @@ const allProjects = projectsData.map((p: any, index: number) => {
         category: p.topics?.[0] || "Geospatial",
         type: isRaster ? "raster" : (isSensor ? "sensor" : "vector"),
         description: p.description,
-        stat: "N/A", // Placeholder
-        statLabel: "Metric",
+        stat: p.stat || "—",
+        statLabel: p.statLabel || "Key Metric",
         tech: p.technologies || [],
         color: projectColors[index % projectColors.length].color,
         bg: projectColors[index % projectColors.length].bg,
-        links: { github: p.githubUrl, demo: "#" }
+        links: { github: p.githubUrl || null, demo: null }
     };
 });
 
@@ -170,13 +223,13 @@ const skillCategories = (skillsData as any).categories.map((cat: any, index: num
 // --- SEPARATED COMPONENTS TO FIX RENDERING ISSUES ---
 
 const Navbar = ({ scrolled, currentView, navigateTo, isMenuOpen, setIsMenuOpen }: any) => (
-    <nav className={`fixed w-full z-50 transition-all duration-300 border-b ${scrolled ? 'bg-white/95 backdrop-blur-md border-slate-200 py-3' : 'bg-transparent border-transparent py-6'}`}>
+    <nav className={`fixed w-full z-50 transition-all duration-300 border-b ${scrolled ? 'bg-white/95 backdrop-blur-md border-slate-200 py-3' : 'bg-slate-950/80 backdrop-blur-sm border-emerald-500/10 py-5'}`}>
         <div className="container mx-auto px-6 flex justify-between items-center">
             <div
-                className="text-xl font-bold tracking-tight text-slate-900 cursor-pointer flex items-center gap-2"
+                className={`text-xl font-bold tracking-tight cursor-pointer flex items-center gap-2 ${scrolled ? 'text-slate-900' : 'text-white'}`}
                 onClick={() => navigateTo('home')}
             >
-                <div className="w-8 h-8 bg-slate-900 text-white flex items-center justify-center rounded-lg shadow-sm">KC</div>
+                <div className="w-8 h-8 bg-emerald-500 text-slate-900 flex items-center justify-center rounded-lg shadow-sm font-black text-sm">KC</div>
                 <span>Kripan K.C.</span>
             </div>
 
@@ -454,6 +507,15 @@ const GISDashboard = ({ projects, title }: any) => {
 
                                 {/* Right Column: Attribute Table & Links */}
                                 <div className="md:w-[350px] shrink-0 flex flex-col">
+                                    {/* Key Metric — highlighted */}
+                                    <div className="bg-slate-900 rounded-xl p-5 mb-4 text-center relative overflow-hidden">
+                                        <div className="absolute inset-0 satellite-grid-bg opacity-40 pointer-events-none"></div>
+                                        <div className="relative z-10">
+                                            <div className="text-3xl font-black text-emerald-400 mb-1">{selectedProject.stat}</div>
+                                            <div className="text-slate-400 text-xs font-mono uppercase tracking-widest">{selectedProject.statLabel}</div>
+                                        </div>
+                                    </div>
+
                                     <div className="border rounded-lg border-slate-300 overflow-hidden mb-6 bg-white shadow-sm">
                                         <div className="bg-slate-50 border-b border-slate-200 px-4 py-2 text-xs font-bold text-slate-600 uppercase tracking-wider">
                                             Feature Attributes
@@ -461,16 +523,16 @@ const GISDashboard = ({ projects, title }: any) => {
                                         <table className="w-full text-sm text-left">
                                             <tbody className="divide-y divide-slate-100">
                                                 <tr>
-                                                    <td className="px-4 py-3 border-r border-slate-100 font-mono text-xs text-slate-500 w-1/3">stat_metric</td>
-                                                    <td className="px-4 py-3 font-bold text-slate-900">{selectedProject.stat}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="px-4 py-3 border-r border-slate-100 font-mono text-xs text-slate-500 w-1/3">metric_desc</td>
-                                                    <td className="px-4 py-3 text-slate-600 text-xs">{selectedProject.statLabel}</td>
+                                                    <td className="px-4 py-3 border-r border-slate-100 font-mono text-xs text-slate-500 w-1/3">category</td>
+                                                    <td className="px-4 py-3 text-slate-600 text-xs">{selectedProject.category}</td>
                                                 </tr>
                                                 <tr>
                                                     <td className="px-4 py-3 border-r border-slate-100 font-mono text-xs text-slate-500 w-1/3">geom_type</td>
                                                     <td className="px-4 py-3 text-slate-600 text-xs capitalize">{selectedProject.type}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td className="px-4 py-3 border-r border-slate-100 font-mono text-xs text-slate-500 w-1/3">tech_count</td>
+                                                    <td className="px-4 py-3 text-slate-600 text-xs">{selectedProject.tech.length} technologies</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -565,21 +627,16 @@ const ProjectsView = () => {
                                 </div>
 
                                 {/* Right Side Stats & Actions */}
-                                <div className="md:w-48 flex flex-col justify-between border-t md:border-t-0 md:border-l border-slate-100 pt-4 md:pt-0 md:pl-6 shrink-0">
-                                    <div className="mb-4">
-                                        <div className="text-xl font-bold text-slate-900">{project.stat}</div>
-                                        <div className="text-[10px] uppercase text-slate-400 font-bold tracking-wider">{project.statLabel}</div>
+                                <div className="md:w-52 flex flex-col justify-between border-t md:border-t-0 md:border-l border-slate-100 pt-4 md:pt-0 md:pl-6 shrink-0">
+                                    <div className="mb-4 bg-slate-900 rounded-xl p-4 text-center">
+                                        <div className="text-2xl font-black text-emerald-400">{project.stat}</div>
+                                        <div className="text-[10px] uppercase text-slate-400 font-bold tracking-wider mt-1">{project.statLabel}</div>
                                     </div>
 
                                     <div className="flex flex-col gap-2">
                                         {project.links.github && (
-                                            <a href={project.links.github} className="flex items-center justify-center gap-2 px-3 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded text-sm font-medium text-slate-700 transition-colors">
-                                                <Github size={14} /> Code Repository
-                                            </a>
-                                        )}
-                                        {project.links.demo && (
-                                            <a href={project.links.demo} className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded text-sm font-medium text-blue-700 transition-colors">
-                                                <ExternalLink size={14} /> View Live
+                                            <a href={project.links.github} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 px-3 py-2 bg-slate-50 hover:bg-slate-900 hover:text-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 transition-all">
+                                                <Github size={14} /> View on GitHub
                                             </a>
                                         )}
                                     </div>
@@ -775,54 +832,93 @@ const Portfolio = () => {
                     <main className="pt-20">
                         <style>{styles}</style>
 
-                        {/* Hero Section */}
-                        <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden tech-grid-bg">
-                            <div className="absolute inset-0 pointer-events-none opacity-20">
-                                <div className="w-full h-[2px] bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)] animate-scan"></div>
+                        {/* ===== HERO SECTION — DARK SATELLITE THEME ===== */}
+                        <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden hero-dark-grid">
+
+                            {/* Satellite scan line */}
+                            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                                <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-60 shadow-[0_0_16px_rgba(52,211,153,0.8)] animate-scan"></div>
                             </div>
 
-                            <div className="container mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center justify-center gap-12 md:gap-24 text-center md:text-left">
-
-                                {/* Creative Profile Photo Slot */}
-                                <div className="relative group shrink-0 mt-8 md:mt-0">
-                                    <div className="absolute inset-0 rounded-full border border-emerald-500/30 animate-orbit w-56 h-56 md:w-80 md:h-80 -z-10 scale-110"></div>
-                                    <div className="absolute inset-0 rounded-full border border-dashed border-slate-300 animate-orbit-reverse w-56 h-56 md:w-80 md:h-80 -z-10 scale-125"></div>
-                                    <div className="w-56 h-56 md:w-80 md:h-80 rounded-full bg-slate-200 border-4 border-white shadow-2xl overflow-hidden relative flex items-center justify-center text-slate-400">
-                                        <span className="text-sm uppercase tracking-widest font-bold">Add Photo</span>
-                                    </div>
-                                    <div className="absolute -bottom-4 right-4 md:right-8 bg-white p-3 rounded-xl shadow-lg border border-slate-100 flex items-center gap-2">
-                                        <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                                        <span className="text-[10px] md:text-xs font-bold text-slate-600">System Online</span>
-                                    </div>
-                                </div>
-
-                                <div className="animate-fade-in-up max-w-2xl">
-                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider mb-6">
-                                        <Globe size={12} className="text-emerald-500" />
-                                        Geospatial Intelligence
-                                    </div>
-
-                                    <h1 className="text-5xl md:text-7xl font-bold text-slate-900 tracking-tight mb-6">
-                                        Mapping the <br />
-                                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600">
-                                            Future World
-                                        </span>
-                                    </h1>
-
-                                    <p className="text-xl text-slate-600 leading-relaxed mb-10">
-                                        I combine environmental engineering with modern software architecture to build scalable risk models and data pipelines.
-                                    </p>
-
-                                    <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                                        <button className="px-8 py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-all hover:-translate-y-1 shadow-xl shadow-slate-900/10 flex items-center justify-center gap-2">
-                                            Download CV <Download size={18} />
-                                        </button>
-                                    </div>
-                                </div>
+                            {/* Corner coordinate brackets */}
+                            <div className="absolute top-24 left-6 text-emerald-500/40 font-mono text-[10px] pointer-events-none hidden md:block">
+                                <div className="border-t border-l border-emerald-500/30 w-8 h-8 absolute top-0 left-0"></div>
+                                <span className="ml-10 mt-1 block animate-coord-blink">48.1351° N</span>
+                                <span className="ml-10 block">11.5820° E</span>
+                            </div>
+                            <div className="absolute top-24 right-6 text-emerald-500/40 font-mono text-[10px] text-right pointer-events-none hidden md:block">
+                                <div className="border-t border-r border-emerald-500/30 w-8 h-8 absolute top-0 right-0"></div>
+                                <span className="mr-10 mt-1 block">ALT: 519m</span>
+                                <span className="mr-10 block animate-coord-blink">EPSG:4326</span>
+                            </div>
+                            <div className="absolute bottom-16 left-6 text-emerald-500/40 font-mono text-[10px] pointer-events-none hidden md:block">
+                                <div className="border-b border-l border-emerald-500/30 w-8 h-8 absolute bottom-0 left-0"></div>
+                                <span className="ml-10 block">PROJ: WGS84</span>
+                            </div>
+                            <div className="absolute bottom-16 right-6 text-emerald-500/40 font-mono text-[10px] text-right pointer-events-none hidden md:block">
+                                <div className="border-b border-r border-emerald-500/30 w-8 h-8 absolute bottom-0 right-0"></div>
+                                <span className="mr-10 block animate-coord-blink">GSD: 50m</span>
                             </div>
 
-                            <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-[600px] h-[600px] opacity-5 pointer-events-none">
-                                <Globe size={600} className="text-slate-300 animate-spin-slow" style={{ animationDuration: '60s' }} />
+                            {/* Main hero content */}
+                            <div className="container mx-auto px-6 relative z-10 flex flex-col items-center text-center gap-8">
+
+                                {/* Status badge */}
+                                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-widest">
+                                    <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></div>
+                                    Geospatial Data Science · Munich Re
+                                </div>
+
+                                {/* Name */}
+                                <h1 className="text-6xl md:text-8xl font-black text-white tracking-tight leading-none">
+                                    Kripan
+                                    <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400">K.C.</span>
+                                </h1>
+
+                                {/* Tagline */}
+                                <p className="text-lg md:text-xl text-slate-400 max-w-2xl leading-relaxed">
+                                    Environmental engineer building <span className="text-emerald-400 font-semibold">spatial data pipelines</span>,
+                                    <span className="text-cyan-400 font-semibold"> global-scale algorithms</span>, and
+                                    <span className="text-teal-400 font-semibold"> geospatial tools</span> for risk modelling.
+                                </p>
+
+                                {/* Stat pills — scannable at a glance */}
+                                <div className="flex flex-wrap justify-center gap-3 mt-2">
+                                    {[
+                                        { val: '~200', label: 'territories mapped' },
+                                        { val: '5', label: 'production systems' },
+                                        { val: '9', label: 'countries linked' },
+                                        { val: '50m', label: 'raster resolution' },
+                                    ].map(s => (
+                                        <div key={s.val} className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-sm stat-card-hover">
+                                            <span className="font-black text-white">{s.val}</span>
+                                            <span className="text-slate-500 ml-1.5 text-xs">{s.label}</span>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* CTA row */}
+                                <div className="flex flex-col sm:flex-row gap-4 mt-4">
+                                    <button
+                                        onClick={() => navigateTo('projects')}
+                                        className="px-8 py-4 bg-emerald-500 text-slate-900 rounded-xl font-black hover:bg-emerald-400 transition-all hover:-translate-y-1 shadow-xl shadow-emerald-500/20 flex items-center justify-center gap-2 text-sm uppercase tracking-wider"
+                                    >
+                                        View Projects <ArrowUpRight size={16} />
+                                    </button>
+                                    <a
+                                        href="https://github.com/Kripankc/geospatial-portfolio"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="px-8 py-4 bg-white/5 border border-white/15 text-slate-300 rounded-xl font-bold hover:bg-white/10 transition-all hover:-translate-y-1 flex items-center justify-center gap-2 text-sm"
+                                    >
+                                        <Github size={16} /> Portfolio Repo
+                                    </a>
+                                </div>
+
+                                {/* Scroll indicator */}
+                                <div className="mt-8 flex flex-col items-center gap-2 text-slate-600 animate-bounce">
+                                    <ChevronDown size={20} />
+                                </div>
                             </div>
                         </section>
 
@@ -846,12 +942,13 @@ const Portfolio = () => {
 
                                     {/* Current Role Box */}
                                     <div className="md:col-span-4 bg-slate-900 text-white p-8 rounded-3xl relative overflow-hidden shadow-lg hover:shadow-xl transition-all flex flex-col justify-center">
-                                        <div className="absolute inset-0 tech-grid-bg opacity-20 pointer-events-none"></div>
+                                        <div className="absolute inset-0 satellite-grid-bg opacity-60 pointer-events-none"></div>
                                         <Briefcase className="mb-6 text-emerald-400 relative z-10" size={32} />
                                         <div className="relative z-10">
-                                            <p className="text-slate-400 font-bold uppercase tracking-wider text-xs mb-2">Current Role</p>
+                                            <p className="text-slate-400 font-bold uppercase tracking-wider text-xs mb-2">Internship</p>
                                             <h3 className="text-2xl font-bold mb-1">Munich Re</h3>
-                                            <p className="text-emerald-400 font-medium">Geospatial Data Engineer</p>
+                                            <p className="text-emerald-400 font-medium">Geospatial Data Science</p>
+                                            <p className="text-slate-500 text-xs mt-1 font-mono">Corp. Underwriting · Geo Solutions</p>
                                         </div>
                                     </div>
 
