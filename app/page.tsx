@@ -578,7 +578,7 @@ const AboutView = () => (
 const ContactView = () => (
     <div className="min-h-screen flex items-center justify-center bg-stone-50 relative overflow-hidden">
         <style>{styles}</style>
-        <TopoBackground opacity={0.5} />
+        <NepalTopoBackground />
 
         {/* Subtle scan overlay */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
@@ -650,6 +650,20 @@ const Portfolio = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [currentView, setCurrentView] = useState('home');
+    // Live cursor coordinate tracker — mapped to Nepal bbox (WGS84)
+    const [cursorCoord, setCursorCoord] = useState<{ lat: number; lon: number } | null>(null);
+    const heroRef = React.useRef<HTMLElement>(null);
+
+    const handleHeroMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+        const rect = heroRef.current?.getBoundingClientRect();
+        if (!rect) return;
+        const xFrac = (e.clientX - rect.left) / rect.width;   // 0→1 left→right
+        const yFrac = (e.clientY - rect.top) / rect.height;  // 0→1 top→bottom
+        // Nepal bbox: lon 80.06→88.20°E, lat 26.35→30.43°N (reversed: top=north)
+        const lon = 80.06 + xFrac * (88.20 - 80.06);
+        const lat = 30.43 - yFrac * (30.43 - 26.35);
+        setCursorCoord({ lat, lon });
+    };
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 20);
@@ -670,7 +684,12 @@ const Portfolio = () => {
                     <style>{styles}</style>
 
                     {/* ── SECTION 1: Hero ── */}
-                    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-stone-50">
+                    <section
+                        ref={heroRef}
+                        onMouseMove={handleHeroMouseMove}
+                        onMouseLeave={() => setCursorCoord(null)}
+                        className="relative min-h-screen flex items-center justify-center overflow-hidden bg-stone-50"
+                    >
                         <NepalTopoBackground />
 
                         {/* Scan line */}
@@ -725,16 +744,42 @@ const Portfolio = () => {
                                     View All Projects <ArrowUpRight size={15} />
                                 </button>
                                 <a
-                                    href="https://github.com/Kripankc/geospatial-portfolio"
+                                    href="https://github.com/Kripankc"
                                     target="_blank" rel="noopener noreferrer"
                                     className="px-7 py-3.5 bg-white border border-stone-200 text-stone-700 rounded-xl font-bold hover:border-stone-300 hover:bg-stone-50 transition-all hover:-translate-y-0.5 shadow-sm flex items-center justify-center gap-2 text-sm"
                                 >
-                                    <Github size={15} /> Portfolio Repo
+                                    <Github size={15} /> GitHub Profile
                                 </a>
                             </div>
 
                             <div className="mt-14 flex flex-col items-center gap-1 text-stone-300">
                                 <ChevronDown size={20} className="animate-bounce" />
+                            </div>
+                        </div>
+
+                        {/* ── Cursor coordinate readout box (top-right) ── */}
+                        <div className="absolute top-24 right-6 hidden md:block">
+                            <div className={`bg-stone-900/90 backdrop-blur-sm border border-stone-700 rounded-xl px-4 py-3 font-mono shadow-lg transition-all duration-100 ${cursorCoord ? 'opacity-100' : 'opacity-40'}`}>
+                                <div className="text-[9px] font-bold uppercase tracking-widest text-emerald-400 mb-1.5 flex items-center gap-1.5">
+                                    <MapPin size={8} /> Cursor Position
+                                </div>
+                                <div className="text-xs text-stone-300 space-y-0.5">
+                                    <div>
+                                        <span className="text-stone-500 mr-1.5">LAT</span>
+                                        <span className="text-emerald-400 font-bold">
+                                            {cursorCoord ? `${cursorCoord.lat.toFixed(4)}° N` : '—'}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span className="text-stone-500 mr-1.5">LON</span>
+                                        <span className="text-emerald-400 font-bold">
+                                            {cursorCoord ? `${cursorCoord.lon.toFixed(4)}° E` : '—'}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="mt-2 pt-2 border-t border-stone-700 text-[8px] text-stone-600 font-mono">
+                                    {cursorCoord ? 'EPSG:4326 · WGS84' : 'Move cursor to scan'}
+                                </div>
                             </div>
                         </div>
 
