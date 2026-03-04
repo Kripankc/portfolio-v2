@@ -241,15 +241,15 @@ const NepalTopoBackground = () => (
             <path d="M 7.3 167.0 L 24.4 88.0 L 57.3 49.0 L 114.6 21.0 L 152.4 42.0 L 196.3 40.0 L 265.9 26.0 L 317.1 46.0 L 357.3 31.0 L 401.2 63.0 L 437.8 51.0 L 500.0 40.0 L 545.1 45.0 L 574.4 25.0 L 632.9 38.0 L 686.6 52.0 L 739.0 65.0 L 790.2 45.0 L 864.6 61.0 L 907.3 45.0 L 942.7 33.0 L 1000.0 296.0 L 986.6 375.0 L 924.4 405.0 L 853.7 410.0 L 811.0 412.0 L 731.7 415.0 L 670.7 411.0 L 609.8 412.0 L 536.6 407.0 L 487.8 402.0 L 414.6 313.0 L 359.8 314.0 L 323.2 319.0 L 258.5 310.0 L 197.6 296.0 L 128.0 303.0 L 63.4 245.0 L 29.3 220.0 L 7.3 167.0 Z" fill="none" stroke="#059669" strokeWidth="1.4" strokeOpacity="0.3" />
         </g>
         <g id="labels">
-            {/* Everest - Triangle Symbol (North) */}
-            <path d="M 870 50 L 864 62 L 876 62 Z" fill="#10b981" opacity="0.9" />
-            <text x="882" y="58" fontFamily="sans-serif" fontSize="10" fontWeight="extrabold" fill="#065f46" opacity="0.9">EVEREST 🇳🇵</text>
-            <text x="882" y="68" fontFamily="monospace" fontSize="7" fill="#059669" opacity="0.7">8848.86m</text>
+            {/* Everest - Triangle Symbol (North-East, pulled inward so not clipped) */}
+            <path d="M 820 68 L 813 82 L 827 82 Z" fill="#10b981" opacity="0.9" />
+            <text x="833" y="76" fontFamily="sans-serif" fontSize="10" fontWeight="bold" fill="#065f46" opacity="0.9">EVEREST 🇳🇵</text>
+            <text x="833" y="87" fontFamily="monospace" fontSize="7" fill="#059669" opacity="0.7">8848.86m</text>
 
-            {/* Kathmandu - City Symbol (South/Valley) */}
-            <circle cx="648.4" cy="278.3" r="4" fill="#f59e0b" opacity="0.85" stroke="#92400e" strokeWidth="1" />
-            <text x="656" y="282" fontFamily="sans-serif" fontSize="9" fontWeight="bold" fill="#92400e" opacity="0.8">Kathmandu Valley</text>
-            <text x="656" y="292" fontFamily="monospace" fontSize="6.5" fill="#b45309" opacity="0.6">Altitude City</text>
+            {/* Kathmandu Valley - placed in the open contour space (center-left) */}
+            <circle cx="450" cy="210" r="4" fill="#f59e0b" opacity="0.85" stroke="#92400e" strokeWidth="1" />
+            <text x="458" y="214" fontFamily="sans-serif" fontSize="9" fontWeight="bold" fill="#92400e" opacity="0.8">Kathmandu Valley</text>
+            <text x="458" y="225" fontFamily="monospace" fontSize="6.5" fill="#b45309" opacity="0.6">1,400m · Capital</text>
         </g>
 
     </svg>
@@ -807,9 +807,10 @@ const Portfolio = () => {
 
                             {/* Tagline */}
                             <p className="text-lg md:text-xl text-stone-500 leading-relaxed mb-8 max-w-xl mx-auto">
-                                Building <span className="text-emerald-700 font-semibold">spatial pipelines</span>,{' '}
-                                <span className="text-teal-700 font-semibold">global-scale algorithms</span>, and{' '}
-                                <span className="text-blue-700 font-semibold">geospatial risk tools</span>.
+                                Environmental engineer bridging{' '}
+                                <span className="text-emerald-700 font-semibold">earth observation</span>,{' '}
+                                <span className="text-teal-700 font-semibold">geospatial modelling</span>, and{' '}
+                                <span className="text-blue-700 font-semibold">hazard &amp; risk analytics</span>.
                             </p>
 
                             {/* Credential / identity pills */}
