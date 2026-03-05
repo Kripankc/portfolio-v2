@@ -125,8 +125,8 @@ const NepalTopoBackground = () => (
         style={{ opacity: 0.5 }}
         preserveAspectRatio="xMidYMid slice"
     >
-        {/* Main Map Container shifted North */}
-        <g id="nepal-map" transform="translate(0, -120)">
+        {/* Main Map Container shifted to ensure whole country is visible */}
+        <g id="nepal-map" transform="translate(0, -20)">
             <g id="contours">
                 <path d="M 0.0 342.8 L 5.0 344.0 L 10.1 345.3 L 11.3 345.6 L 15.1 346.5 L 20.1 347.8 L 25.1 349.0 L 30.2 350.2 L 32.8 350.9 L 35.2 351.5 L 40.2 352.7 L 45.2 354.0 L 50.3 355.2 L 54.4 356.2 L 55.3 356.4 L 60.3 357.6 L 65.3 358.8 L 70.4 360.0 L 75.4 361.2 L 76.7 361.5 L 80.4 362.4 L 85.4 363.5 L 90.5 364.7 L 95.5 365.8 L 100.2 366.8 L 100.5 366.9 L 105.5 368.0 L 110.6 369.1 L 115.6 370.1 L 120.6 371.2 L 125.6 372.2 L 125.6 372.2 L 130.7 373.1 L 135.7 374.1 L 140.7 375.0 L 145.7 375.9 L 150.8 376.8 L 154.6 377.5 L 155.8 377.7 L 160.8 378.5 L 165.8 379.3 L 170.9 380.1 L 175.9 380.8 L 180.9 381.5 L 185.9 382.1 L 191.0 382.7 L 191.4 382.8 L 196.0 383.3 L 201.0 383.9 L 206.0 384.4 L 211.1 384.8 L 216.1 385.3 L 221.1 385.6 L 226.1 386.0 L 231.2 386.2 L 236.2 386.5 L 241.2 386.7 L 246.2 386.8 L 251.3 386.9 L 256.3 386.9 L 261.3 386.9 L 266.3 386.8 L 271.4 386.7 L 276.4 386.5 L 281.4 386.3 L 286.4 386.0 L 291.5 385.6 L 296.5 385.2 L 301.5 384.8 L 306.5 384.2 L 311.6 383.6 L 316.6 383.0 L 318.0 382.8 L 321.6 382.3 L 326.6 381.5 L 331.7 380.7 L 336.7 379.9 L 341.7 378.9 L 346.7 378.0 L 349.1 377.5 L 351.8 376.9 L 356.8 375.9 L 361.8 374.7 L 366.8 373.6 L 371.9 372.3 L 372.5 372.2 L 376.9 371.1 L 381.9 369.8 L 386.9 368.4 L 392.0 367.0 L 392.5 366.8 L 397.0 365.6 L 402.0 364.1 L 407.0 362.6 L 410.6 361.5 L 412.1 361.1 L 417.1 359.5 L 422.1 358.0 L 427.1 356.4 L 427.6 356.2 L 432.2 354.7 L 437.2 353.1 L 442.2 351.5 L 443.9 350.9 L 447.2 349.8 L 452.3 348.1 L 457.3 346.5 L 460.0 345.6 L 462.3 344.8 L 467.3 343.1 L 472.4 341.5 L 476.1 340.3 L 477.4 339.8 L 482.4 338.2 L 487.4 336.6 L 492.5 335.0 L 492.6 334.9 L 497.5 333.4 L 502.5 331.8 L 507.5 330.3 L 509.8 329.6 L 512.6 328.8 L 517.6 327.3 L 522.6 325.9 L 527.6 324.5 L 528.4 324.3 L 532.7 323.2 L 537.7 321.8 L 542.7 320.6 L 547.7 319.3 L 549.3 319.0 L 552.8 318.2 L 557.8 317.1 L 562.8 316.0 L 567.8 315.0 L 572.9 314.0 L 574.7 313.7 L 577.9 313.1 L 582.9 312.2 L 587.9 311.5 L 593.0 310.7 L 598.0 310.1 L 603.0 309.5 L 608.0 308.9 L 613.1 308.4 L 614.0 308.4 L 618.1 308.0 L 623.1 307.7 L 628.1 307.4 L 633.2 307.2 L 638.2 307.0 L 643.2 307.0 L 648.2 307.0 L 653.3 307.0 L 658.3 307.2 L 663.3 307.4 L 668.3 307.7 L 673.4 308.1 L 676.5 308.4 L 678.4 308.5 L 683.4 309.1 L 688.4 309.7 L 693.5 310.3 L 698.5 311.0 L 703.5 311.8 L 708.5 312.5 L 713.6 313.2 L 717.2 313.7 L 718.6 313.9 L 723.6 314.7 L 728.6 315.6 L 733.7 316.4 L 738.7 317.3 L 743.7 318.2 L 747.7 319.0 L 748.7 319.2 L 753.8 320.3 L 758.8 321.4 L 763.8 322.5 L 768.8 323.7 L 771.4 324.3 L 773.9 324.9 L 778.9 326.1 L 783.9 327.4 L 788.9 328.7 L 792.5 329.6 L 794.0 330.0 L 799.0 331.3 L 804.0 332.6 L 809.0 334.0 L 812.8 334.9 L 814.1 335.3 L 819.1 336.6 L 824.1 338.0 L 829.1 339.3 L 832.8 340.3 L 834.2 340.6 L 839.2 341.9 L 844.2 343.2 L 849.2 344.6 L 853.2 345.6 L 854.3 345.8 L 859.3 347.1 L 864.3 348.4 L 869.3 349.6 L 874.4 350.9 L 874.5 350.9 L 879.4 352.1 L 884.4 353.3 L 889.4 354.4 L 894.5 355.6 L 897.4 356.2 L 899.5 356.7 L 904.5 357.8 L 909.5 358.8 L 914.6 359.9 L 919.6 360.9 L 923.1 361.5 L 924.6 361.8 L 929.6 362.8 L 934.7 363.7 L 939.7 364.5 L 944.7 365.4 L 949.7 366.2 L 954.2 366.8 L 954.8 366.9 L 959.8 367.6 L 964.8 368.3 L 969.8 369.0 L 974.9 369.6 L 979.9 370.1 L 984.9 370.7 L 989.9 371.1 L 995.0 371.6 L 1000.0 371.9" fill="none" stroke="#648264" strokeWidth="0.40" strokeOpacity="0.08" />
                 <path d="M 0.0 307.2 L 4.3 308.4 L 5.0 308.5 L 10.1 309.9 L 15.1 311.2 L 20.1 312.5 L 24.6 313.7 L 25.1 313.8 L 30.2 315.1 L 35.2 316.5 L 40.2 317.8 L 44.8 319.0 L 45.2 319.1 L 50.3 320.4 L 55.3 321.7 L 60.3 323.0 L 65.3 324.3 L 65.5 324.3 L 70.4 325.5 L 75.4 326.8 L 80.4 328.0 L 85.4 329.2 L 87.1 329.6 L 90.5 330.4 L 95.5 331.6 L 100.5 332.7 L 105.5 333.8 L 110.5 334.9 L 110.6 335.0 L 115.6 336.0 L 120.6 337.1 L 125.6 338.1 L 130.7 339.1 L 135.7 340.0 L 136.8 340.3 L 140.7 341.0 L 145.7 341.9 L 150.8 342.7 L 155.8 343.6 L 160.8 344.3 L 165.8 345.1 L 169.1 345.6 L 170.9 345.8 L 175.9 346.5 L 180.9 347.1 L 185.9 347.7 L 191.0 348.3 L 196.0 348.8 L 201.0 349.3 L 206.0 349.7 L 211.1 350.1 L 216.1 350.4 L 221.1 350.7 L 224.6 350.9 L 226.1 351.0 L 231.2 351.2 L 236.2 351.3 L 241.2 351.4 L 246.2 351.5 L 251.3 351.4 L 256.3 351.4 L 261.3 351.3 L 266.3 351.1 L 271.4 350.9 L 271.9 350.9 L 276.4 350.7 L 281.4 350.3 L 286.4 350.0 L 291.5 349.5 L 296.5 349.1 L 301.5 348.5 L 306.5 347.9 L 311.6 347.3 L 316.6 346.6 L 321.6 345.8 L 323.2 345.6 L 326.6 345.0 L 331.7 344.2 L 336.7 343.3 L 341.7 342.3 L 346.7 341.3 L 351.6 340.3 L 351.8 340.2 L 356.8 339.1 L 361.8 337.9 L 366.8 336.7 L 371.9 335.5 L 374.0 334.9 L 376.9 334.2 L 381.9 332.9 L 386.9 331.5 L 392.0 330.1 L 393.6 329.6 L 397.0 328.7 L 402.0 327.2 L 407.0 325.7 L 411.6 324.3 L 412.1 324.2 L 417.1 322.6 L 422.1 321.0 L 427.1 319.4 L 428.5 319.0 L 432.2 317.8 L 437.2 316.2 L 442.2 314.6 L 445.0 313.7 L 447.2 312.9 L 452.3 311.3 L 457.3 309.6 L 461.2 308.4 L 462.3 308.0 L 467.3 306.4 L 472.4 304.7 L 477.4 303.1 L 477.7 303.0 L 482.4 301.5 L 487.4 299.9 L 492.5 298.4 L 494.6 297.7 L 497.5 296.8 L 502.5 295.3 L 507.5 293.8 L 512.5 292.4 L 512.6 292.4 L 517.6 291.0 L 522.6 289.6 L 527.6 288.2 L 531.9 287.1 L 532.7 286.9 L 537.7 285.6 L 542.7 284.4 L 547.7 283.2 L 552.8 282.1 L 554.1 281.8 L 557.8 281.0 L 562.8 279.9 L 567.8 279.0 L 572.9 278.0 L 577.9 277.2 L 582.8 276.5 L 582.9 276.4 L 587.9 275.8 L 593.0 275.3 L 598.0 274.9 L 603.0 274.7 L 608.0 274.7 L 613.1 274.9 L 618.1 275.2 L 623.1 275.6 L 628.1 276.1 L 631.5 276.5 L 633.2 276.7 L 638.2 277.4 L 643.2 278.2 L 648.2 279.1 L 653.3 280.0 L 658.3 281.1 L 661.3 281.8 L 663.3 282.4 L 668.3 284.1 L 673.4 285.7 L 677.8 287.1 L 678.4 287.3 L 683.4 289.2 L 688.4 290.9 L 693.5 292.2 L 694.4 292.4 L 698.5 293.7 L 703.5 295.0 L 708.5 296.0 L 713.6 296.8 L 718.6 297.4 L 723.1 297.7 L 723.6 297.8 L 728.6 298.3 L 733.7 298.6 L 738.7 298.8 L 743.7 298.8 L 748.7 298.6 L 753.8 298.4 L 758.8 298.2 L 763.8 297.9 L 768.8 297.8 L 773.9 297.9 L 778.9 298.4 L 783.9 299.2 L 788.9 300.2 L 794.0 301.4 L 799.0 302.6 L 800.8 303.0 L 804.0 304.0 L 809.0 305.5 L 814.1 306.8 L 819.1 307.9 L 821.6 308.4 L 824.1 309.0 L 829.1 310.3 L 834.2 311.4 L 839.2 312.3 L 844.2 313.1 L 848.2 313.7 L 849.2 313.9 L 854.3 314.9 L 859.3 315.8 L 864.3 316.6 L 869.3 317.5 L 874.4 318.3 L 878.7 319.0 L 879.4 319.1 L 884.4 320.2 L 889.4 321.2 L 894.5 322.2 L 899.5 323.3 L 904.2 324.3 L 904.5 324.4 L 909.5 325.5 L 914.6 326.5 L 919.6 327.6 L 924.6 328.6 L 929.6 329.6 L 929.6 329.6 L 934.7 330.6 L 939.7 331.6 L 944.7 332.5 L 949.7 333.4 L 954.8 334.2 L 959.8 334.9 L 960.1 334.9 L 964.8 335.6 L 969.8 336.3 L 974.9 336.9 L 979.9 337.4 L 984.9 337.8 L 989.9 338.2 L 995.0 338.5 L 1000.0 338.7" fill="none" stroke="#698566" strokeWidth="0.43" strokeOpacity="0.09" />
@@ -218,47 +218,34 @@ const NepalTopoBackground = () => (
                 <path d="M 477.4 213.1 L 482.4 213.2 L 487.4 213.3 L 492.5 213.3 L 497.5 213.3 L 502.5 213.3 L 507.5 213.2 L 512.6 213.2 L 517.6 213.0 L 520.3 212.7 L 522.6 210.8 L 527.6 209.4 L 532.7 208.8 L 537.7 208.5 L 542.7 208.4 L 547.7 208.2 L 552.8 208.1 L 557.8 207.6 L 558.8 207.3 L 562.8 204.3 L 567.8 203.2 L 570.1 202.0 L 572.9 199.1 L 574.4 196.7 L 574.1 191.4 L 572.9 189.8 L 569.1 186.1 L 567.8 185.4 L 562.8 184.6 L 557.8 183.4 L 553.9 180.8 L 552.8 180.5 L 547.7 180.0 L 542.7 179.9 L 537.7 179.8 L 532.7 179.6 L 527.6 179.3 L 522.6 178.6 L 517.6 175.4 L 517.6 175.4 L 512.6 174.8 L 507.5 174.6 L 502.5 174.4 L 497.5 173.8 L 492.5 171.7 L 491.0 170.1 L 487.4 169.4 L 482.4 169.2 L 477.4 168.7 L 472.4 167.3 L 469.9 164.8 L 467.3 164.2 L 462.3 163.9 L 457.3 163.7 L 452.3 163.4 L 447.2 163.0 L 442.2 162.6 L 437.2 162.4 L 432.2 162.5 L 427.1 162.9 L 422.1 163.3 L 417.1 163.7 L 412.1 163.9 L 409.1 164.8 L 407.0 167.0 L 402.0 168.8 L 399.9 170.1 L 397.0 173.2 L 395.2 175.4 L 394.3 180.8 L 395.2 186.1 L 397.0 189.0 L 399.2 191.4 L 402.0 193.2 L 405.3 196.7 L 407.0 197.6 L 412.1 198.4 L 416.2 202.0 L 417.1 202.3 L 422.1 202.9 L 427.1 203.4 L 432.2 204.6 L 435.5 207.3 L 437.2 207.7 L 442.2 208.1 L 447.2 208.2 L 452.3 208.4 L 457.3 208.6 L 462.3 209.0 L 467.3 209.7 L 472.4 211.6 L 473.6 212.7 L 477.4 213.1" fill="none" stroke="#d9dce3" strokeWidth="1.19" strokeOpacity="0.42" />
                 <path d="M 311.6 107.4 L 316.6 108.2 L 321.6 109.4 L 326.6 109.9 L 331.7 108.9 L 336.7 107.9 L 340.6 106.3 L 341.7 105.2 L 343.9 101.0 L 343.6 95.7 L 341.7 93.5 L 338.6 90.4 L 336.7 89.4 L 331.7 88.9 L 326.6 88.7 L 321.6 88.8 L 316.6 89.1 L 312.8 90.4 L 311.6 91.7 L 307.5 95.7 L 306.5 98.9 L 306.3 101.0 L 306.5 101.4 L 310.0 106.3 L 311.6 107.4" fill="none" stroke="#d9dce3" strokeWidth="1.19" strokeOpacity="0.42" />
                 <path d="M 226.1 69.6 L 231.2 70.6 L 236.2 71.6 L 241.2 73.0 L 246.2 72.6 L 251.3 71.2 L 256.3 70.4 L 259.3 69.1 L 261.3 67.0 L 263.3 63.8 L 263.3 58.5 L 261.3 55.4 L 259.2 53.2 L 256.3 51.8 L 251.3 51.0 L 246.2 49.6 L 241.2 49.2 L 236.2 50.5 L 231.2 51.6 L 226.1 52.7 L 225.4 53.2 L 221.7 58.5 L 221.7 63.8 L 225.4 69.1 L 226.1 69.6" fill="none" stroke="#d9dce3" strokeWidth="1.19" strokeOpacity="0.42" />
+
+                {/* High Altitude Peak Divisions (8000m+) */}
+                <path d="M 865 55 L 870 52 L 875 55 L 870 58 Z" fill="none" stroke="#648264" strokeWidth="0.8" strokeOpacity="0.5" />
+                <path d="M 425 75 L 430 72 L 435 75 L 430 78 Z" fill="none" stroke="#648264" strokeWidth="0.8" strokeOpacity="0.5" />
             </g>
 
-            {/* Peak Clusters (High Frequency Concentric Contours) */}
-            <g id="peak-clusters" stroke="#4a5a4a" strokeWidth="0.6" strokeOpacity="0.4">
-                {/* Everest Peak Cluster */}
-                <circle cx="845" cy="251" r="5" fill="none" />
-                <circle cx="845" cy="251" r="10" fill="none" />
-                <circle cx="845" cy="251" r="18" fill="none" opacity="0.6" />
-                <circle cx="845" cy="251" r="28" fill="none" opacity="0.3" />
 
-                {/* Annapurna Peak Cluster */}
-                <circle cx="450" cy="240" r="5" fill="none" />
-                <circle cx="450" cy="240" r="12" fill="none" />
-                <circle cx="450" cy="240" r="22" fill="none" opacity="0.5" />
-            </g>
 
             <g id="border">
                 <path d="M 7.3 167.0 L 24.4 88.0 L 57.3 49.0 L 114.6 21.0 L 152.4 42.0 L 196.3 40.0 L 265.9 26.0 L 317.1 46.0 L 357.3 31.0 L 401.2 63.0 L 437.8 51.0 L 500.0 40.0 L 545.1 45.0 L 574.4 25.0 L 632.9 38.0 L 686.6 52.0 L 739.0 65.0 L 790.2 45.0 L 864.6 61.0 L 907.3 45.0 L 942.7 33.0 L 1000.0 296.0 L 986.6 375.0 L 924.4 405.0 L 853.7 410.0 L 811.0 412.0 L 731.7 415.0 L 670.7 411.0 L 609.8 412.0 L 536.6 407.0 L 487.8 402.0 L 414.6 313.0 L 359.8 314.0 L 323.2 319.0 L 258.5 310.0 L 197.6 296.0 L 128.0 303.0 L 63.4 245.0 L 29.3 220.0 L 7.3 167.0 Z" fill="none" stroke="#059669" strokeWidth="1.4" strokeOpacity="0.3" />
             </g>
 
             <g id="labels">
-                {/* Everest Label */}
-                <g transform="translate(845, 251)" className="cursor-default group/label">
+                <g transform="translate(870, 55)" className="cursor-default group/label">
                     <path d="M -6 0 L 0 -10 L 6 0 Z" fill="#b91c1c" className="drop-shadow-sm group-hover/label:fill-red-500 transition-colors" />
-                    <text x="10" y="4" className="text-[10px] font-bold fill-stone-800 pointer-events-none drop-shadow-sm">Mt. Everest</text>
-                    <text x="10" y="14" className="text-[7px] font-medium fill-stone-400 pointer-events-none tracking-tight">8848m · Top of the World</text>
+                    <text x="10" y="4" className="text-[10px] font-bold fill-stone-800 pointer-events-none drop-shadow-sm">8848m</text>
                 </g>
 
-                {/* Annapurna Label */}
-                <g transform="translate(450, 240)" className="cursor-default group/label">
+                <g transform="translate(430, 75)" className="cursor-default group/label">
                     <path d="M -4 0 L 0 -7 L 4 0 Z" fill="#991b1b" className="drop-shadow-sm" />
-                    <text x="8" y="3" className="text-[9px] font-bold fill-stone-800 pointer-events-none">Annapurna</text>
-                    <text x="8" y="11" className="text-[6px] font-medium fill-stone-400 pointer-events-none">8091m · Massif</text>
+                    <text x="8" y="3" className="text-[9px] font-bold fill-stone-800 pointer-events-none">8091m</text>
                 </g>
 
-                {/* Kathmandu Label */}
                 <g transform="translate(649, 278)" className="cursor-default group/label">
                     <circle r="3.5" fill="#059669" className="drop-shadow-sm group-hover/label:fill-emerald-500 transition-colors" />
                     <circle r="6" fill="none" stroke="#059669" strokeWidth="0.5" className="animate-ping opacity-20" />
                     <text x="10" y="4" className="text-[10px] font-bold fill-stone-800 pointer-events-none drop-shadow-sm">Kathmandu</text>
-                    <text x="10" y="14" className="text-[7px] font-medium fill-stone-400 pointer-events-none tracking-tight">Capital City · Hub</text>
+                    <text x="10" y="14" className="text-[7px] font-medium fill-stone-400 pointer-events-none tracking-tight">Capital</text>
                 </g>
 
                 {/* Pokhara Label */}
@@ -275,21 +262,7 @@ const NepalTopoBackground = () => (
             </g>
         </g>
 
-        {/* Dynamic Data Links - Floating Particles */}
-        <g id="dynamic-links" style={{ opacity: 0.4 }}>
-            <path d="M 450 120 Q 550 150 649 158" fill="none" stroke="#10b981" strokeWidth="0.5" strokeDasharray="2,4">
-                <animate attributeName="stroke-dashoffset" from="20" to="0" dur="3s" repeatCount="indefinite" />
-            </path>
-            <path d="M 649 158 Q 750 140 845 131" fill="none" stroke="#10b981" strokeWidth="0.5" strokeDasharray="2,4">
-                <animate attributeName="stroke-dashoffset" from="20" to="0" dur="4s" repeatCount="indefinite" />
-            </path>
-            <circle r="1" fill="#10b981">
-                <animateMotion path="M 450 120 Q 550 150 649 158" dur="3s" repeatCount="indefinite" />
-            </circle>
-            <circle r="1" fill="#10b981">
-                <animateMotion path="M 649 158 Q 750 140 845 131" dur="4s" repeatCount="indefinite" />
-            </circle>
-        </g>
+
     </svg>
 );
 
@@ -821,7 +794,7 @@ const Portfolio = () => {
                         ref={heroRef}
                         onMouseMove={handleHeroMouseMove}
                         onMouseLeave={() => setCursorCoord(null)}
-                        className="relative min-h-screen flex items-center justify-center overflow-hidden bg-stone-50"
+                        className="relative min-h-screen flex items-center justify-start overflow-hidden bg-stone-50"
                     >
                         <NepalTopoBackground />
 
@@ -830,7 +803,7 @@ const Portfolio = () => {
                             <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500 to-transparent animate-scan shadow-[0_0_8px_rgba(5,150,105,0.6)]" />
                         </div>
 
-                        <div className="container mx-auto px-6 relative z-10 text-center lg:text-left lg:max-w-7xl flex flex-col items-center lg:items-start">
+                        <div className="container ml-0 mr-auto px-6 relative z-10 text-left lg:max-w-7xl flex flex-col items-start lg:pl-24">
                             {/* Status badge */}
                             <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white border border-stone-200 rounded-full text-stone-600 text-xs font-bold uppercase tracking-widest mb-8 shadow-sm">
                                 <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
@@ -838,13 +811,13 @@ const Portfolio = () => {
                             </div>
 
                             {/* Name */}
-                            <h1 className="text-7xl md:text-9xl font-black tracking-tight leading-[0.9] mb-6 text-stone-900 mx-auto lg:mx-0">
+                            <h1 className="text-7xl md:text-9xl font-black tracking-tight leading-[0.9] mb-6 text-stone-900">
                                 Kripan<br />
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">K.C.</span>
                             </h1>
 
                             {/* Tagline */}
-                            <p className="text-lg md:text-xl text-stone-500 leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0">
+                            <p className="text-lg md:text-xl text-stone-500 leading-relaxed mb-8 max-w-xl">
                                 Environmental engineer specializing in{' '}
                                 <span className="text-emerald-700 font-semibold">geospatial analysis</span>,{' '}
                                 <span className="text-teal-700 font-semibold">coding</span>,{' '}
