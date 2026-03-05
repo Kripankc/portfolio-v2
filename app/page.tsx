@@ -219,9 +219,24 @@ const NepalTopoBackground = () => (
                 <path d="M 311.6 107.4 L 316.6 108.2 L 321.6 109.4 L 326.6 109.9 L 331.7 108.9 L 336.7 107.9 L 340.6 106.3 L 341.7 105.2 L 343.9 101.0 L 343.6 95.7 L 341.7 93.5 L 338.6 90.4 L 336.7 89.4 L 331.7 88.9 L 326.6 88.7 L 321.6 88.8 L 316.6 89.1 L 312.8 90.4 L 311.6 91.7 L 307.5 95.7 L 306.5 98.9 L 306.3 101.0 L 306.5 101.4 L 310.0 106.3 L 311.6 107.4" fill="none" stroke="#d9dce3" strokeWidth="1.19" strokeOpacity="0.42" />
                 <path d="M 226.1 69.6 L 231.2 70.6 L 236.2 71.6 L 241.2 73.0 L 246.2 72.6 L 251.3 71.2 L 256.3 70.4 L 259.3 69.1 L 261.3 67.0 L 263.3 63.8 L 263.3 58.5 L 261.3 55.4 L 259.2 53.2 L 256.3 51.8 L 251.3 51.0 L 246.2 49.6 L 241.2 49.2 L 236.2 50.5 L 231.2 51.6 L 226.1 52.7 L 225.4 53.2 L 221.7 58.5 L 221.7 63.8 L 225.4 69.1 L 226.1 69.6" fill="none" stroke="#d9dce3" strokeWidth="1.19" strokeOpacity="0.42" />
 
-                {/* High Altitude Peak Divisions (8000m+) */}
-                <path d="M 865 55 L 870 52 L 875 55 L 870 58 Z" fill="none" stroke="#648264" strokeWidth="0.8" strokeOpacity="0.5" />
-                <path d="M 425 75 L 430 72 L 435 75 L 430 78 Z" fill="none" stroke="#648264" strokeWidth="0.8" strokeOpacity="0.5" />
+                {/* High Altitude Massif Detail (>7500m) - Fixed Positioning & Pinnacle Logic */}
+                {/* Everest Massif Detail (8848m) - Adding more divisions to create pinnacle */}
+                <g id="everest-massif-detail">
+                    <path d="M 830 65 L 845 61 L 860 59 L 870 58 L 880 59 L 895 62 L 910 66" fill="none" stroke="#b4a094" strokeWidth="0.6" strokeOpacity="0.2" />
+                    <path d="M 840 60 L 855 56 L 865 54 L 870 53 L 875 54 L 885 57 L 900 61" fill="none" stroke="#bba39a" strokeWidth="0.7" strokeOpacity="0.25" />
+                    <path d="M 850 55 L 860 51 L 868 49 L 870 48.5 L 872 49 L 880 52 L 890 56" fill="none" stroke="#c5cad3" strokeWidth="0.8" strokeOpacity="0.3" />
+                    <path d="M 860 51 L 865 48 L 869 46.5 L 870 46 L 871 46.5 L 875 49 L 880 52" fill="none" stroke="#c7ccd5" strokeWidth="0.9" strokeOpacity="0.35" />
+                    <path d="M 865 48 L 868 46 L 870 44 L 872 46 L 875 48.5" fill="none" stroke="#caced7" strokeWidth="1.0" strokeOpacity="0.4" />
+                </g>
+
+                {/* Annapurna Massif Detail (8091m) - Adding more divisions */}
+                <g id="annapurna-massif-detail">
+                    <path d="M 390 85 L 405 82 L 420 80 L 430 79 L 440 80 L 455 83 L 470 87" fill="none" stroke="#b4a094" strokeWidth="0.6" strokeOpacity="0.2" />
+                    <path d="M 400 80 L 415 77 L 425 75 L 430 74 L 435 75 L 445 78 L 460 82" fill="none" stroke="#bba39a" strokeWidth="0.7" strokeOpacity="0.25" />
+                    <path d="M 410 75 L 420 72 L 428 70 L 430 69.5 L 432 70 L 440 73 L 450 77" fill="none" stroke="#c5cad3" strokeWidth="0.8" strokeOpacity="0.3" />
+                    <path d="M 420 71 L 425 68 L 429 66.5 L 430 66 L 431 66.5 L 435 69 L 440 72" fill="none" stroke="#c7ccd5" strokeWidth="0.9" strokeOpacity="0.35" />
+                    <path d="M 423 68 L 428 66 L 430 64 L 432 66 L 437 68.5" fill="none" stroke="#caced7" strokeWidth="1.0" strokeOpacity="0.4" />
+                </g>
             </g>
 
 
@@ -231,12 +246,12 @@ const NepalTopoBackground = () => (
             </g>
 
             <g id="labels">
-                <g transform="translate(870, 55)" className="cursor-default group/label">
+                <g transform="translate(870, 56)" className="cursor-default group/label">
                     <path d="M -6 0 L 0 -10 L 6 0 Z" fill="#b91c1c" className="drop-shadow-sm group-hover/label:fill-red-500 transition-colors" />
                     <text x="10" y="4" className="text-[10px] font-bold fill-stone-800 pointer-events-none drop-shadow-sm">8848m</text>
                 </g>
 
-                <g transform="translate(430, 75)" className="cursor-default group/label">
+                <g transform="translate(430, 76)" className="cursor-default group/label">
                     <path d="M -4 0 L 0 -7 L 4 0 Z" fill="#991b1b" className="drop-shadow-sm" />
                     <text x="8" y="3" className="text-[9px] font-bold fill-stone-800 pointer-events-none">8091m</text>
                 </g>
