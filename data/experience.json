@@ -1,42 +1,55 @@
 [
     {
-        "id": "exp-munich-re",
-        "role": "Intern - Geospatial Solutions Team",
-        "company": "Munich Re",
-        "period": "Sep 2025 - Present",
+        "id": "exp-dlr-thesis",
+        "role": "Master's Thesis Researcher",
+        "company": "German Aerospace Center (DLR) — Earth Observation",
+        "period": "May 2026 – Present",
         "description": [
-            "Developing geospatial solutions for climate and hazard risk modeling, utilizing advanced Remote Sensing technology.",
-            "Processing large-scale satellite products for disaster models and integration into risk analysis pipelines.",
-            "Building APIs to operationalize GIS and remote sensing algorithms for production-level risk assessment platforms."
+            "Designing and training a U-Net semantic segmentation model (ResNet-34 encoder, PyTorch) to classify sediment, shallow water, vegetation, and shadow in high-resolution Alpine river orthophotos.",
+            "Benchmarking deep learning performance against a Random Forest baseline and evaluating zero-shot foundation models (SAM), identifying their limitations for continuous semantic transitions in complex river environments.",
+            "Running large-scale training and inference on the Terrabyte HPC cluster (NVIDIA A100 80GB VRAM; PyTorch/CUDA 12.4) with optimised dataloaders for high-resolution orthophoto patches.",
+            "Mitigating geospatial ML pitfalls — spatial autocorrelation, inter-patch data leakage, and class imbalance — through spatial splitting, stratified sampling, and augmentation strategies."
+        ]
+    },
+    {
+        "id": "exp-munich-re",
+        "role": "Intern — Corporate Underwriting (Geospatial)",
+        "company": "Munich Re",
+        "period": "Sep 2025 – Mar 2026",
+        "description": [
+            "Designed and implemented workflows for large-scale geodata using hybrid raster/vector algorithms, spatial indexing, and parallelised cloud-based execution.",
+            "Developed and refactored a GUI-based geodata enrichment tool with multithreaded batch processing and SOAP/REST API integrations within a modular Python architecture.",
+            "Published ArcGIS Enterprise maps and geoprocessing services for underwriting web applications; designed GIS toolboxes for spatial risk analysis.",
+            "Performance rated 'sehr gut' (1/1, highest grade) — recognised for initiative, reliability, and contributions exceeding intern expectations."
         ]
     },
     {
         "id": "exp-tum-assistant",
-        "role": "Student Research Assistant",
+        "role": "Research Assistant & Teaching Assistant",
         "company": "Technical University of Munich (TUM)",
-        "period": "Nov 2024 - Sep 2025",
+        "period": "Nov 2024 – Present",
         "description": [
-            "Conducting flood risk analysis using remote sensing, modeling, and advanced data techniques to support sustainable water and hazard management.",
-            "Assisting in research related to hydrology and river basin management."
+            "Conducting flood risk analysis using GIS, remote sensing, and hydrological modelling tools (HEC-RAS, HEC-HMS) to support watershed-scale hazard assessment.",
+            "Serving as Teaching Assistant for graduate-level courses in Flood Risk Management and Urban Hydrology."
         ]
     },
     {
         "id": "exp-rise-nepal",
         "role": "Environmental Engineer",
         "company": "Research Institute for Sustainable Environment (RISE) Pvt. Ltd.",
-        "period": "June 2023 - April 2024",
+        "period": "Jun 2023 – Apr 2024",
         "description": [
-            "Engaged in Environmental impact assessments, Environmental modeling, GIS, and Remote sensing application in sustainable development."
+            "Engaged in environmental impact assessments, environmental modelling, GIS, and remote sensing applications in sustainable development projects across Nepal."
         ]
     },
     {
         "id": "exp-upwork-gis",
-        "role": "Freelancer GIS Analyst",
+        "role": "Freelance GIS Analyst",
         "company": "Upwork",
-        "period": "April 2020 - March 2024",
+        "period": "Apr 2020 – Mar 2024",
         "description": [
-            "Provided geospatial analysis for global clients, including suitability modeling, remote sensing data processing, and spatial data analysis.",
-            "Developed an evapotranspiration (ET) model in Google Earth Engine (GEE) by integrating satellite-derived inputs."
+            "Delivered geospatial analysis and Earth observation projects for international clients, including Google Earth Engine workflows for evapotranspiration and land-surface analysis.",
+            "Optimised global geospatial processing pipelines, reducing runtimes from days to hours."
         ]
     }
 ]
