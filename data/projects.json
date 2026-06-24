@@ -1,5 +1,36 @@
 [
     {
+        "id": "dlr-alpine-river-segmentation",
+        "title": "Alpine River Semantic Segmentation — DLR Master's Thesis",
+        "description": "U-Net (ResNet-34 encoder, PyTorch) trained to classify sediment, shallow water, vegetation, and shadow in high-resolution Alpine river orthophotos. Benchmarked against Random Forest baseline and zero-shot SAM. Training on Terrabyte HPC (NVIDIA A100 80GB, CUDA 12.4). Spatial train/test splitting and stratified sampling to mitigate autocorrelation and inter-patch data leakage.",
+        "technologies": [
+            "PyTorch",
+            "U-Net",
+            "ResNet-34",
+            "CUDA 12.4",
+            "Rasterio",
+            "GDAL"
+        ],
+        "libraries": [
+            "torch",
+            "torchvision",
+            "rasterio",
+            "gdal",
+            "numpy",
+            "scikit-learn"
+        ],
+        "topics": [
+            "Deep Learning",
+            "Remote Sensing",
+            "Semantic Segmentation"
+        ],
+        "stat": "4-class",
+        "statLabel": "semantic segmentation",
+        "imageUrl": "/projects/dlr-river.png",
+        "githubUrl": null,
+        "featured": true
+    },
+    {
         "id": "global-territorial-buffer-engine",
         "title": "Global Territorial Buffer Engine",
         "description": "Production pipeline generating seamless, non-overlapping offshore territorial zones for ~200 sovereign territories. Replaced O(N²) vector polygon intersection with O(N) Euclidean Distance Transform for conflict resolution. 8-hour zero-crash run on Databricks with shared-memory parallelism.",
@@ -25,7 +56,7 @@
         "stat": "O(N)",
         "statLabel": "complexity vs O(N²)",
         "imageUrl": "/projects/buffer-world.png",
-        "githubUrl": "https://github.com/Kripankc/geospatial-portfolio/tree/main/buffer-world",
+        "githubUrl": "https://github.com/Kripankc/raster-voronoi-solver",
         "featured": true
     },
     {
@@ -54,7 +85,37 @@
         "stat": "4 APIs",
         "statLabel": "pipelines unified",
         "imageUrl": "/projects/angel-api.png",
-        "githubUrl": "https://github.com/Kripankc/geospatial-portfolio/tree/main/angel-api-tool",
+        "githubUrl": null,
+        "featured": true
+    },
+    {
+        "id": "el-nino-drought-agent",
+        "title": "ENSA — El Niño Sentinel Agent",
+        "description": "Autonomous agentic AI system for agricultural drought early-warning during El Niño 2026 in Southern Africa. Integrates Copernicus GDO, ECMWF forecasts, and CDSE STAC satellite data to monitor NDVI/VCI/NDWI at field scale. LLM-powered agent layer generates agricultural risk assessments and recommendations.",
+        "technologies": [
+            "Python",
+            "Streamlit",
+            "Folium",
+            "LLM Agents",
+            "Copernicus API"
+        ],
+        "libraries": [
+            "streamlit",
+            "folium",
+            "xarray",
+            "rioxarray",
+            "requests",
+            "anthropic"
+        ],
+        "topics": [
+            "Agentic AI",
+            "Remote Sensing",
+            "Climate"
+        ],
+        "stat": "Field-scale",
+        "statLabel": "drought monitoring",
+        "imageUrl": "/projects/ensa.png",
+        "githubUrl": "https://github.com/Kripankc/el-nino-drought-agent",
         "featured": true
     },
     {
@@ -81,7 +142,7 @@
         "stat": "95–100%",
         "statLabel": "match rate per country",
         "imageUrl": "/projects/sfd-mfd.png",
-        "githubUrl": "https://github.com/Kripankc/geospatial-portfolio/tree/main/sfd-mfd-enrichment",
+        "githubUrl": null,
         "featured": true
     },
     {
@@ -108,7 +169,7 @@
         "stat": "25 mi",
         "statLabel": "US coastal coverage",
         "imageUrl": "/projects/coastal.png",
-        "githubUrl": "https://github.com/Kripankc/geospatial-portfolio/tree/main/coastal-proximity",
+        "githubUrl": null,
         "featured": false
     },
     {
@@ -135,13 +196,13 @@
         "stat": "3 bands",
         "statLabel": "urban strata validated",
         "imageUrl": "/projects/india-buildings.png",
-        "githubUrl": "https://github.com/Kripankc/geospatial-portfolio/tree/main/india-building-validation",
+        "githubUrl": null,
         "featured": false
     },
     {
         "id": "areal-precipitation-refinement",
         "title": "Areal Precipitation Refinement for Rainfall-Runoff Modeling",
-        "description": "Novel directional DEM smoothing and stratified kriging framework, reducing precipitation estimation errors by 45.4%. Quantified impact on a calibrated HBV model for flood forecasting.",
+        "description": "Novel directional DEM smoothing and stratified kriging framework, reducing precipitation estimation errors by 45.4%. Quantified impact on a calibrated HBV model for flood forecasting. Awarded grade 1.0.",
         "technologies": [
             "Python",
             "Kriging",
@@ -162,7 +223,7 @@
         "stat": "45.4%",
         "statLabel": "error reduction",
         "imageUrl": "/projects/precip.png",
-        "githubUrl": "https://github.com/kripankc/precipitation-modeling",
+        "githubUrl": null,
         "featured": true
     },
     {
@@ -186,13 +247,13 @@
         "stat": "HEC-RAS",
         "statLabel": "1D/2D flood model",
         "imageUrl": "/projects/flood.png",
-        "githubUrl": "https://github.com/kripankc/flood-risk-reduction",
-        "featured": true
+        "githubUrl": null,
+        "featured": false
     },
     {
         "id": "glacier-dynamics-nepal",
-        "title": "Glacier Dynamics Analysis — Nepal",
-        "description": "Long-term glacier dynamics (1990–2020) in the Marshyangdi river basin. Machine Learning applied to multi-temporal Landsat and Sentinel-2 imagery for ice differentiation.",
+        "title": "Glacier Dynamics Analysis — Nepal Himalayas",
+        "description": "Long-term glacier dynamics (1990–2020) in the Marshyangdi river basin. Machine Learning applied to multi-temporal Landsat and Sentinel-2 imagery for ice/snow differentiation and 30-year area change quantification.",
         "technologies": [
             "Machine Learning",
             "Sentinel-2",
@@ -201,8 +262,9 @@
         ],
         "libraries": [
             "scikit-learn",
-            "random-forest",
-            "rasterio"
+            "rasterio",
+            "numpy",
+            "pandas"
         ],
         "topics": [
             "Climate Change",
@@ -211,6 +273,7 @@
         "stat": "30 yrs",
         "statLabel": "temporal coverage",
         "imageUrl": "/projects/glacier.png",
+        "githubUrl": null,
         "featured": false
     },
     {
@@ -235,13 +298,13 @@
         "stat": "GEE",
         "statLabel": "satellite-derived inputs",
         "imageUrl": "/projects/snowmelt.png",
-        "githubUrl": "https://github.com/kripankc/snowmelt-model",
-        "featured": true
+        "githubUrl": null,
+        "featured": false
     },
     {
         "id": "lulc-change-detection",
         "title": "Post-Disaster LULC Change Detection — Nepal 2015",
-        "description": "Quantified Land Use/Land Cover change patterns in Panauti and Banepa Valley following the 2015 Nepal earthquake using Change Detection techniques and ground validation.",
+        "description": "Quantified Land Use/Land Cover change patterns in Panauti and Banepa Valley following the 2015 Nepal earthquake (Mw 7.8) using Change Detection techniques and ground validation.",
         "technologies": [
             "Remote Sensing",
             "ArcGIS",
@@ -250,8 +313,7 @@
         ],
         "libraries": [
             "ArcGIS",
-            "QGIS",
-            "Remote Sensing"
+            "QGIS"
         ],
         "topics": [
             "Risk Assessment",
@@ -260,6 +322,34 @@
         "stat": "Mw 7.8",
         "statLabel": "earthquake event",
         "imageUrl": "/projects/lulc.png",
+        "githubUrl": null,
+        "featured": false
+    },
+    {
+        "id": "geospatial-memory-optimizer",
+        "title": "Geospatial Memory Optimizer — COW Architecture",
+        "description": "Production-grade framework for memory-efficient processing of large-scale geospatial datasets. Copy-On-Write shared memory architecture eliminates the 'Memory Multiplier Effect' in multiprocessing. R-tree spatial indexing for O(log N) neighbour queries. 89% memory reduction demonstrated on 10GB datasets with 16 workers.",
+        "technologies": [
+            "Python",
+            "GeoPandas",
+            "Multiprocessing",
+            "R-tree"
+        ],
+        "libraries": [
+            "geopandas",
+            "shapely",
+            "rtree",
+            "numpy",
+            "pandas"
+        ],
+        "topics": [
+            "Algorithm Engineering",
+            "Geospatial"
+        ],
+        "stat": "89%",
+        "statLabel": "memory reduction",
+        "imageUrl": "/projects/memory-optimizer.png",
+        "githubUrl": "https://github.com/Kripankc/geospatial-memory-optimizer",
         "featured": false
     }
 ]

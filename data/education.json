@@ -1,14 +1,16 @@
 [
     {
-        "degree": "M.Sc. in Environmental Engineering",
+        "degree": "M.Sc. Environmental Engineering",
         "institution": "Technical University of Munich (TUM)",
-        "period": "2024 - Present",
-        "honors": "Focus: Hydrology & Water Resources"
+        "period": "2024 – Oct 2026 (expected)",
+        "honors": "Deutschlandstipendium 2024/25 & 2025/26 | CGPA: 1.4 (1.0 = highest)",
+        "focus": "Environmental Hazards/Risk & Water Resources Management",
+        "thesis": "Semantic segmentation of Alpine river sediment dynamics using deep learning (U-Net, ResNet-34 encoder) — Master's Thesis at DLR Earth Observation"
     },
     {
-        "degree": "B.Tech in Environmental Engineering",
+        "degree": "B.Tech. Environmental Engineering",
         "institution": "Kathmandu University, Nepal",
-        "period": "2019 - 2023",
-        "honors": "First Class with Distinction"
+        "period": "2019 – 2023",
+        "honors": "CGPA: 1.3 (1.0 = highest)"
     }
 ]

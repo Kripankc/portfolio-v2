@@ -1,0 +1,80 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// PATCH 1: Hero tagline (find and replace the subtitle/description text)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// FIND this text in the hero section (around line 650–700):
+//   "Environmental Engineer · Geo Developer"
+// or similar subtitle under the name. Replace with:
+//   "Geospatial Researcher · Deep Learning · Earth Observation"
+
+// FIND the hero description paragraph. Replace with:
+//   "M.Sc. Researcher at DLR (German Aerospace Center), training deep learning
+//    models for Alpine river analysis. I bridge environmental science, satellite
+//    remote sensing, and production-grade geospatial engineering."
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PATCH 2: Bio card paragraph in the About/Skills bento section
+// ─────────────────────────────────────────────────────────────────────────────
+
+// FIND this exact paragraph (around line 800–850):
+/*
+    M.Sc. Environmental Engineering, TUM. I model the physical world — hydrology,
+    hazards, terrain — then turn those models into production software. At Munich Re
+    I built global-scale geospatial pipelines and risk enrichment tools used by
+    underwriters across Europe and the US.
+*/
+
+// REPLACE WITH:
+/*
+    M.Sc. Researcher at TUM & DLR, training U-Net semantic segmentation models
+    on NVIDIA A100 GPUs for Alpine river Earth observation. I bridge environmental
+    science, deep learning, and production geospatial engineering — from HPC-scale
+    PyTorch pipelines to global NatCat risk tools at Munich Re.
+*/
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PATCH 3: Hardcoded experience timeline array in the bento grid
+// ─────────────────────────────────────────────────────────────────────────────
+
+// FIND this array (around line 830–870):
+/*
+    [
+        { dot: 'bg-emerald-500', role: 'Geospatial Data Science Intern', org: 'Munich Re', year: '2025–26', badge: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+        { dot: 'bg-blue-400',    role: 'Student Research Assistant',     org: 'TUM',       year: '2024–25', badge: 'bg-blue-50 text-blue-700 border-blue-200' },
+        { dot: 'bg-stone-400',   role: 'Environmental Engineer',          org: 'RISE Nepal', year: '2023–24', badge: 'bg-stone-50 text-stone-600 border-stone-200' },
+        { dot: 'bg-amber-400',   role: 'Freelance GIS Analyst',           org: 'Upwork',    year: '2020–24', badge: 'bg-amber-50 text-amber-700 border-amber-200' },
+    ]
+*/
+
+// REPLACE WITH:
+/*
+    [
+        { dot: 'bg-emerald-500', role: "Master's Thesis Researcher",  org: 'DLR — Earth Observation', year: '2026–now', badge: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+        { dot: 'bg-blue-400',    role: 'Geospatial Intern',           org: 'Munich Re',               year: '2025–26',  badge: 'bg-blue-50 text-blue-700 border-blue-200' },
+        { dot: 'bg-teal-400',    role: 'Research & Teaching Asst.',   org: 'TUM',                     year: '2024–now', badge: 'bg-teal-50 text-teal-700 border-teal-200' },
+        { dot: 'bg-amber-400',   role: 'Freelance GIS Analyst',       org: 'Upwork',                  year: '2020–24',  badge: 'bg-amber-50 text-amber-700 border-amber-200' },
+    ]
+*/
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PATCH 4: Bio card metadata grid (the 4 mini stat boxes)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// FIND:
+/*
+    { label: 'Education', val: 'M.Sc. TUM' },
+    { label: 'Scholarship', val: 'Deutschlandstipendium ×2' },
+    { label: 'Location', val: 'Munich, Germany' },
+    { label: 'Origin', val: 'Nepal 🇳🇵' },
+*/
+
+// REPLACE WITH:
+/*
+    { label: 'Current Role', val: 'Researcher @ DLR' },
+    { label: 'Scholarship', val: 'Deutschlandstipendium ×2' },
+    { label: 'Location', val: 'Munich, Germany 🇩🇪' },
+    { label: 'Origin', val: 'Nepal 🇳🇵' },
+*/
