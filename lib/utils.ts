@@ -11,3 +11,9 @@ export const formatDate = (date: string) => {
         year: "numeric",
     }).format(new Date(date));
 };
+
+// Must match `basePath` in next.config.mjs — plain <a>/<img> tags don't get
+// Next's basePath auto-applied the way next/link and next/image do.
+const BASE_PATH = "/portfolio-v2";
+
+export const withBasePath = (path: string) => `${BASE_PATH}${path}`;

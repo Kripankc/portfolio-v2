@@ -85,8 +85,43 @@
             ]
         },
         {
+            "id": "ml",
+            "title": "Deep Learning & Machine Learning",
+            "icon": "Cpu",
+            "description": "Applied deep learning and classical ML for Earth observation and hazard classification.",
+            "tools": [
+                {
+                    "name": "PyTorch (CUDA)",
+                    "description": "GPU-accelerated model training on HPC clusters (NVIDIA A100)",
+                    "projects": [
+                        "dlr-alpine-river-segmentation"
+                    ]
+                },
+                {
+                    "name": "U-Net / ResNet-34",
+                    "description": "Semantic segmentation for Alpine river orthophoto classification",
+                    "projects": [
+                        "dlr-alpine-river-segmentation"
+                    ]
+                },
+                {
+                    "name": "Random Forest",
+                    "description": "Baseline benchmarking and glacier/LULC classification",
+                    "projects": [
+                        "dlr-alpine-river-segmentation",
+                        "glacier-dynamics-nepal"
+                    ]
+                },
+                {
+                    "name": "XGBoost / SVM",
+                    "description": "Gradient boosting and support vector classifiers for spatial ML tasks",
+                    "projects": []
+                }
+            ]
+        },
+        {
             "id": "api",
-            "title": "API Development",
+            "title": "Data Engineering & APIs",
             "icon": "Server",
             "description": "Operationalizing algorithms into production-level platforms.",
             "tools": [
@@ -102,6 +137,13 @@
                     "description": "Building scalable interfaces for geospatial data",
                     "projects": [
                         "exp-munich-re"
+                    ]
+                },
+                {
+                    "name": "Databricks",
+                    "description": "Cloud-based parallel processing for large-scale geodata pipelines",
+                    "projects": [
+                        "global-territorial-buffer-engine"
                     ]
                 }
             ]

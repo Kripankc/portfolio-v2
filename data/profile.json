@@ -1,0 +1,12 @@
+{
+    "languages": [
+        { "name": "English", "level": "Professional" },
+        { "name": "German", "level": "A1–A2, Basic" },
+        { "name": "Nepali", "level": "Native" }
+    ],
+    "awards": [
+        { "title": "Deutschlandstipendium Scholarship", "detail": "2024/25 and 2025/26" },
+        { "title": "International Mountain Conference, Nepal", "detail": "Poster presentation" },
+        { "title": "Technical University of Munich (TUM)", "detail": "Poster presentation" }
+    ]
+}

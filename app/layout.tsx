@@ -8,15 +8,15 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
 const siteConfig = {
-    name: "Kripan K.C. | Environmental Engineer",
-    description: "Environmental Engineer specializing in GIS, Remote Sensing, and Python for climate risk and hazard modeling.",
+    name: "Kripan K C | Geospatial Data Scientist",
+    description: "Geospatial Data Scientist and Remote Sensing Engineer specializing in Earth observation, applied deep learning, and climate risk modeling.",
     url: "https://kripankc.github.io/portfolio-v2/",
 };
 
 export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
-    keywords: ["Environmental Engineer", "GIS", "Remote Sensing", "Python", "Climate Risk", "Hazard Modeling"],
+    keywords: ["Geospatial Data Scientist", "Remote Sensing", "Earth Observation", "Deep Learning", "GIS", "Python", "Climate Risk", "Hazard Modeling"],
 };
 
 export default function RootLayout({
