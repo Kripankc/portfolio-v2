@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import {
     Menu, X, Github, Linkedin, Mail, ChevronDown,
-    Map as MapIcon, Globe, Layers, Database, Code, Terminal, Cpu,
-    Droplets, Activity, ArrowUpRight, Server,
-    GraduationCap, ExternalLink, Briefcase,
+    Map as MapIcon, Globe, Layers, Cpu,
+    ArrowUpRight, Server,
+    GraduationCap, Briefcase,
     Star, MapPin, Waves, Eye, EyeOff, FileJson, Grid,
-    Filter, MoreVertical, Plus, Minus, Move, Code2, Compass,
+    Filter, MoreVertical, Plus, Minus, Move, Compass,
     Download, Award, Languages as LanguagesIcon
 } from 'lucide-react';
 
@@ -90,24 +90,6 @@ const allProjects = projectsData.map((p: any, index: number) => {
 });
 
 const featuredProjects = allProjects.filter((p: any) => p.featured);
-
-const iconMap: { [key: string]: any } = {
-    "Code2": <Code2 size={15} />,
-    "Globe2": <Globe size={15} />,
-    "Server": <Server size={15} />,
-    "Waves": <Waves size={15} />,
-    "Code": <Code size={15} />,
-    "Globe": <Globe size={15} />,
-    "Database": <Database size={15} />,
-    "Cpu": <Cpu size={15} />,
-};
-
-const skillCategories = (skillsData as any).categories.map((cat: any) => ({
-    id: cat.id,
-    name: cat.title,
-    icon: iconMap[cat.icon] || <Code size={15} />,
-    skills: cat.tools.map((t: any) => t.name),
-}));
 
 const timeline = [
     ...experienceData.map((e: any) => ({ type: 'work', year: e.period, title: e.role, org: e.company, desc: e.description[0] })),
@@ -721,87 +703,6 @@ const GISDashboard = ({ projects, title }: any) => {
                 </div>
             </div>
         </section>
-    );
-};
-
-// ─── COMPACT SKILLS ───────────────────────────────────────────────────────────
-const CompactSkills = () => {
-    const [activeId, setActiveId] = useState<string | null>(null);
-    const activeCat = skillCategories.find(c => c.id === activeId);
-
-    return (
-        <div>
-            <div className="flex flex-wrap gap-2 mb-3">
-                {skillCategories.map((cat: any) => (
-                    <button
-                        key={cat.id}
-                        onClick={() => setActiveId(activeId === cat.id ? null : cat.id)}
-                        className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border transition-all ${activeId === cat.id
-                            ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
-                            : 'bg-white text-stone-600 border-stone-200 hover:border-emerald-400 hover:text-emerald-700'}`}
-                    >
-                        {cat.icon} <span>{cat.name}</span>
-                    </button>
-                ))}
-            </div>
-
-            {activeCat && (
-                <div className="p-4 bg-stone-50 border border-stone-200 rounded-xl flex flex-wrap gap-2 animate-skill-drop">
-                    {activeCat.skills.map((skill: string) => (
-                        <span key={skill} className="skill-chip px-3 py-1.5 bg-white border border-stone-200 rounded-full text-xs font-medium text-stone-700 cursor-default shadow-sm">
-                            {skill}
-                        </span>
-                    ))}
-                </div>
-            )}
-
-            {!activeCat && (
-                <div className="p-4 bg-stone-50 border border-dashed border-stone-200 rounded-xl text-xs text-stone-400 text-center">
-                    Select a category to explore technologies
-                </div>
-            )}
-        </div>
-    );
-};
-
-// ─── COMPACT SKILLS (DARK) ────────────────────────────────────────────────────
-const CompactSkillsDark = () => {
-    const [activeId, setActiveId] = useState<string | null>(null);
-    const activeCat = skillCategories.find(c => c.id === activeId);
-
-    return (
-        <div>
-            {/* Category buttons — scroll row on small screens */}
-            <div className="flex flex-wrap gap-2 mb-3">
-                {skillCategories.map((cat: any) => (
-                    <button
-                        key={cat.id}
-                        onClick={() => setActiveId(activeId === cat.id ? null : cat.id)}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${activeId === cat.id
-                            ? 'bg-emerald-500 text-white border-emerald-500 shadow-sm'
-                            : 'bg-stone-800 text-stone-300 border-stone-700 hover:border-emerald-500 hover:text-emerald-400'}`}
-                    >
-                        {cat.icon} <span>{cat.name}</span>
-                    </button>
-                ))}
-            </div>
-
-            {activeCat && (
-                <div className="p-3 bg-stone-800 border border-stone-700 rounded-xl flex flex-wrap gap-2 animate-skill-drop">
-                    {activeCat.skills.map((skill: string) => (
-                        <span key={skill} className="px-3 py-1.5 bg-stone-700 border border-stone-600 rounded-full text-xs font-medium text-stone-200 cursor-default">
-                            {skill}
-                        </span>
-                    ))}
-                </div>
-            )}
-
-            {!activeCat && (
-                <div className="p-3 bg-stone-800 border border-dashed border-stone-700 rounded-xl text-xs text-stone-500 text-center">
-                    ▶ Select a layer to inspect its tools
-                </div>
-            )}
-        </div>
     );
 };
 
@@ -1512,17 +1413,11 @@ const Portfolio = () => {
                                     </button>
                                 </div>
 
-                                {/* ── Right side: skills layers + experience ── */}
+                                {/* ── Right side: skills legend + experience ── */}
                                 <div className="lg:col-span-7 flex flex-col gap-5">
 
-                                    {/* GIS-Layer style skill selector */}
-                                    <div className="bg-stone-900 rounded-2xl p-6 text-white">
-                                        <div className="flex items-center gap-2 mb-4">
-                                            <Layers size={14} className="text-emerald-400" />
-                                            <span className="text-xs font-bold uppercase tracking-widest text-stone-400">Technical Stack — Layer Panel</span>
-                                        </div>
-                                        <CompactSkillsDark />
-                                    </div>
+                                    {/* Skills — always-visible capability legend */}
+                                    <CapabilityLegend />
 
                                     {/* Experience: horizontal scrolling timeline */}
                                     <div className="bg-white rounded-2xl border border-stone-200 p-6">
