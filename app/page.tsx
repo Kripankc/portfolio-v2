@@ -2,18 +2,21 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-    Menu, X, Github, Linkedin, Mail, ChevronDown,
-    Map as MapIcon, Globe, Layers, Database, Code, Terminal, Cpu,
-    Droplets, Activity, ArrowUpRight, Server,
-    GraduationCap, ExternalLink, Briefcase,
-    Star, MapPin, Waves, Eye, EyeOff, FileJson, Grid,
-    Filter, MoreVertical, Plus, Minus, Move, Code2, Compass
+    Menu, X, Github, Linkedin, Mail,
+    Map as MapIcon, Globe, Layers, Cpu,
+    ArrowUpRight, Server,
+    GraduationCap, Briefcase,
+    Star, Waves, Eye, EyeOff, FileJson, Grid,
+    Filter, MoreVertical, Plus, Minus, Move, Compass, Satellite,
+    Download, Award, Languages as LanguagesIcon
 } from 'lucide-react';
 
 import projectsData from '../data/projects.json';
 import skillsData from '../data/skills.json';
 import experienceData from '../data/experience.json';
 import educationData from '../data/education.json';
+import profileData from '../data/profile.json';
+import { withBasePath } from '../lib/utils';
 
 // ─── STYLES ───────────────────────────────────────────────────────────────────
 const styles = `
@@ -80,35 +83,31 @@ const allProjects = projectsData.map((p: any, index: number) => {
         stat: p.stat || "—",
         statLabel: p.statLabel || "Key Metric",
         tech: p.technologies || [],
+        libraries: p.libraries || [],
+        imageUrl: p.imageUrl || null,
         color: projectColors[index % projectColors.length].color,
         bg: projectColors[index % projectColors.length].bg,
-        links: { github: p.githubUrl || null },
+        links: { github: p.githubUrl || null, report: p.reportUrl || null, website: p.websiteUrl || null },
     };
 });
 
 const featuredProjects = allProjects.filter((p: any) => p.featured);
 
-const iconMap: { [key: string]: any } = {
-    "Code2": <Code2 size={15} />,
-    "Globe2": <Globe size={15} />,
-    "Server": <Server size={15} />,
-    "Waves": <Waves size={15} />,
-    "Code": <Code size={15} />,
-    "Globe": <Globe size={15} />,
-    "Database": <Database size={15} />,
-};
-
-const skillCategories = (skillsData as any).categories.map((cat: any) => ({
-    id: cat.id,
-    name: cat.title,
-    icon: iconMap[cat.icon] || <Code size={15} />,
-    skills: cat.tools.map((t: any) => t.name),
-}));
-
-const timeline = [
-    ...experienceData.map((e: any) => ({ type: 'work', year: e.period, title: e.role, org: e.company, desc: e.description[0] })),
-    ...educationData.map((e: any) => ({ type: 'edu', year: e.period, title: e.degree, org: e.institution, desc: e.honors })),
+// Color cycle for the homepage "Experience" mini-timeline — derived from
+// experienceData (data/experience.json) so it can't drift out of sync.
+const experienceTimelineColors = [
+    { dot: 'bg-emerald-500', badge: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+    { dot: 'bg-blue-400', badge: 'bg-blue-50 text-blue-700 border-blue-200' },
+    { dot: 'bg-stone-400', badge: 'bg-stone-50 text-stone-600 border-stone-200' },
+    { dot: 'bg-amber-400', badge: 'bg-amber-50 text-amber-700 border-amber-200' },
+    { dot: 'bg-indigo-400', badge: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
 ];
+const homepageExperienceTimeline = experienceData.map((e: any, i: number) => ({
+    role: e.role,
+    org: e.company,
+    year: e.period,
+    ...experienceTimelineColors[i % experienceTimelineColors.length],
+}));
 
 // ─── NEPAL TOPOGRAPHIC BACKGROUND ────────────────────────────────────────────
 // Nepal sits roughly 80°E–88°E, 26.4°N–30.4°N.
@@ -281,6 +280,254 @@ const NepalTopoBackground = () => (
     </svg>
 );
 
+// ─── NEPAL CONTOUR MAP — hero background ─────────────────────────────────────
+// Simplified Nepal border hand-digitised from WGS84 anchors and projected into
+// the viewBox. Contours are interpolated between the south (Terai) and north
+// (Himalaya) borders with elevation-biased spacing: wide apart in the flat
+// south, crowded together toward the high north — like a real topo sheet.
+// All math is deterministic (no Math.random) so SSR and client HTML match.
+const MAP = { lonMin: 80.0, lonMax: 88.25, latMin: 26.3, latMax: 30.5, x: 40, y: 50, w: 920, h: 350 };
+const projX = (lon: number) => MAP.x + ((lon - MAP.lonMin) / (MAP.lonMax - MAP.lonMin)) * MAP.w;
+const projY = (lat: number) => MAP.y + ((MAP.latMax - lat) / (MAP.latMax - MAP.latMin)) * MAP.h;
+
+// [lon, lat] anchors, west → east
+const NEPAL_NORTH: [number, number][] = [
+    [80.06, 30.45], [81.0, 30.35], [81.8, 30.15], [82.5, 29.75], [83.3, 29.5],
+    [84.2, 29.25], [85.0, 28.65], [85.8, 28.35], [86.5, 28.1], [87.2, 27.95], [88.2, 27.85],
+];
+const NEPAL_SOUTH: [number, number][] = [
+    [80.06, 28.8], [80.7, 28.55], [81.5, 28.05], [82.5, 27.7], [83.5, 27.45],
+    [84.5, 27.05], [85.3, 26.8], [86.3, 26.6], [87.2, 26.45], [88.1, 26.6],
+];
+
+const latOnBorder = (anchors: [number, number][], lon: number) => {
+    if (lon <= anchors[0][0]) return anchors[0][1];
+    for (let i = 1; i < anchors.length; i++) {
+        if (lon <= anchors[i][0]) {
+            const [l0, a0] = anchors[i - 1];
+            const [l1, a1] = anchors[i];
+            return a0 + ((lon - l0) / (l1 - l0)) * (a1 - a0);
+        }
+    }
+    return anchors[anchors.length - 1][1];
+};
+
+const lerpChannel = (a: number, b: number, t: number) => Math.round(a + (b - a) * t);
+const lerpHex = (a: string, b: string, t: number) => {
+    const pa = [1, 3, 5].map(i => parseInt(a.slice(i, i + 2), 16));
+    const pb = [1, 3, 5].map(i => parseInt(b.slice(i, i + 2), 16));
+    return `#${pa.map((c, i) => lerpChannel(c, pb[i], t).toString(16).padStart(2, '0')).join('')}`;
+};
+// Hypsometric tint: muted green (low) → olive/tan (mid) → light warm brown (high)
+const hypsoColor = (e: number) =>
+    e < 0.5 ? lerpHex('#8B9467', '#A09070', e * 2) : lerpHex('#A09070', '#B8A88A', (e - 0.5) * 2);
+
+const buildNepalBorderPath = () => {
+    const east: [number, number][] = [[88.2, 27.85], [88.15, 27.35], [88.1, 26.6]];
+    const west: [number, number][] = [[80.06, 28.8], [80.35, 29.3], [80.25, 29.9], [80.06, 30.45]];
+    const ring = [...NEPAL_NORTH, ...east, ...[...NEPAL_SOUTH].reverse().slice(1), ...west.slice(1)];
+    return ring.map(([lon, lat], i) => `${i === 0 ? 'M' : 'L'} ${projX(lon).toFixed(1)} ${projY(lat).toFixed(1)}`).join(' ') + ' Z';
+};
+
+const buildContours = () => {
+    const N = 12;
+    const contours: { d: string; color: string; elevation: number; labelY: number }[] = [];
+    for (let k = 0; k < N; k++) {
+        const e = (k + 1) / (N + 1);              // elevation fraction 0→1
+        const f = Math.pow(e, 0.55);               // position bias: spread south, crowd north
+        const pts: string[] = [];
+        let labelY = 0;
+        // Extend well past the border — the soft mask fades the lines out beyond it
+        for (let lon = 78.9; lon <= 89.36; lon += 0.08) {
+            const s = latOnBorder(NEPAL_SOUTH, lon) + 0.09;
+            const n = latOnBorder(NEPAL_NORTH, lon) - 0.07;
+            const amp = 0.02 + 0.09 * f;           // rugged wiggle grows toward the Himalaya
+            const wiggle = amp * Math.sin(lon * 3.1 + k * 1.7) + amp * 0.45 * Math.sin(lon * 7.3 + k * 0.9);
+            const lat = Math.min(n, Math.max(s, s + f * (n - s) + wiggle));
+            const x = projX(lon), y = projY(lat);
+            if (Math.abs(lon - 80.34) < 0.04) labelY = y;
+            pts.push(`${pts.length === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${y.toFixed(1)}`);
+        }
+        contours.push({
+            d: pts.join(' '),
+            color: hypsoColor(e),
+            elevation: Math.round((150 + 8500 * e * e) / 50) * 50,
+            labelY,
+        });
+    }
+    return contours;
+};
+
+// Kathmandu Valley — closed depression contours (an intermontane basin), with
+// short hachure ticks pointing inward, the cartographic convention for a valley.
+const buildValleyRings = (cx: number, cy: number) =>
+    [26, 19, 12].map((r, ri) => {
+        const pts: string[] = [];
+        for (let a = 0; a <= 360; a += 15) {
+            const rad = (a * Math.PI) / 180;
+            const rr = r * (1 + 0.14 * Math.sin(3 * rad + ri * 1.3) + 0.07 * Math.sin(5 * rad + ri));
+            const x = cx + rr * Math.cos(rad);
+            const y = cy + rr * 0.72 * Math.sin(rad);   // squashed — valley floor ellipse
+            pts.push(`${pts.length === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${y.toFixed(1)}`);
+        }
+        return pts.join(' ') + ' Z';
+    });
+
+const buildValleyHachures = (cx: number, cy: number) => {
+    const ticks: { x1: number; y1: number; x2: number; y2: number }[] = [];
+    for (let a = 0; a < 360; a += 45) {
+        const rad = (a * Math.PI) / 180;
+        ticks.push({
+            x1: cx + 11 * Math.cos(rad), y1: cy + 11 * 0.72 * Math.sin(rad),
+            x2: cx + 6.5 * Math.cos(rad), y2: cy + 6.5 * 0.72 * Math.sin(rad),
+        });
+    }
+    return ticks;
+};
+
+// Major Himalayan summits — nested closed loops, the way peaks read on a topo
+// sheet. Positioned at real longitudes just south of the northern border.
+const buildPeakLoops = (cx: number, cy: number, seed: number) =>
+    [10, 6.5, 3.5].map((r, ri) => {
+        const pts: string[] = [];
+        for (let a = 0; a <= 360; a += 20) {
+            const rad = (a * Math.PI) / 180;
+            const rr = r * (1 + 0.18 * Math.sin(2 * rad + seed + ri) + 0.1 * Math.sin(5 * rad + seed));
+            pts.push(`${pts.length === 0 ? 'M' : 'L'} ${(cx + rr * Math.cos(rad)).toFixed(1)} ${(cy + rr * 0.62 * Math.sin(rad)).toFixed(1)}`);
+        }
+        return pts.join(' ') + ' Z';
+    });
+
+const NEPAL_BORDER_PATH = buildNepalBorderPath();
+const NEPAL_CONTOURS = buildContours();
+const KTM = { x: projX(85.32), y: projY(27.71) };
+const EVEREST = { x: projX(86.925), y: projY(27.99) };
+const KTM_RINGS = buildValleyRings(KTM.x, KTM.y);
+const KTM_HACHURES = buildValleyHachures(KTM.x, KTM.y);
+const PEAKS = [
+    { lon: 83.10, lat: null, name: 'Dhaulagiri' },
+    { lon: 83.93, lat: null, name: 'Annapurna' },
+    { lon: 84.62, lat: null, name: 'Manaslu' },
+    { lon: 86.925, lat: 27.99, name: 'Everest' },   // loops sit under the marker
+].map((p, i) => {
+    const x = projX(p.lon);
+    const y = projY(p.lat ?? latOnBorder(NEPAL_NORTH, p.lon) - 0.32);
+    return { ...p, x, y, loops: buildPeakLoops(x, y, i * 2.3) };
+});
+
+const NepalContourMap = () => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 1000 440"
+        className="absolute inset-0 w-full h-full"
+        aria-hidden="true"
+        preserveAspectRatio="xMidYMid slice"
+    >
+        {/* Graticule — faint lat/lon grid */}
+        <g stroke="#d6d3d1" strokeWidth="0.6" strokeDasharray="2 6" opacity="0.45">
+            {[81, 82, 83, 84, 85, 86, 87, 88].map(lon => (
+                <line key={`lon${lon}`} x1={projX(lon)} y1="0" x2={projX(lon)} y2="440" />
+            ))}
+            {[27, 28, 29, 30].map(lat => (
+                <line key={`lat${lat}`} x1="0" y1={projY(lat)} x2="1000" y2={projY(lat)} />
+            ))}
+        </g>
+        <g fill="#a8a29e" fontSize="9" fontFamily="monospace" opacity="0.55">
+            {[81, 84, 87].map(lon => (
+                <text key={`lont${lon}`} x={projX(lon) + 3} y="14">{lon}°E</text>
+            ))}
+            {[27, 28, 29, 30].map(lat => (
+                <text key={`latt${lat}`} x="6" y={projY(lat) - 4}>{lat}°N</text>
+            ))}
+        </g>
+
+        {/* Soft-fade mask: solid white core over Nepal + a tight blurred halo,
+            so contours hold full strength inside the country and dissolve
+            within ~2–3 contour spacings beyond the border. Black holes are
+            punched where closed feature contours (valley, peaks) live, so
+            regional lines never cross them. */}
+        <defs>
+            <filter id="nepal-soft-edge" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="14" />
+            </filter>
+            <filter id="feature-hole" x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="5" />
+            </filter>
+            <mask id="nepal-fade">
+                <rect x="0" y="0" width="1000" height="440" fill="black" />
+                <path d={NEPAL_BORDER_PATH} fill="white" filter="url(#nepal-soft-edge)" />
+                <path d={NEPAL_BORDER_PATH} fill="white" />
+                <ellipse cx={KTM.x} cy={KTM.y} rx="41" ry="30" fill="black" filter="url(#feature-hole)" />
+                {PEAKS.map(p => (
+                    <ellipse key={p.name} cx={p.x} cy={p.y} rx="15" ry="10" fill="black" filter="url(#feature-hole)" />
+                ))}
+            </mask>
+        </defs>
+
+        {/* Hypsometric contours — every 4th is an index contour, drawn heavier */}
+        <g fill="none" strokeLinecap="round" opacity="0.6" mask="url(#nepal-fade)">
+            {NEPAL_CONTOURS.map((c, i) => (
+                <path
+                    key={i}
+                    d={c.d}
+                    stroke={c.color}
+                    strokeWidth={i % 4 === 3 ? 1.35 : 0.85}
+                    strokeOpacity={i % 4 === 3 ? 0.55 : 0.32 + 0.03 * i}
+                />
+            ))}
+        </g>
+
+        {/* Closed feature contours — drawn in the cleared holes, no crossings */}
+        <g fill="none" strokeLinecap="round" opacity="0.6">
+            {/* Kathmandu Valley — basin contours + inward hachures (depression) */}
+            <g stroke="#8B9467">
+                {KTM_RINGS.map((d, i) => (
+                    <path key={i} d={d} strokeWidth={0.8} strokeOpacity={0.4 + 0.08 * i} />
+                ))}
+                {KTM_HACHURES.map((t, i) => (
+                    <line key={i} x1={t.x1} y1={t.y1} x2={t.x2} y2={t.y2} strokeWidth={0.7} strokeOpacity={0.35} />
+                ))}
+            </g>
+            {/* Summit loops along the High Himalaya */}
+            {PEAKS.map(p => (
+                <g key={p.name} stroke="#B8A88A">
+                    {p.loops.map((d, i) => (
+                        <path key={i} d={d} strokeWidth={0.8} strokeOpacity={0.5 + 0.08 * i} />
+                    ))}
+                </g>
+            ))}
+        </g>
+
+        {/* Sparse elevation labels on the western edge of select contours */}
+        <g fill="#a8a29e" fontSize="8" fontFamily="monospace" opacity="0.6">
+            {[2, 6, 10].map(i => (
+                <text key={i} x={projX(80.34) - 4} y={NEPAL_CONTOURS[i].labelY + 2.5} textAnchor="end">
+                    {NEPAL_CONTOURS[i].elevation}
+                </text>
+            ))}
+        </g>
+
+        {/* Kathmandu — dot on the valley floor, label clear of the basin rings */}
+        <g opacity="0.75">
+            <circle cx={KTM.x} cy={KTM.y} r="3.2" fill="#059669" stroke="#fafaf9" strokeWidth="1.2" />
+            <text x={KTM.x + 34} y={KTM.y + 3.5} fontSize="10.5" fontFamily="monospace" fill="#57534e">
+                Kathmandu · 1,400 m
+            </text>
+        </g>
+
+        {/* Mt. Everest — triangle, northeast near the border */}
+        <g opacity="0.75">
+            <polygon
+                points={`${EVEREST.x},${EVEREST.y - 5.5} ${EVEREST.x - 4.8},${EVEREST.y + 3.8} ${EVEREST.x + 4.8},${EVEREST.y + 3.8}`}
+                fill="#78716c" stroke="#fafaf9" strokeWidth="1"
+            />
+            <text x={EVEREST.x - 9} y={EVEREST.y + 3.5} fontSize="10.5" fontFamily="monospace" fill="#57534e" textAnchor="end">
+                Mt. Everest · 8,848 m
+            </text>
+        </g>
+    </svg>
+);
+
 // ─── NAVBAR ───────────────────────────────────────────────────────────────────
 const Navbar = ({ scrolled, currentView, navigateTo, isMenuOpen, setIsMenuOpen }: any) => (
     <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled
@@ -293,7 +540,7 @@ const Navbar = ({ scrolled, currentView, navigateTo, isMenuOpen, setIsMenuOpen }
                 onClick={() => navigateTo('home')}
             >
                 <div className="w-8 h-8 bg-emerald-600 text-white flex items-center justify-center rounded-lg text-xs font-black tracking-tight shadow-sm">KC</div>
-                <span className="font-bold text-stone-900">Kripan K.C.</span>
+                <span className="font-bold text-stone-900">Kripan K C</span>
             </div>
 
             <div className="hidden md:flex items-center gap-1">
@@ -306,9 +553,18 @@ const Navbar = ({ scrolled, currentView, navigateTo, isMenuOpen, setIsMenuOpen }
                             : 'text-stone-500 hover:bg-stone-50 hover:text-stone-800'}`}
                     >{item}</button>
                 ))}
+                <a
+                    href={withBasePath('/documents/Kripan_CV.pdf')}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-1 px-3 py-2 text-sm font-medium text-stone-500 hover:bg-stone-50 hover:text-stone-800 rounded-lg transition-all flex items-center gap-1.5"
+                    title="Download CV"
+                >
+                    <Download size={15} /> CV
+                </a>
                 <button
                     onClick={() => navigateTo('contact')}
-                    className="ml-3 px-4 py-2 text-sm font-bold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all shadow-sm"
+                    className="ml-1 px-4 py-2 text-sm font-bold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all shadow-sm"
                 >Contact</button>
             </div>
 
@@ -326,6 +582,14 @@ const Navbar = ({ scrolled, currentView, navigateTo, isMenuOpen, setIsMenuOpen }
                         className="block w-full text-left px-6 py-3 text-stone-700 hover:bg-stone-50 text-sm font-medium border-b border-stone-50"
                     >{item}</button>
                 ))}
+                <a
+                    href={withBasePath('/documents/Kripan_CV.pdf')}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 w-full text-left px-6 py-3 text-stone-700 hover:bg-stone-50 text-sm font-medium"
+                >
+                    <Download size={15} /> Download CV
+                </a>
             </div>
         )}
     </nav>
@@ -488,205 +752,640 @@ const GISDashboard = ({ projects, title }: any) => {
     );
 };
 
-// ─── COMPACT SKILLS ───────────────────────────────────────────────────────────
-const CompactSkills = () => {
-    const [activeId, setActiveId] = useState<string | null>(null);
-    const activeCat = skillCategories.find(c => c.id === activeId);
+// ─── PROJECTS PAGE — "Project Atlas" ──────────────────────────────────────────
+// Flagship work up top, everything else grouped by domain, map-sheet style.
+const FLAGSHIP_IDS = [
+    'dlr-alpine-river-segmentation',
+    'global-territorial-buffer-engine',
+    'areal-precipitation-refinement',
+    'batch-api-enrichment-application',
+];
 
+const PROJECT_DOMAINS = [
+    {
+        id: 'domain-eo', sheet: '01', iconKey: 'Globe',
+        title: 'Earth Observation & Deep Learning',
+        blurb: 'Satellite imagery, semantic segmentation and AI-driven environmental monitoring.',
+        ids: ['dlr-alpine-river-segmentation', 'el-nino-drought-agent', 'glacier-dynamics-nepal', 'lulc-change-detection'],
+    },
+    {
+        id: 'domain-algo', sheet: '02', iconKey: 'Cpu',
+        title: 'Geospatial Algorithm Engineering',
+        blurb: 'Production-scale spatial algorithms, performance work and entity resolution.',
+        ids: ['global-territorial-buffer-engine', 'geospatial-memory-optimizer', 'us-coastal-proximity-toolbox', 'sfd-mfd-municipality-enrichment'],
+    },
+    {
+        id: 'domain-hydro', sheet: '03', iconKey: 'Waves',
+        title: 'Hydrology & Water Resources',
+        blurb: 'Flood risk, rainfall-runoff and snowmelt modelling.',
+        ids: ['areal-precipitation-refinement', 'flood-risk-reduction-roshaupten', 'snowmelt-runoff-modeling'],
+    },
+    {
+        id: 'domain-soft', sheet: '04', iconKey: 'Server',
+        title: 'Software & Data Systems',
+        blurb: 'GUI tools, API pipelines and large-scale data validation.',
+        ids: ['batch-api-enrichment-application', 'india-building-osm-validation'],
+    },
+];
+
+const domainIcon = (key: string, size = 16) => {
+    switch (key) {
+        case 'Globe': return <Globe size={size} />;
+        case 'Cpu': return <Cpu size={size} />;
+        case 'Waves': return <Waves size={size} />;
+        default: return <Server size={size} />;
+    }
+};
+
+const FLAGSHIP_ACCENTS = [
+    { bar: 'bg-emerald-600', num: 'text-emerald-600', chip: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+    { bar: 'bg-blue-600', num: 'text-blue-600', chip: 'bg-blue-50 text-blue-700 border-blue-200' },
+    { bar: 'bg-amber-500', num: 'text-amber-600', chip: 'bg-amber-50 text-amber-700 border-amber-200' },
+    { bar: 'bg-slate-700', num: 'text-slate-600', chip: 'bg-slate-100 text-slate-700 border-slate-300' },
+];
+
+const findProject = (id: string) => allProjects.find((p: any) => p.id === id);
+
+// Faint contour decoration for flagship card corners
+// Figure area for the detail window: tries the project image, falls back to a
+// labelled placeholder frame so results/figures can be dropped in later.
+const ProjectFigure = ({ project }: any) => {
+    const [imgOk, setImgOk] = useState(true);
+    if (project.imageUrl && imgOk) {
+        return (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+                src={withBasePath(project.imageUrl)}
+                alt={`${project.title} — results figure`}
+                className="w-full aspect-video object-cover rounded-xl border border-stone-200 bg-stone-100"
+                onError={() => setImgOk(false)}
+            />
+        );
+    }
     return (
-        <div>
-            <div className="flex flex-wrap gap-2 mb-3">
-                {skillCategories.map((cat: any) => (
-                    <button
-                        key={cat.id}
-                        onClick={() => setActiveId(activeId === cat.id ? null : cat.id)}
-                        className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border transition-all ${activeId === cat.id
-                            ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
-                            : 'bg-white text-stone-600 border-stone-200 hover:border-emerald-400 hover:text-emerald-700'}`}
-                    >
-                        {cat.icon} <span>{cat.name}</span>
-                    </button>
-                ))}
-            </div>
-
-            {activeCat && (
-                <div className="p-4 bg-stone-50 border border-stone-200 rounded-xl flex flex-wrap gap-2 animate-skill-drop">
-                    {activeCat.skills.map((skill: string) => (
-                        <span key={skill} className="skill-chip px-3 py-1.5 bg-white border border-stone-200 rounded-full text-xs font-medium text-stone-700 cursor-default shadow-sm">
-                            {skill}
-                        </span>
-                    ))}
-                </div>
-            )}
-
-            {!activeCat && (
-                <div className="p-4 bg-stone-50 border border-dashed border-stone-200 rounded-xl text-xs text-stone-400 text-center">
-                    Select a category to explore technologies
-                </div>
+        <div className="w-full aspect-video rounded-xl border-2 border-dashed border-stone-200 bg-stone-50 flex flex-col items-center justify-center gap-2 text-stone-300">
+            <Satellite size={28} strokeWidth={1.5} />
+            <div className="text-xs font-medium text-stone-400">Results figure — coming soon</div>
+            {project.imageUrl && (
+                <div className="font-mono text-[9px] text-stone-300">drop into public{project.imageUrl}</div>
             )}
         </div>
     );
 };
 
-// ─── COMPACT SKILLS (DARK) ────────────────────────────────────────────────────
-const CompactSkillsDark = () => {
-    const [activeId, setActiveId] = useState<string | null>(null);
-    const activeCat = skillCategories.find(c => c.id === activeId);
+// Large detail window shared by flagship cards and domain rows
+const ProjectDetailModal = ({ project, onClose }: any) => {
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+        window.addEventListener('keydown', onKey);
+        document.body.style.overflow = 'hidden';
+        return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
+    }, [onClose]);
 
     return (
-        <div>
-            {/* Category buttons — scroll row on small screens */}
-            <div className="flex flex-wrap gap-2 mb-3">
-                {skillCategories.map((cat: any) => (
+        <div
+            className="fixed inset-0 z-[60] bg-stone-900/40 backdrop-blur-sm flex items-center justify-center p-4 md:p-8 animate-fade-in-up"
+            onClick={onClose}
+        >
+            <div
+                className="w-full max-w-3xl max-h-[88vh] bg-white rounded-2xl shadow-2xl overflow-y-auto ring-1 ring-stone-900/10"
+                onClick={(e) => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-label={project.title}
+            >
+                {/* Header */}
+                <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-stone-100 px-6 md:px-8 py-4 flex items-start justify-between gap-4 z-10">
+                    <div>
+                        <div className="flex items-center gap-2 mb-1.5">
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">{project.category}</span>
+                            {project.featured && (
+                                <span className="text-[10px] font-bold uppercase text-emerald-600 flex items-center gap-1">
+                                    <Star size={9} className="fill-emerald-600" /> Flagship
+                                </span>
+                            )}
+                        </div>
+                        <h3 className="text-xl md:text-2xl font-bold text-stone-900 leading-tight">{project.title}</h3>
+                    </div>
                     <button
-                        key={cat.id}
-                        onClick={() => setActiveId(activeId === cat.id ? null : cat.id)}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${activeId === cat.id
-                            ? 'bg-emerald-500 text-white border-emerald-500 shadow-sm'
-                            : 'bg-stone-800 text-stone-300 border-stone-700 hover:border-emerald-500 hover:text-emerald-400'}`}
+                        onClick={onClose}
+                        aria-label="Close project details"
+                        className="p-2 -m-1 text-stone-400 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition-colors shrink-0"
                     >
-                        {cat.icon} <span>{cat.name}</span>
+                        <X size={18} />
                     </button>
-                ))}
+                </div>
+
+                <div className="px-6 md:px-8 py-6 space-y-6">
+                    {/* Figure / results */}
+                    <ProjectFigure project={project} />
+
+                    {/* Stat + description */}
+                    <div className="flex flex-col sm:flex-row gap-5">
+                        <div className="bg-stone-900 rounded-xl px-5 py-4 text-center shrink-0 sm:w-44 self-start">
+                            <div className="text-2xl font-black text-emerald-400">{project.stat}</div>
+                            <div className="text-stone-400 text-[10px] font-mono uppercase tracking-widest mt-1">{project.statLabel}</div>
+                        </div>
+                        <p className="text-stone-600 text-sm leading-relaxed">{project.description}</p>
+                    </div>
+
+                    {/* Tech + libraries */}
+                    <div>
+                        <div className="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-2">Tech Stack</div>
+                        <div className="flex flex-wrap gap-1.5">
+                            {project.tech.map((t: string) => (
+                                <span key={t} className="px-2.5 py-1 bg-stone-50 border border-stone-200 rounded-md text-[11px] font-mono text-stone-600">{t}</span>
+                            ))}
+                        </div>
+                        {project.libraries.length > 0 && (
+                            <div className="mt-2.5 font-mono text-[10px] text-stone-400">
+                                libs: {project.libraries.join(' · ')}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Links */}
+                    <div className="flex flex-wrap gap-2.5 pt-1 pb-2">
+                        {project.links.github && (
+                            <a href={project.links.github} target="_blank" rel="noopener noreferrer"
+                                className="flex items-center gap-2 px-4 py-2.5 bg-stone-900 text-white rounded-lg text-xs font-bold hover:bg-stone-700 transition-colors">
+                                <Github size={14} /> View on GitHub
+                            </a>
+                        )}
+                        {project.links.website && (
+                            <a href={project.links.website} target="_blank" rel="noopener noreferrer"
+                                className="flex items-center gap-2 px-4 py-2.5 bg-white border border-stone-200 text-stone-700 rounded-lg text-xs font-bold hover:border-emerald-500 hover:text-emerald-700 transition-colors">
+                                <Globe size={14} /> Live site
+                            </a>
+                        )}
+                        {project.links.report && (
+                            <a href={project.links.report} target="_blank" rel="noopener noreferrer"
+                                className="flex items-center gap-2 px-4 py-2.5 bg-white border border-stone-200 text-stone-700 rounded-lg text-xs font-bold hover:border-emerald-500 hover:text-emerald-700 transition-colors">
+                                <FileJson size={14} /> Report
+                            </a>
+                        )}
+                        {!project.links.github && !project.links.website && !project.links.report && (
+                            <span className="text-xs text-stone-400 italic py-2.5">Report &amp; code links coming soon.</span>
+                        )}
+                    </div>
+                </div>
             </div>
-
-            {activeCat && (
-                <div className="p-3 bg-stone-800 border border-stone-700 rounded-xl flex flex-wrap gap-2 animate-skill-drop">
-                    {activeCat.skills.map((skill: string) => (
-                        <span key={skill} className="px-3 py-1.5 bg-stone-700 border border-stone-600 rounded-full text-xs font-medium text-stone-200 cursor-default">
-                            {skill}
-                        </span>
-                    ))}
-                </div>
-            )}
-
-            {!activeCat && (
-                <div className="p-3 bg-stone-800 border border-dashed border-stone-700 rounded-xl text-xs text-stone-500 text-center">
-                    ▶ Select a layer to inspect its tools
-                </div>
-            )}
         </div>
     );
 };
 
-// ─── PROJECTS ARCHIVE PAGE ────────────────────────────────────────────────────
+const ContourCorner = () => (
+    <svg viewBox="0 0 120 90" className="absolute bottom-0 right-0 w-28 h-20 pointer-events-none" aria-hidden="true" style={{ opacity: 0.1 }}>
+        <path d="M 130 20 C 90 25 75 45 68 95" fill="none" stroke="#8B9467" strokeWidth="1.5" />
+        <path d="M 130 38 C 100 42 88 58 82 95" fill="none" stroke="#A09070" strokeWidth="1.2" />
+        <path d="M 130 56 C 110 60 100 72 96 95" fill="none" stroke="#B8A88A" strokeWidth="1" />
+    </svg>
+);
+
 const ProjectsView = () => {
-    const [filter, setFilter] = useState('All');
-    const categories = ['All', ...Array.from(new Set(allProjects.map((p: any) => p.category)))];
-    const filtered = filter === 'All' ? allProjects : allProjects.filter((p: any) => p.category === filter);
+    const [detailId, setDetailId] = useState<string | null>(null);
+    const flagships = FLAGSHIP_IDS.map(findProject).filter(Boolean) as any[];
+    const detailProject = detailId ? findProject(detailId) : null;
+
+    const jumpTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     return (
         <div className="min-h-screen bg-stone-50 pt-24 pb-20">
-            <style>{styles}</style>
-            <div className="container mx-auto px-6 max-w-4xl">
-                <div className="mb-10 text-center">
-                    <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-emerald-600 mb-4">
-                        <Database size={12} /> Project Archive
+            <style dangerouslySetInnerHTML={{ __html: styles }} />
+            <div className="container mx-auto px-6 max-w-5xl">
+
+                {/* Header */}
+                <div className="mb-8">
+                    <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-emerald-600 mb-3">
+                        <MapIcon size={12} /> Project Atlas
                     </div>
-                    <h1 className="text-3xl font-black text-stone-900 mb-3">All Projects</h1>
-                    <p className="text-stone-500 text-sm">Geospatial engineering, remote sensing, and environmental modelling.</p>
+                    <h1 className="text-4xl font-black text-stone-900 mb-2">Projects</h1>
+                    <p className="text-stone-500 text-sm max-w-2xl">
+                        {allProjects.length} projects across {PROJECT_DOMAINS.length} domains — from Alpine deep learning at DLR
+                        to production geodata systems at Munich Re.
+                    </p>
                 </div>
 
-                <div className="flex flex-wrap justify-center gap-2 mb-10">
-                    {categories.map((cat: any) => (
-                        <button key={cat} onClick={() => setFilter(cat)}
-                            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${filter === cat
-                                ? 'bg-stone-900 text-white shadow-sm'
-                                : 'bg-white text-stone-500 border border-stone-200 hover:border-emerald-400 hover:text-emerald-600'}`}
-                        >{cat}</button>
+                {/* Domain jump nav */}
+                <div className="flex flex-wrap gap-2 mb-12 sticky top-16 z-30 py-3 bg-stone-50/95 backdrop-blur-sm">
+                    <button
+                        onClick={() => jumpTo('flagship')}
+                        className="px-4 py-1.5 rounded-full text-xs font-bold bg-stone-900 text-white shadow-sm hover:bg-stone-700 transition-colors flex items-center gap-1.5"
+                    >
+                        <Star size={11} className="fill-white" /> Flagship
+                    </button>
+                    {PROJECT_DOMAINS.map(d => (
+                        <button
+                            key={d.id}
+                            onClick={() => jumpTo(d.id)}
+                            className="px-4 py-1.5 rounded-full text-xs font-medium bg-white text-stone-500 border border-stone-200 hover:border-emerald-400 hover:text-emerald-700 transition-colors flex items-center gap-1.5"
+                        >
+                            {domainIcon(d.iconKey, 12)} {d.title.split(' & ')[0]}
+                        </button>
                     ))}
                 </div>
 
-                <div className="flex flex-col gap-4">
-                    {filtered.map((project: any) => (
-                        <div key={project.id} className="bg-white rounded-xl border border-stone-200 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all group overflow-hidden flex">
-                            <div className={`w-1 shrink-0 ${project.color.replace('border-', 'bg-')}`} />
-                            <div className="p-6 flex flex-col md:flex-row gap-6 w-full">
-                                <div className="flex-grow">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400 bg-stone-100 px-2 py-0.5 rounded">{project.category}</span>
-                                        {project.featured && (
-                                            <span className="text-[10px] font-bold uppercase text-emerald-600 flex items-center gap-1">
-                                                <Star size={9} className="fill-emerald-600" /> Featured
+                {/* ── Flagship work ── */}
+                <section id="flagship" className="scroll-mt-32 mb-16">
+                    <div className="flex items-baseline justify-between mb-5">
+                        <h2 className="text-lg font-black text-stone-900 flex items-center gap-2">
+                            <Star size={16} className="text-emerald-600 fill-emerald-600" /> Flagship Work
+                        </h2>
+                        <span className="font-mono text-[10px] text-stone-400 uppercase tracking-widest">Selected · {String(flagships.length).padStart(2, '0')}</span>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-5">
+                        {flagships.map((p: any, i: number) => {
+                            const a = FLAGSHIP_ACCENTS[i % FLAGSHIP_ACCENTS.length];
+                            return (
+                                <div
+                                    key={p.id}
+                                    onClick={() => setDetailId(p.id)}
+                                    role="button"
+                                    tabIndex={0}
+                                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setDetailId(p.id); } }}
+                                    className="relative bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-lg hover:border-emerald-300 transition-all overflow-hidden flex flex-col cursor-pointer group"
+                                >
+                                    <div className={`h-1 ${a.bar}`} />
+                                    <div className="p-6 md:p-7 flex flex-col flex-grow relative">
+                                        <ContourCorner />
+                                        <div className="flex items-center justify-between mb-4">
+                                            <span className={`font-mono text-2xl font-black ${a.num} opacity-30`}>{String(i + 1).padStart(2, '0')}</span>
+                                            <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded border ${a.chip}`}>{p.category}</span>
+                                        </div>
+                                        <h3 className="text-xl font-bold text-stone-900 mb-3 leading-snug group-hover:text-emerald-700 transition-colors">{p.title}</h3>
+                                        <p className="text-stone-500 text-sm leading-relaxed mb-5 line-clamp-3">{p.description}</p>
+                                        <div className="flex flex-wrap gap-1.5 mb-6">
+                                            {p.tech.slice(0, 5).map((t: string) => (
+                                                <span key={t} className="px-2 py-0.5 bg-stone-50 border border-stone-200 rounded text-[10px] font-mono text-stone-500">{t}</span>
+                                            ))}
+                                        </div>
+                                        <div className="mt-auto flex items-center justify-between pt-4 border-t border-stone-100">
+                                            <div>
+                                                <span className="text-lg font-black text-stone-900">{p.stat}</span>
+                                                <span className="ml-2 text-[10px] uppercase tracking-wider text-stone-400 font-bold">{p.statLabel}</span>
+                                            </div>
+                                            <span className="flex items-center gap-1 text-xs font-bold text-stone-400 group-hover:text-emerald-600 transition-colors">
+                                                Details <ArrowUpRight size={13} />
                                             </span>
-                                        )}
-                                    </div>
-                                    <h3 className="text-lg font-bold text-stone-900 mb-2 group-hover:text-emerald-700 transition-colors">{project.title}</h3>
-                                    <p className="text-stone-500 text-sm leading-relaxed mb-3">{project.description}</p>
-                                    <div className="flex flex-wrap gap-1.5">
-                                        {project.tech.map((t: string) => (
-                                            <span key={t} className="px-2 py-0.5 bg-stone-50 border border-stone-100 rounded text-[10px] font-mono text-stone-400">{t}</span>
-                                        ))}
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="md:w-44 flex flex-col justify-between border-t md:border-t-0 md:border-l border-stone-100 pt-4 md:pt-0 md:pl-6 shrink-0">
-                                    <div className="mb-4 bg-stone-900 rounded-xl p-4 text-center">
-                                        <div className="text-xl font-black text-emerald-400">{project.stat}</div>
-                                        <div className="text-[10px] uppercase text-stone-500 font-bold tracking-wider mt-1">{project.statLabel}</div>
-                                    </div>
-                                    {project.links.github && (
-                                        <a href={project.links.github} target="_blank" rel="noopener noreferrer"
-                                            className="flex items-center justify-center gap-2 px-3 py-2 bg-stone-50 hover:bg-stone-900 hover:text-white border border-stone-200 rounded-lg text-sm font-medium text-stone-700 transition-all">
-                                            <Github size={13} /> GitHub
-                                        </a>
-                                    )}
+                            );
+                        })}
+                    </div>
+                </section>
+
+                {/* ── Domain sheets ── */}
+                {PROJECT_DOMAINS.map(domain => {
+                    const rows = domain.ids.filter(id => !FLAGSHIP_IDS.includes(id)).map(findProject).filter(Boolean) as any[];
+                    const flagshipHere = domain.ids.filter(id => FLAGSHIP_IDS.includes(id)).map(findProject).filter(Boolean) as any[];
+                    return (
+                        <section key={domain.id} id={domain.id} className="scroll-mt-32 mb-12">
+                            <div className="flex items-start gap-3 mb-4 pb-3 border-b-2 border-stone-200">
+                                <div className="w-9 h-9 rounded-lg bg-white border border-stone-200 flex items-center justify-center text-emerald-600 shrink-0 mt-0.5">
+                                    {domainIcon(domain.iconKey)}
                                 </div>
+                                <div className="flex-grow">
+                                    <div className="flex items-baseline justify-between">
+                                        <h2 className="text-lg font-black text-stone-900">{domain.title}</h2>
+                                        <span className="font-mono text-[10px] text-stone-400 uppercase tracking-widest shrink-0 ml-3">Sheet {domain.sheet}</span>
+                                    </div>
+                                    <p className="text-stone-400 text-xs">{domain.blurb}</p>
+                                </div>
+                            </div>
+
+                            {flagshipHere.length > 0 && (
+                                <div className="mb-2 text-[10px] font-mono text-stone-400 pl-1">
+                                    ★ Also in this domain: {flagshipHere.map((p: any) => p.title.split(' — ')[0].split(':')[0]).join(' · ')} (see Flagship Work)
+                                </div>
+                            )}
+
+                            <div className="space-y-2">
+                                {rows.map((p: any) => (
+                                    <button
+                                        key={p.id}
+                                        onClick={() => setDetailId(p.id)}
+                                        className="w-full flex items-center gap-3 p-4 text-left bg-white rounded-xl border border-stone-200 hover:border-emerald-300 hover:shadow-md transition-all group"
+                                    >
+                                        <ArrowUpRight size={14} className="text-stone-300 group-hover:text-emerald-600 shrink-0 transition-colors" />
+                                        <span className="font-semibold text-sm text-stone-800 flex-grow min-w-0 truncate group-hover:text-emerald-700 transition-colors">{p.title}</span>
+                                        {p.featured && <Star size={11} className="text-emerald-500 fill-emerald-500 shrink-0" />}
+                                        <span className="hidden sm:inline text-[10px] font-bold uppercase tracking-wider text-stone-400 bg-stone-50 border border-stone-100 px-2 py-0.5 rounded shrink-0">{p.category}</span>
+                                        <span className="font-mono text-xs font-bold text-emerald-600 shrink-0 w-20 text-right">{p.stat}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </section>
+                    );
+                })}
+
+                <div className="mt-4 text-xs font-mono text-stone-300 flex items-center gap-4">
+                    <span>EPSG:4326</span><span>·</span><span>WGS84</span><span>·</span><span>{allProjects.length} layers</span>
+                </div>
+            </div>
+
+            {detailProject && (
+                <ProjectDetailModal project={detailProject} onClose={() => setDetailId(null)} />
+            )}
+        </div>
+    );
+};
+
+// ─── MISSION TIMELINE — EO-mission-style career & studies chart ───────────────
+// Horizontal acquisition-timeline: career events pinned above the axis
+// (emerald), studies below it (blue diamonds), positioned to scale by year.
+const shortOrg = (org: string) => {
+    if (org.includes('DLR')) return 'DLR — Earth Observation';
+    if (org.includes('Munich Re')) return 'Munich Re';
+    if (org.includes('Technical University')) return 'TUM';
+    if (org.includes('RISE')) return 'RISE Nepal';
+    if (org.includes('Kathmandu University')) return 'Kathmandu University';
+    return org;
+};
+
+const TIMELINE_YEAR_MIN = 2019;
+const TIMELINE_YEAR_MAX = 2027;
+const yearToX = (y: number) =>
+    Math.max(8, 4 + ((y - TIMELINE_YEAR_MIN) / (TIMELINE_YEAR_MAX - TIMELINE_YEAR_MIN)) * 92);
+
+const parseStartYear = (period: string) => parseInt((period.match(/\d{4}/) || ['2019'])[0], 10);
+
+const missionWork = experienceData
+    .map((e: any) => ({ title: e.role, org: shortOrg(e.company), period: e.period, year: parseStartYear(e.period) }))
+    .sort((a: any, b: any) => a.year - b.year);
+const missionEdu = educationData
+    .map((e: any) => ({ title: e.degree, org: shortOrg(e.institution), period: e.period, year: parseStartYear(e.period) }))
+    .sort((a: any, b: any) => a.year - b.year);
+
+const MissionTimeline = () => (
+    <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+        <div className="p-4 border-b border-stone-200 bg-stone-50 flex justify-between items-center">
+            <span className="text-xs font-bold uppercase text-stone-700 tracking-wider flex items-center gap-2">
+                <Satellite size={14} className="text-emerald-600" /> Mission Timeline
+            </span>
+            <span className="flex items-center gap-4 font-mono text-[10px] text-stone-400">
+                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-600 inline-block" /> Career</span>
+                <span className="flex items-center gap-1.5"><span className="w-2 h-2 bg-blue-500 rotate-45 inline-block" /> Studies</span>
+            </span>
+        </div>
+
+        {/* Desktop: horizontal to-scale chart */}
+        <div className="hidden md:block relative h-[360px] px-6">
+            {/* Axis */}
+            <div className="absolute left-6 right-6 h-px bg-stone-300" style={{ top: '62%' }} />
+            {/* Year ticks */}
+            {[2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026].map(y => (
+                <div key={y} className="absolute" style={{ left: `${4 + ((y - TIMELINE_YEAR_MIN) / (TIMELINE_YEAR_MAX - TIMELINE_YEAR_MIN)) * 92}%`, top: '62%' }}>
+                    <div className="w-px h-1.5 bg-stone-300" />
+                    <div className="font-mono text-[9px] text-stone-400 -translate-x-1/2 mt-5">{y}</div>
+                </div>
+            ))}
+            <div className="absolute font-mono text-[9px] text-emerald-600 font-bold" style={{ right: '8px', top: '62%', marginTop: '20px' }}>▸ Present</div>
+
+            {/* Career events — above the axis, two staggered levels */}
+            {missionWork.map((e: any, i: number) => {
+                const x = yearToX(e.year);
+                const stem = [16, 86, 156][i % 3];
+                return (
+                    <React.Fragment key={`w${i}`}>
+                        <div className="absolute w-px border-l border-dashed border-stone-300" style={{ left: `${x}%`, bottom: '38%', height: `${stem}px` }} />
+                        <div className="absolute w-3 h-3 rounded-full bg-emerald-600 ring-4 ring-emerald-100 -translate-x-1/2 translate-y-1/2" style={{ left: `${x}%`, bottom: '38%' }} />
+                        <div className="absolute w-44 -translate-x-1/2 bg-white border border-stone-200 rounded-lg px-3 py-2 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all" style={{ left: `${x}%`, bottom: `calc(38% + ${stem}px)` }}>
+                            <div className="flex items-center gap-1.5 mb-0.5">
+                                <Briefcase size={10} className="text-emerald-600 shrink-0" />
+                                <span className="text-[11px] font-bold text-stone-900 leading-tight truncate">{e.title}</span>
+                            </div>
+                            <div className="text-[10px] font-semibold text-emerald-700 truncate">{e.org}</div>
+                            <div className="font-mono text-[9px] text-stone-400">{e.period}</div>
+                        </div>
+                    </React.Fragment>
+                );
+            })}
+
+            {/* Studies — below the axis */}
+            {missionEdu.map((e: any, i: number) => {
+                const x = yearToX(e.year);
+                const stem = 34;
+                return (
+                    <React.Fragment key={`e${i}`}>
+                        <div className="absolute w-px border-l border-dashed border-stone-300" style={{ left: `${x}%`, top: '62%', height: `${stem}px` }} />
+                        <div className="absolute w-2.5 h-2.5 bg-blue-500 rotate-45 ring-4 ring-blue-100 -translate-x-1/2 -translate-y-1/2" style={{ left: `${x}%`, top: '62%' }} />
+                        <div className="absolute w-48 -translate-x-1/2 bg-white border border-stone-200 rounded-lg px-3 py-2 shadow-sm hover:shadow-md hover:border-blue-300 transition-all" style={{ left: `${x}%`, top: `calc(62% + ${stem}px)` }}>
+                            <div className="flex items-center gap-1.5 mb-0.5">
+                                <GraduationCap size={11} className="text-blue-600 shrink-0" />
+                                <span className="text-[11px] font-bold text-stone-900 leading-tight truncate">{e.title}</span>
+                            </div>
+                            <div className="text-[10px] font-semibold text-blue-700 truncate">{e.org}</div>
+                            <div className="font-mono text-[9px] text-stone-400">{e.period}</div>
+                        </div>
+                    </React.Fragment>
+                );
+            })}
+        </div>
+
+        {/* Mobile: compact vertical list, newest first */}
+        <div className="md:hidden p-4 space-y-3">
+            {[...missionWork.map((e: any) => ({ ...e, type: 'work' })), ...missionEdu.map((e: any) => ({ ...e, type: 'edu' }))]
+                .sort((a: any, b: any) => b.year - a.year)
+                .map((e: any, i: number) => (
+                    <div key={i} className="flex items-center gap-3">
+                        <div className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${e.type === 'work' ? 'bg-emerald-50 text-emerald-600' : 'bg-blue-50 text-blue-600'}`}>
+                            {e.type === 'work' ? <Briefcase size={12} /> : <GraduationCap size={13} />}
+                        </div>
+                        <div className="min-w-0 flex-grow">
+                            <div className="text-xs font-bold text-stone-900 truncate">{e.title}</div>
+                            <div className={`text-[10px] font-semibold truncate ${e.type === 'work' ? 'text-emerald-700' : 'text-blue-700'}`}>{e.org}</div>
+                        </div>
+                        <span className="font-mono text-[9px] text-stone-400 shrink-0">{e.period}</span>
+                    </div>
+                ))}
+        </div>
+    </div>
+);
+
+// ─── SKILLS ROTATOR — auto-cycling capability bands, hover to inspect ─────────
+// Styled loosely after a satellite sensor-band selector: one capability band
+// active at a time, auto-advancing; hovering a tab (or the panel) pins it.
+const SKILL_TAB_LABELS: { [id: string]: string } = {
+    python: 'Python',
+    gis: 'GIS & RS',
+    ml: 'Deep Learning',
+    api: 'Data Eng',
+    modeling: 'Modeling',
+};
+
+const SkillsRotator = () => {
+    const cats = (skillsData as any).categories;
+    const [active, setActive] = useState(0);
+    const [paused, setPaused] = useState(false);
+
+    useEffect(() => {
+        if (paused) return;
+        const t = setInterval(() => setActive(a => (a + 1) % cats.length), 4000);
+        return () => clearInterval(t);
+    }, [paused, cats.length]);
+
+    const cat = cats[active];
+    return (
+        <div
+            className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden"
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+        >
+            <div className="p-4 border-b border-stone-200 bg-stone-50 flex justify-between items-center">
+                <span className="text-xs font-bold uppercase text-stone-700 tracking-wider flex items-center gap-2">
+                    <Satellite size={14} className="text-emerald-600" /> Capabilities — Sensor Suite
+                </span>
+                <span className="font-mono text-[10px] text-stone-400 hidden sm:block">
+                    {paused ? 'inspecting' : 'auto-cycling'} · hover a band
+                </span>
+            </div>
+
+            {/* Band tabs */}
+            <div className="flex flex-wrap gap-1 px-4 pt-3">
+                {cats.map((c: any, i: number) => (
+                    <button
+                        key={c.id}
+                        onMouseEnter={() => setActive(i)}
+                        onClick={() => setActive(i)}
+                        className={`px-3 py-1.5 rounded-full text-[11px] font-bold transition-all ${i === active
+                            ? 'bg-emerald-600 text-white shadow-sm'
+                            : 'bg-stone-50 text-stone-500 border border-stone-200 hover:border-emerald-400 hover:text-emerald-700'}`}
+                    >
+                        {SKILL_TAB_LABELS[c.id] || c.title}
+                    </button>
+                ))}
+            </div>
+
+            {/* Active band */}
+            <div key={cat.id} className="p-4 md:p-5 min-h-[170px] animate-fade-in-up">
+                <div className="text-xs text-stone-400 mb-3">{cat.description}</div>
+                <div className="grid sm:grid-cols-2 gap-2">
+                    {cat.tools.map((t: any) => (
+                        <div key={t.name} className="flex items-start gap-2 p-2 rounded-lg bg-stone-50 border border-stone-100">
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                            <div className="min-w-0">
+                                <div className="text-xs font-bold text-stone-800">{t.name}</div>
+                                <div className="text-[10px] text-stone-400 leading-snug">{t.description}</div>
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
+
+            {/* Progress dots */}
+            <div className="flex justify-center gap-1.5 pb-3">
+                {cats.map((c: any, i: number) => (
+                    <div key={c.id} className={`h-1 rounded-full transition-all ${i === active ? 'w-5 bg-emerald-500' : 'w-1.5 bg-stone-200'}`} />
+                ))}
+            </div>
         </div>
     );
 };
 
-// ─── ABOUT PAGE ───────────────────────────────────────────────────────────────
-const AboutView = () => (
-    <div className="min-h-screen bg-stone-50 pt-24 pb-20">
-        <style>{styles}</style>
-        <div className="container mx-auto px-6 max-w-5xl">
-            <div className="grid lg:grid-cols-12 gap-10">
+// ─── ABOUT PAGE — compact, single-viewport profile ────────────────────────────
+const AboutView = ({ navigateTo }: any) => (
+    <div className="min-h-screen bg-stone-50 pt-24 pb-16">
+        <style dangerouslySetInnerHTML={{ __html: styles }} />
+        <div className="container mx-auto px-6 max-w-6xl">
+            <div className="grid lg:grid-cols-12 gap-6 items-start">
+                {/* Left: compact identify card */}
                 <div className="lg:col-span-4">
-                    <div className="bg-white rounded-2xl border border-stone-200 p-8 shadow-sm sticky top-24">
-                        <div className="w-20 h-20 bg-emerald-600 rounded-2xl flex items-center justify-center text-white text-2xl font-black mb-6">KC</div>
-                        <h1 className="text-2xl font-black text-stone-900">Kripan K.C.</h1>
-                        <p className="text-emerald-600 font-semibold text-sm mt-1 mb-6">Environmental Engineer · Geospatial Developer</p>
-                        <p className="text-stone-500 text-sm leading-relaxed mb-6">
-                            M.Sc. Environmental Engineering, TUM. Building spatial data systems and risk modelling tools that bridge environmental science and engineering software.
-                        </p>
-                        <div className="space-y-2 border-t border-stone-100 pt-6">
-                            <a href="https://github.com/Kripankc" target="_blank" rel="noopener noreferrer"
-                                className="flex items-center gap-2 text-sm text-stone-500 hover:text-stone-900 transition-colors">
-                                <Github size={16} /> github.com/Kripankc
-                            </a>
-                            <a href="mailto:kc.kripan@gmail.com"
-                                className="flex items-center gap-2 text-sm text-stone-500 hover:text-emerald-600 transition-colors">
-                                <Mail size={16} /> kc.kripan@gmail.com
-                            </a>
-                            <div className="flex items-center gap-2 text-sm text-stone-400 font-mono">
-                                <MapPin size={14} /> 48.1351°N, 11.5820°E
+                    <div className="bg-white border border-slate-300 rounded-xl shadow-lg overflow-hidden ring-1 ring-slate-900/5">
+                        <div className="p-3 px-4 border-b border-slate-200 bg-slate-100 flex justify-between items-center">
+                            <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                                <FileJson size={13} className="text-blue-600" /> Identify Results
+                            </div>
+                            <button onClick={() => navigateTo('home')} aria-label="Close identify panel">
+                                <X size={13} className="text-slate-400 hover:text-slate-700 cursor-pointer" />
+                            </button>
+                        </div>
+
+                        <div className="p-5">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center text-white text-lg font-black shrink-0">KC</div>
+                                <div>
+                                    <h1 className="text-lg font-black text-slate-900">Kripan K C</h1>
+                                    <p className="text-emerald-600 font-semibold text-[11px] mt-0.5">Geospatial Data Scientist</p>
+                                </div>
+                            </div>
+
+                            <p className="text-slate-500 text-xs leading-relaxed mb-4">
+                                Environmental hazards and risk, studied from above — Earth observation, AI, and large-scale geodata turned into production analytics.
+                            </p>
+
+                            <div className="border rounded-lg border-slate-200 overflow-hidden mb-4 bg-white">
+                                <table className="w-full text-left">
+                                    <tbody className="divide-y divide-slate-100">
+                                        <tr>
+                                            <td className="px-3 py-2 border-r border-slate-100 font-mono text-[10px] text-slate-400 w-2/5">role</td>
+                                            <td className="px-3 py-2 text-slate-600 text-[11px]">Geospatial Data Scientist · Remote Sensing Engineer</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="px-3 py-2 border-r border-slate-100 font-mono text-[10px] text-slate-400">location</td>
+                                            <td className="px-3 py-2 text-slate-600 text-[11px]">Munich, Germany</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="px-3 py-2 border-r border-slate-100 font-mono text-[10px] text-slate-400">education</td>
+                                            <td className="px-3 py-2 text-slate-600 text-[11px]">{(educationData as any)[0].degree}, TUM</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="px-3 py-2 border-r border-slate-100 font-mono text-[10px] text-slate-400">origin</td>
+                                            <td className="px-3 py-2 text-slate-600 text-[11px]">Nepal 🇳🇵 → Munich</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-2">
+                                <a href="https://github.com/Kripankc" target="_blank" rel="noopener noreferrer"
+                                    className="flex items-center justify-center gap-1.5 px-2 py-2.5 bg-stone-50 hover:bg-stone-900 hover:text-white border border-stone-200 rounded-lg text-[11px] font-bold text-stone-700 transition-all">
+                                    <Github size={13} /> GitHub
+                                </a>
+                                <a href="mailto:kc.kripan@gmail.com"
+                                    className="flex items-center justify-center gap-1.5 px-2 py-2.5 bg-stone-50 hover:bg-emerald-600 hover:text-white border border-stone-200 rounded-lg text-[11px] font-bold text-stone-700 transition-all">
+                                    <Mail size={13} /> Email
+                                </a>
+                                <a href={withBasePath('/documents/Kripan_CV.pdf')} target="_blank" rel="noopener noreferrer"
+                                    className="flex items-center justify-center gap-1.5 px-2 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-[11px] font-bold transition-all">
+                                    <Download size={13} /> CV
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="lg:col-span-8">
-                    <div className="bg-white rounded-2xl border border-stone-200 p-8 shadow-sm">
-                        <h2 className="text-lg font-black text-stone-900 mb-8 flex items-center gap-2 border-b border-stone-100 pb-4">
-                            <Briefcase size={18} className="text-emerald-600" /> Professional Journey
-                        </h2>
-                        <div className="relative border-l-2 border-stone-100 ml-3 space-y-10">
-                            {timeline.map((item: any, i: number) => (
-                                <div key={i} className="relative pl-10">
-                                    <div className={`absolute -left-[9px] top-1 w-4 h-4 rounded-full border-2 border-white shadow-sm ${item.type === 'work' ? 'bg-emerald-500' : 'bg-blue-400'}`} />
-                                    <div className="flex flex-col sm:flex-row justify-between items-start mb-1">
-                                        <h3 className="font-bold text-stone-900">{item.title}</h3>
-                                        <span className="font-mono text-xs text-stone-400 mt-0.5">{item.year}</span>
+                {/* Right: timeline + awards/languages */}
+                <div className="lg:col-span-8 flex flex-col gap-6">
+                    <MissionTimeline />
+
+                    <div className="grid sm:grid-cols-2 gap-6">
+                        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+                            <div className="bg-stone-50 border-b border-stone-200 px-4 py-2.5 text-[11px] font-bold text-stone-600 uppercase tracking-wider flex items-center gap-2">
+                                <Award size={12} className="text-emerald-600" /> Awards &amp; Recognition
+                            </div>
+                            <div className="divide-y divide-stone-100">
+                                {(profileData as any).awards.map((a: any, i: number) => (
+                                    <div key={i} className="px-4 py-2.5">
+                                        <div className="text-xs font-bold text-stone-800">{a.title}</div>
+                                        <div className="text-[10px] text-stone-400">{a.detail}</div>
                                     </div>
-                                    <div className="text-sm font-semibold text-emerald-700 mb-2">{item.org}</div>
-                                    {item.desc && <p className="text-stone-500 text-sm leading-relaxed">{item.desc}</p>}
-                                </div>
-                            ))}
+                                ))}
+                            </div>
+                        </div>
+                        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+                            <div className="bg-stone-50 border-b border-stone-200 px-4 py-2.5 text-[11px] font-bold text-stone-600 uppercase tracking-wider flex items-center gap-2">
+                                <LanguagesIcon size={12} className="text-emerald-600" /> Languages
+                            </div>
+                            <div className="divide-y divide-stone-100">
+                                {(profileData as any).languages.map((l: any, i: number) => (
+                                    <div key={i} className="px-4 py-2.5 flex justify-between items-center">
+                                        <span className="text-xs font-bold text-stone-800">{l.name}</span>
+                                        <span className="text-[10px] text-stone-400 font-mono">{l.level}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -695,10 +1394,11 @@ const AboutView = () => (
     </div>
 );
 
+
 // ─── CONTACT PAGE — minimal, just email + LinkedIn ────────────────────────────
 const ContactView = () => (
     <div className="min-h-screen flex items-center justify-center bg-stone-50 relative overflow-hidden">
-        <style>{styles}</style>
+        <style dangerouslySetInnerHTML={{ __html: styles }} />
         <NepalTopoBackground />
 
         {/* Subtle scan overlay */}
@@ -746,7 +1446,7 @@ const ContactView = () => (
                     </div>
                     <div>
                         <div className="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-1">LinkedIn</div>
-                        <div className="font-bold text-stone-800 text-xs leading-tight">Kripan K.C.</div>
+                        <div className="font-bold text-stone-800 text-xs leading-tight">Kripan K C</div>
                     </div>
                     <div className="flex items-center gap-1 text-blue-600 text-xs font-bold mt-auto">
                         View profile <ArrowUpRight size={11} />
@@ -767,12 +1467,27 @@ const ContactView = () => (
 );
 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
+// Rotating focus areas — the soft, indirect way the hero states the domain
+const FOCUS_AREAS = [
+    'flood & natural hazard modelling',
+    'satellite change detection',
+    'semantic segmentation of alpine rivers',
+    'climate & drought risk analytics',
+    'planet-scale geodata pipelines',
+];
+
 const Portfolio = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [currentView, setCurrentView] = useState('home');
     // Live cursor coordinate tracker — mapped to Nepal bbox (WGS84)
     const [cursorCoord, setCursorCoord] = useState<{ lat: number; lon: number } | null>(null);
+    const [focusIdx, setFocusIdx] = useState(0);
+
+    useEffect(() => {
+        const t = setInterval(() => setFocusIdx(i => (i + 1) % FOCUS_AREAS.length), 3200);
+        return () => clearInterval(t);
+    }, []);
     const heroRef = React.useRef<HTMLElement>(null);
 
     const handleHeroMouseMove = (e: React.MouseEvent<HTMLElement>) => {
@@ -780,9 +1495,9 @@ const Portfolio = () => {
         if (!rect) return;
         const xFrac = (e.clientX - rect.left) / rect.width;   // 0→1 left→right
         const yFrac = (e.clientY - rect.top) / rect.height;  // 0→1 top→bottom
-        // Nepal bbox: lon 80.06→88.20°E, lat 26.35→30.43°N (reversed: top=north)
-        const lon = 80.06 + xFrac * (88.20 - 80.06);
-        const lat = 30.43 - yFrac * (30.43 - 26.35);
+        // Match NepalContourMap projection extents (top = north)
+        const lon = MAP.lonMin + xFrac * (MAP.lonMax - MAP.lonMin);
+        const lat = MAP.latMax - yFrac * (MAP.latMax - MAP.latMin);
         setCursorCoord({ lat, lon });
     };
 
@@ -802,138 +1517,126 @@ const Portfolio = () => {
         switch (currentView) {
             case 'home': return (
                 <main>
-                    <style>{styles}</style>
+                    <style dangerouslySetInnerHTML={{ __html: styles }} />
 
-                    {/* ── SECTION 1: Hero ── */}
+                    {/* ── SECTION 1: Hero — clean topo-sheet style ── */}
                     <section
                         ref={heroRef}
                         onMouseMove={handleHeroMouseMove}
                         onMouseLeave={() => setCursorCoord(null)}
-                        className="relative min-h-screen flex items-center justify-start overflow-hidden bg-stone-50"
+                        className="relative min-h-screen flex items-center justify-start overflow-hidden bg-[#fafaf9]"
                     >
-                        <NepalTopoBackground />
+                        <NepalContourMap />
 
-                        {/* Scan line */}
-                        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-25">
-                            <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500 to-transparent animate-scan shadow-[0_0_8px_rgba(5,150,105,0.6)]" />
-                        </div>
-
-                        <div className="container ml-0 mr-auto px-6 relative z-10 text-left lg:max-w-7xl flex flex-col items-start lg:pl-24">
-                            {/* Status badge */}
-                            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white border border-stone-200 rounded-full text-stone-600 text-xs font-bold uppercase tracking-widest mb-8 shadow-sm">
-                                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                                Geospatial Data Science · Munich Re Internship
-                            </div>
-
+                        <div className="container ml-0 mr-auto px-6 relative z-10 text-left lg:max-w-6xl flex flex-col items-start lg:pl-24 pt-20">
                             {/* Name */}
-                            <h1 className="text-7xl md:text-9xl font-black tracking-tight leading-[0.9] mb-6 text-stone-900">
-                                Kripan<br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">K.C.</span>
+                            <h1
+                                className="text-6xl md:text-8xl font-black tracking-tight leading-[0.95] mb-2 text-stone-900 opacity-0 animate-fade-in-up"
+                                style={{ animationDelay: '0.05s' }}
+                            >
+                                Kripan K C
                             </h1>
+                            <div
+                                className="h-1 w-20 bg-emerald-600 rounded-full mb-5 opacity-0 animate-fade-in-up"
+                                style={{ animationDelay: '0.12s' }}
+                            />
 
-                            {/* Tagline */}
-                            <p className="text-lg md:text-xl text-stone-500 leading-relaxed mb-8 max-w-xl">
-                                Environmental engineer specializing in{' '}
-                                <span className="text-emerald-700 font-semibold">geospatial analysis</span>,{' '}
-                                <span className="text-teal-700 font-semibold">coding</span>,{' '}
-                                <span className="text-blue-700 font-semibold">modelling</span>,{' '}
-                                <span className="text-stone-700 font-semibold">risk assessment</span>, and{' '}
-                                <span className="text-indigo-700 font-semibold">earth observation</span>.
+                            {/* Title */}
+                            <p
+                                className="text-xl md:text-2xl text-stone-500 font-medium mb-6 opacity-0 animate-fade-in-up"
+                                style={{ animationDelay: '0.18s' }}
+                            >
+                                Environmental Engineer
                             </p>
 
-                            {/* Credential / identity pills */}
-                            <div className="flex flex-wrap justify-center lg:justify-start gap-2.5 mb-10">
-                                {[
-                                    { icon: '🏅', val: 'Deutschlandstipendium', label: '2024/25 · 2025/26' },
-                                    { icon: '🎓', val: 'M.Sc. TUM', label: 'Environmental Engineering' },
-                                    { icon: '🌏', val: 'Nepal → Munich', label: 'Himalayan to Alpine' },
-                                    { icon: '🔗', val: 'Env × GIS × Code', label: 'Bridging disciplines' },
-                                ].map(s => (
-                                    <div key={s.val} className="flex items-center gap-2 px-4 py-2.5 bg-white border border-stone-200 rounded-xl text-sm shadow-sm hover:-translate-y-0.5 hover:border-emerald-300 transition-all cursor-default">
-                                        <span className="text-base leading-none">{s.icon}</span>
-                                        <div className="text-left">
-                                            <div className="font-black text-stone-900 text-xs leading-tight">{s.val}</div>
-                                            <div className="text-stone-400 text-[10px] leading-tight">{s.label}</div>
-                                        </div>
-                                    </div>
+                            {/* Specialization badges */}
+                            <div
+                                className="flex flex-wrap gap-2.5 mb-6 opacity-0 animate-fade-in-up"
+                                style={{ animationDelay: '0.26s' }}
+                            >
+                                {['GIS', 'Remote Sensing', 'Earth Observation'].map(tag => (
+                                    <span
+                                        key={tag}
+                                        className="px-3.5 py-1.5 bg-white/70 border border-stone-300 rounded-full text-xs font-medium text-stone-600 tracking-wide"
+                                    >
+                                        {tag}
+                                    </span>
                                 ))}
                             </div>
 
+                            {/* One-line bio */}
+                            <p
+                                className="text-base md:text-lg text-stone-500 leading-relaxed mb-4 max-w-xl opacity-0 animate-fade-in-up"
+                                style={{ animationDelay: '0.34s' }}
+                            >
+                                Specializing in climate risk assessment and hazard modeling using geospatial technologies.
+                            </p>
+
+                            {/* Rotating focus areas — quiet domain signal */}
+                            <div
+                                className="h-5 mb-10 font-mono text-xs text-stone-400 flex items-center gap-2 opacity-0 animate-fade-in-up"
+                                style={{ animationDelay: '0.38s' }}
+                            >
+                                <Satellite size={12} className="text-emerald-600 shrink-0" />
+                                <span key={focusIdx} className="inline-block animate-fade-in-up">
+                                    {FOCUS_AREAS[focusIdx]}
+                                </span>
+                            </div>
+
                             {/* CTAs */}
-                            <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start w-full lg:w-auto">
+                            <div
+                                className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto opacity-0 animate-fade-in-up"
+                                style={{ animationDelay: '0.42s' }}
+                            >
                                 <button
                                     onClick={() => navigateTo('projects')}
-                                    className="px-7 py-3.5 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 transition-all hover:-translate-y-0.5 shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 text-sm"
+                                    className="px-7 py-3.5 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 transition-colors shadow-sm flex items-center justify-center gap-2 text-sm"
                                 >
-                                    View All Projects <ArrowUpRight size={15} />
+                                    View Projects <ArrowUpRight size={15} />
                                 </button>
                                 <a
-                                    href="https://github.com/Kripankc"
+                                    href={withBasePath('/documents/Kripan_CV.pdf')}
                                     target="_blank" rel="noopener noreferrer"
-                                    className="px-7 py-3.5 bg-white border border-stone-200 text-stone-700 rounded-xl font-bold hover:border-stone-300 hover:bg-stone-50 transition-all hover:-translate-y-0.5 shadow-sm flex items-center justify-center gap-2 text-sm"
+                                    className="px-7 py-3.5 bg-transparent border border-stone-300 text-stone-700 rounded-lg font-bold hover:border-emerald-600 hover:text-emerald-700 transition-colors flex items-center justify-center gap-2 text-sm"
                                 >
-                                    <Github size={15} /> GitHub Profile
+                                    <Download size={15} /> Download CV
                                 </a>
                             </div>
+                        </div>
 
-                            <div className="mt-14 flex flex-col items-center gap-1 text-stone-300">
-                                <ChevronDown size={20} className="animate-bounce" />
+                        {/* Live cursor coordinate readout — quiet, light, map-margin style */}
+                        <div className="absolute bottom-6 right-6 hidden md:block">
+                            <div className="bg-white/80 backdrop-blur-sm border border-stone-200 rounded-lg px-3.5 py-2 font-mono text-[11px] text-stone-500 shadow-sm">
+                                {cursorCoord
+                                    ? <span>{cursorCoord.lat.toFixed(4)}° N&ensp;{cursorCoord.lon.toFixed(4)}° E</span>
+                                    : <span className="text-stone-400">EPSG:4326 · WGS84</span>}
                             </div>
                         </div>
 
-                        {/* ── Cursor coordinate readout box (top-right) ── */}
-                        <div className="absolute top-24 right-6 hidden md:block">
-                            <div className={`bg-stone-900/90 backdrop-blur-sm border border-stone-700 rounded-xl px-4 py-3 font-mono shadow-lg transition-all duration-100 ${cursorCoord ? 'opacity-100' : 'opacity-40'}`}>
-                                <div className="text-[9px] font-bold uppercase tracking-widest text-emerald-400 mb-1.5 flex items-center gap-1.5">
-                                    <MapPin size={8} /> Cursor Position
-                                </div>
-                                <div className="text-xs text-stone-300 space-y-0.5">
-                                    <div>
-                                        <span className="text-stone-500 mr-1.5">LAT</span>
-                                        <span className="text-emerald-400 font-bold">
-                                            {cursorCoord ? `${cursorCoord.lat.toFixed(4)}° N` : '—'}
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span className="text-stone-500 mr-1.5">LON</span>
-                                        <span className="text-emerald-400 font-bold">
-                                            {cursorCoord ? `${cursorCoord.lon.toFixed(4)}° E` : '—'}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="mt-2 pt-2 border-t border-stone-700 text-[8px] text-stone-600 font-mono">
-                                    {cursorCoord ? 'EPSG:4326 · WGS84' : 'Move cursor to scan'}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Corner coordinates */}
-                        <div className="absolute bottom-6 left-6 font-mono text-[10px] text-stone-300 hidden md:flex flex-col gap-0.5">
-                            <div className="border-b border-l border-stone-200 w-5 h-5 mb-1" />
-                            <span>48.1351° N</span>
-                            <span>11.5820° E</span>
-                        </div>
-                        <div className="absolute bottom-6 right-6 font-mono text-[10px] text-stone-300 text-right hidden md:flex flex-col gap-0.5 items-end">
-                            <div className="border-b border-r border-stone-200 w-5 h-5 mb-1 self-end" />
-                            <span>EPSG:4326</span>
-                            <span>WGS84</span>
+                        {/* Map-sheet corner mark */}
+                        <div className="absolute bottom-6 left-6 font-mono text-[10px] text-stone-400 hidden md:flex flex-col gap-0.5">
+                            <div className="border-b border-l border-stone-300 w-5 h-5 mb-1" />
+                            <span>Nepal · 1:2,000,000</span>
+                            <span>Contour interval 700 m</span>
                         </div>
                     </section>
 
-                    {/* ── SECTION 2: About + Technical Stack (creative bento layout) ── */}
-                    <section className="min-h-screen flex items-center py-20 bg-white border-t border-stone-100">
+                    {/* ── SECTION 2: About + Capabilities (one viewport) ── */}
+                    <section className="py-16 bg-white border-t border-stone-100">
                         <div className="container mx-auto px-6 max-w-6xl">
 
                             {/* Section header */}
-                            <div className="text-center mb-12">
+                            <div className="text-center mb-10">
                                 <div className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 mb-3 flex items-center justify-center gap-2">
-                                    <Layers size={11} /> About · Skills
+                                    <Satellite size={11} /> Scene 02 · Profile
                                 </div>
                                 <h2 className="text-4xl font-black text-stone-900 leading-tight">
-                                    Bridging <span className="text-emerald-600">Environment</span> ×{' '}
-                                    <span className="text-teal-600">GIS</span> ×{' '}
-                                    <span className="text-blue-600">Code</span>
+                                    From <span className="text-emerald-600">Orbit</span> to{' '}
+                                    <span className="text-blue-600">Insight</span>
                                 </h2>
+                                <p className="text-stone-400 text-sm mt-3 max-w-xl mx-auto">
+                                    Environmental hazards and risk — observed from space, modelled with AI, delivered as production geodata systems.
+                                </p>
                             </div>
 
                             {/* Bento grid */}
@@ -945,7 +1648,7 @@ const Portfolio = () => {
                                         <div className="flex items-center gap-3 mb-6">
                                             <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center text-white font-black text-lg">KC</div>
                                             <div>
-                                                <div className="font-black text-stone-900">Kripan K.C.</div>
+                                                <div className="font-black text-stone-900">Kripan K C</div>
                                                 <div className="text-xs text-emerald-600 font-semibold">Environmental Engineer · Geo Developer</div>
                                             </div>
                                         </div>
@@ -974,43 +1677,30 @@ const Portfolio = () => {
                                     </button>
                                 </div>
 
-                                {/* ── Right side: skills layers + experience ── */}
+                                {/* ── Right side: rotating capability bands + experience ── */}
                                 <div className="lg:col-span-7 flex flex-col gap-5">
 
-                                    {/* GIS-Layer style skill selector */}
-                                    <div className="bg-stone-900 rounded-2xl p-6 text-white">
-                                        <div className="flex items-center gap-2 mb-4">
-                                            <Layers size={14} className="text-emerald-400" />
-                                            <span className="text-xs font-bold uppercase tracking-widest text-stone-400">Technical Stack — Layer Panel</span>
-                                        </div>
-                                        <CompactSkillsDark />
-                                    </div>
+                                    {/* Skills — auto-rotating sensor-suite tabs */}
+                                    <SkillsRotator />
 
-                                    {/* Experience: horizontal scrolling timeline */}
-                                    <div className="bg-white rounded-2xl border border-stone-200 p-6">
-                                        <div className="flex items-center gap-2 mb-5">
+                                    {/* Experience: compact vertical list */}
+                                    <div className="bg-white rounded-2xl border border-stone-200 p-5">
+                                        <div className="flex items-center gap-2 mb-4">
                                             <Briefcase size={14} className="text-emerald-600" />
                                             <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Experience</span>
                                         </div>
                                         <div className="relative">
                                             {/* Timeline line */}
                                             <div className="absolute left-0 top-3 bottom-3 w-px bg-stone-100" />
-                                            <div className="space-y-4 pl-6">
-                                                {[
-                                                    { dot: 'bg-emerald-500', role: 'Geospatial Data Science Intern', org: 'Munich Re', year: '2025–26', badge: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-                                                    { dot: 'bg-blue-400', role: 'Student Research Assistant', org: 'TUM', year: '2024–25', badge: 'bg-blue-50 text-blue-700 border-blue-200' },
-                                                    { dot: 'bg-stone-400', role: 'Environmental Engineer', org: 'RISE Nepal', year: '2023–24', badge: 'bg-stone-50 text-stone-600 border-stone-200' },
-                                                    { dot: 'bg-amber-400', role: 'Freelance GIS Analyst', org: 'Upwork', year: '2020–24', badge: 'bg-amber-50 text-amber-700 border-amber-200' },
-                                                ].map((item, i) => (
-                                                    <div key={i} className="relative flex items-start gap-4">
-                                                        <div className={`absolute -left-6 top-1.5 w-2.5 h-2.5 rounded-full ${item.dot} ring-2 ring-white`} />
-                                                        <div className="flex-1 flex items-center justify-between min-w-0">
-                                                            <div className="min-w-0">
-                                                                <div className="font-semibold text-stone-800 text-sm truncate">{item.role}</div>
-                                                                <div className="text-xs text-stone-400">{item.org}</div>
-                                                            </div>
-                                                            <span className={`ml-3 shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full border ${item.badge}`}>{item.year}</span>
+                                            <div className="space-y-2.5 pl-6">
+                                                {homepageExperienceTimeline.map((item, i) => (
+                                                    <div key={i} className="relative flex items-center gap-3">
+                                                        <div className={`absolute -left-6 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full ${item.dot} ring-2 ring-white`} />
+                                                        <div className="min-w-0 flex items-baseline gap-1.5 flex-grow">
+                                                            <span className="font-semibold text-stone-800 text-[13px] truncate">{item.role}</span>
+                                                            <span className="text-[11px] text-stone-400 shrink-0 hidden sm:inline">· {shortOrg(item.org)}</span>
                                                         </div>
+                                                        <span className={`shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full border ${item.badge}`}>{item.year}</span>
                                                     </div>
                                                 ))}
                                             </div>
@@ -1025,7 +1715,7 @@ const Portfolio = () => {
                     <GISDashboard projects={featuredProjects} title="Featured Projects" />
                 </main>
             );
-            case 'about': return <AboutView />;
+            case 'about': return <AboutView navigateTo={navigateTo} />;
             case 'projects': return <ProjectsView />;
             case 'contact': return <ContactView />;
             default: return null;
@@ -1047,7 +1737,7 @@ const Portfolio = () => {
             <footer className="bg-white border-t border-stone-100 py-6">
                 <div className="container mx-auto px-6 flex justify-between items-center">
                     <span className="font-mono text-xs text-stone-400">
-                        48.1351°N, 11.5820°E · © {new Date().getFullYear()} Kripan K.C.
+                        48.1351°N, 11.5820°E · © {new Date().getFullYear()} Kripan K C
                     </span>
                     <div className="flex gap-3">
                         <a href="https://github.com/Kripankc" target="_blank" rel="noopener noreferrer" className="text-stone-400 hover:text-stone-900 transition-colors"><Github size={16} /></a>
