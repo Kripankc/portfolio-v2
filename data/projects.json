@@ -26,7 +26,6 @@
         ],
         "stat": "4-class",
         "statLabel": "semantic segmentation",
-        "imageUrl": "/projects/dlr-river.png",
         "githubUrl": null,
         "featured": true
     },
@@ -55,7 +54,6 @@
         ],
         "stat": "O(N)",
         "statLabel": "complexity vs O(N²)",
-        "imageUrl": "/projects/buffer-world.png",
         "githubUrl": "https://github.com/Kripankc/raster-voronoi-solver",
         "featured": true
     },
@@ -84,39 +82,37 @@
         ],
         "stat": "4 APIs",
         "statLabel": "pipelines unified",
-        "imageUrl": "/projects/angel-api.png",
         "githubUrl": null,
         "featured": true
     },
     {
         "id": "el-nino-drought-agent",
-        "title": "ENSA — El Niño Sentinel Agent",
-        "description": "Autonomous agentic AI system for agricultural drought early-warning during El Niño 2026 in Southern Africa. Integrates Copernicus GDO, ECMWF forecasts, and CDSE STAC satellite data to monitor NDVI/VCI/NDWI at field scale. LLM-powered agent layer generates agricultural risk assessments and recommendations.",
+        "title": "ENSOwatch: El Niño, climate and crops for any farm",
+        "description": "Free web app that shows farmers what El Niño means for their own field. For any location it shows the crops grown there and their sowing calendar (CROPGRIDS, GGCMI), rainfall this season against crop water need (FAO-56), how every El Niño since 1950 changed local rainfall with a permutation significance test (ERA5, NOAA CPC), the 15-day and 7-month forecasts (ECMWF), when the rains reliably start for sowing, satellite crop greenness (MODIS NDVI), and rule-based guidance in eight languages. Static site; data jobs run on GitHub Actions.",
         "technologies": [
+            "TypeScript",
+            "Observable Plot",
+            "Leaflet",
             "Python",
-            "Streamlit",
-            "Folium",
-            "LLM Agents",
-            "Copernicus API"
+            "GitHub Actions"
         ],
         "libraries": [
-            "streamlit",
-            "folium",
-            "xarray",
-            "rioxarray",
-            "requests",
-            "anthropic"
+            "vite",
+            "leaflet",
+            "@observablehq/plot",
+            "idb-keyval",
+            "vitest"
         ],
         "topics": [
-            "Agentic AI",
+            "Climate",
             "Remote Sensing",
-            "Climate"
+            "Agriculture"
         ],
-        "stat": "Field-scale",
-        "statLabel": "drought monitoring",
-        "imageUrl": "/projects/ensa.png",
+        "stat": "75 years",
+        "statLabel": "of El Niño seasons per location",
         "githubUrl": "https://github.com/Kripankc/el-nino-drought-agent",
-        "featured": true
+        "featured": true,
+        "liveUrl": "https://kripankc.github.io/el-nino-drought-agent/"
     },
     {
         "id": "sfd-mfd-municipality-enrichment",
@@ -141,7 +137,6 @@
         ],
         "stat": "95–100%",
         "statLabel": "match rate per country",
-        "imageUrl": "/projects/sfd-mfd.png",
         "githubUrl": null,
         "featured": true
     },
@@ -168,7 +163,6 @@
         ],
         "stat": "25 mi",
         "statLabel": "US coastal coverage",
-        "imageUrl": "/projects/coastal.png",
         "githubUrl": null,
         "featured": false
     },
@@ -195,7 +189,6 @@
         ],
         "stat": "3 bands",
         "statLabel": "urban strata validated",
-        "imageUrl": "/projects/india-buildings.png",
         "githubUrl": null,
         "featured": false
     },
@@ -222,7 +215,6 @@
         ],
         "stat": "45.4%",
         "statLabel": "error reduction",
-        "imageUrl": "/projects/precip.png",
         "githubUrl": null,
         "featured": true
     },
@@ -246,7 +238,6 @@
         ],
         "stat": "HEC-RAS",
         "statLabel": "1D/2D flood model",
-        "imageUrl": "/projects/flood.png",
         "githubUrl": null,
         "featured": false
     },
@@ -272,7 +263,6 @@
         ],
         "stat": "30 yrs",
         "statLabel": "temporal coverage",
-        "imageUrl": "/projects/glacier.png",
         "githubUrl": null,
         "featured": false
     },
@@ -297,7 +287,6 @@
         ],
         "stat": "GEE",
         "statLabel": "satellite-derived inputs",
-        "imageUrl": "/projects/snowmelt.png",
         "githubUrl": null,
         "featured": false
     },
@@ -321,7 +310,6 @@
         ],
         "stat": "Mw 7.8",
         "statLabel": "earthquake event",
-        "imageUrl": "/projects/lulc.png",
         "githubUrl": null,
         "featured": false
     },
@@ -348,7 +336,6 @@
         ],
         "stat": "89%",
         "statLabel": "memory reduction",
-        "imageUrl": "/projects/memory-optimizer.png",
         "githubUrl": "https://github.com/Kripankc/geospatial-memory-optimizer",
         "featured": false
     }
